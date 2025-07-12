@@ -1,7 +1,7 @@
+import { getAllRooms } from "../controllers/room";
+
 export const roomResolvers = {
   Query: {
-    getAllRooms: async () => {
-      return "Hello GraphQL"
-    },
+    getAllRooms: async () => await getAllRooms()
   }
 }
