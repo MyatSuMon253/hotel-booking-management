@@ -10,7 +10,7 @@ export const roomTypeDefs = gql`
     isAvailable: Boolean!
   }
 
-  type Query{}
-
-  type Mutation{}
+  type Query{
+    getAllRooms:String
+  }
 `;
