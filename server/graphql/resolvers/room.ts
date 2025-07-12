@@ -1,4 +1,4 @@
-import { getAllRooms } from "../controllers/room";
+import { getAllRooms } from "../../controllers/room";
 
 export const roomResolvers = {
   Query: {
