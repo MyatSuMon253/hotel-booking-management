@@ -3,6 +3,7 @@ export type Room = {
   type: string;
   pricePerNight: number;
   capacity: number;
+  location: string;
   isAvailable: boolean;
   images: RoomImage[];
   reviews: string[];

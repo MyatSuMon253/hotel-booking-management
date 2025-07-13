@@ -5,6 +5,7 @@ export const rooms = [
     type: "Single",
     pricePerNight: 100.0,
     capacity: 1,
+    location: "Room 1",
     isAvailable: true,
     images: [
       { url: "https://images.pexels.com/photos/1669799/pexels-photo-1669799.jpeg", public_id: "room1-1" },
@@ -18,6 +19,7 @@ export const rooms = [
     type: "Double",
     pricePerNight: 150.0,
     capacity: 2,
+    location: "Room 2",
     isAvailable: true,
     images: [
       { url: "https://images.pexels.com/photos/6782346/pexels-photo-6782346.jpeg", public_id: "room2-1" },
@@ -31,6 +33,7 @@ export const rooms = [
     type: "Suite",
     pricePerNight: 250.0,
     capacity: 4,
+    location: "Room 3",
     isAvailable: false,
     images: [
       { url: "https://images.pexels.com/photos/1669799/pexels-photo-1669799.jpeg", public_id: "room3-1" },
@@ -44,6 +47,7 @@ export const rooms = [
     type: "Single",
     pricePerNight: 120.0,
     capacity: 1,
+    location: "Room 4",
     isAvailable: true,
     images: [
       { url: "https://images.pexels.com/photos/1457842/pexels-photo-1457842.jpeg", public_id: "room4-1" },
@@ -57,6 +61,7 @@ export const rooms = [
     type: "Double",
     pricePerNight: 180.0,
     capacity: 2,
+    location: "Room 5",
     isAvailable: true,
     images: [
       { url: "https://images.pexels.com/photos/439227/pexels-photo-439227.jpeg", public_id: "room5-1" },
@@ -70,6 +75,7 @@ export const rooms = [
     type: "Suite",
     pricePerNight: 300.0,
     capacity: 4,
+    location: "Room 6",
     isAvailable: false,
     images: [
       { url: "https://images.pexels.com/photos/7512038/pexels-photo-7512038.jpeg", public_id: "room6-1" },
@@ -83,6 +89,7 @@ export const rooms = [
     type: "Single",
     pricePerNight: 110.0,
     capacity: 1,
+    location: "Room 7",
     isAvailable: true,
     images: [
       { url: "https://images.pexels.com/photos/7060811/pexels-photo-7060811.jpeg", public_id: "room7-1" },
@@ -96,6 +103,7 @@ export const rooms = [
     type: "Double",
     pricePerNight: 160.0,
     capacity: 2,
+    location: "Room 8",
     isAvailable: true,
     images: [
       { url: "https://images.pexels.com/photos/6782346/pexels-photo-6782346.jpeg", public_id: "room8-1" },
@@ -109,6 +117,7 @@ export const rooms = [
     type: "Suite",
     pricePerNight: 280.0,
     capacity: 4,
+    location: "Room 9",
     isAvailable: false,
     images: [
       { url: "https://images.pexels.com/photos/1457842/pexels-photo-1457842.jpeg", public_id: "room9-1" },
@@ -122,6 +131,7 @@ export const rooms = [
     type: "Single",
     pricePerNight: 130.0,
     capacity: 1,
+    location: "Room 10",
     isAvailable: true,
     images: [
       { url: "https://images.pexels.com/photos/7512038/pexels-photo-7512038.jpeg", public_id: "room10-1" },
