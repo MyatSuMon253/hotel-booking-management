@@ -36,5 +36,6 @@ export const roomTypeDefs = gql`
 
   type Mutation {
     createNewRoom(roomInput: RoomInput!): Room!
+    updateRoom(roomId: ID!, roomInput: RoomInput!): String!
   }
 `;

@@ -20,3 +20,15 @@ export const getRoomById = async (roomId: string) => {
 
   return room;
 }
+
+export const updateRoom = async (roomId: string, roomInput: RoomType) => {
+  const room = await Room.findById(roomId);
+
+  if (!room) {
+    throw new Error("Room not found");
+  }
+
+  await room.set(roomInput).save();
+
+  return "Room is updated successfully";
+}
