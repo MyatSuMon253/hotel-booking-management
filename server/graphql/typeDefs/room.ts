@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 
 export const roomTypeDefs = gql`
-  type RoomImages {
+  type RoomImage {
     url: String!
     public_id: String!
   }
@@ -13,13 +13,27 @@ export const roomTypeDefs = gql`
     pricePerNight: Float!
     capacity: Int!
     isAvailable: Boolean!
-    images: [RoomImages]
+    images: [RoomImage]
     reviews: [String]
     createdAt: String
     updatedAt: String
   }
 
+  input RoomInput {
+    roomNumber: String!
+    type: String!
+    pricePerNight: Float!
+    capacity: Int!
+    isAvailable: Boolean!
+    images: [String]
+    reviews: [String]
+  }
+
   type Query{
     getAllRooms:String
+  }
+
+  type Mutation {
+    createNewRoom(roomInput: RoomInput!): Room!
   }
 `;
