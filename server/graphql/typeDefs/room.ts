@@ -31,6 +31,7 @@ export const roomTypeDefs = gql`
 
   type Query{
     getAllRooms: [Room]
+    getRoomById(roomId: String!): Room
   }
 
   type Mutation {

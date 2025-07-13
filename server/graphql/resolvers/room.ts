@@ -1,9 +1,10 @@
-import { createNewRoom, getAllRooms } from "../../controllers/room";
+import { createNewRoom, getAllRooms, getRoomById } from "../../controllers/room";
 import { Room as RoomType } from "../../types/room";
 
 export const roomResolvers = {
   Query: {
-    getAllRooms: async () => await getAllRooms()
+    getAllRooms: async () => await getAllRooms(),
+    getRoomById: async (_: any, { roomId }: { roomId: string }) => await getRoomById(roomId)
   },
   Mutation: {
     createNewRoom: async (_: any, { roomInput }: { roomInput: RoomType }) => await createNewRoom(roomInput)

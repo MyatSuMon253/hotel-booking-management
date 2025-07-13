@@ -10,3 +10,13 @@ export const createNewRoom = async (roomInput: RoomType) => {
   const newRoom = await Room.create(roomInput)
   return newRoom;
 }
+
+export const getRoomById = async (roomId: string) => {
+  const room = await Room.findById(roomId);
+
+  if (!room) {
+    throw new Error("Room not found");
+  }
+
+  return room;
+}
