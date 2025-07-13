@@ -30,7 +30,7 @@ export const roomTypeDefs = gql`
   }
 
   type Query{
-    getAllRooms:String
+    getAllRooms: [Room]
   }
 
   type Mutation {

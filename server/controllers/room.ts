@@ -1,8 +1,9 @@
-import Room from "../models/room"
-import { Room as RoomType } from "../types/room"
+import Room from "../models/room";
+import { Room as RoomType } from "../types/room";
 
-export const getAllRooms = () => {
-  return "Hello GraphQL from controller"
+export const getAllRooms = async () => {
+  const rooms = await Room.find();
+  return rooms
 }
 
 export const createNewRoom = async (roomInput: RoomType) => {
