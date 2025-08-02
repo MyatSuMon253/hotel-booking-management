@@ -13,6 +13,10 @@ const roomSchema = new mongoose.Schema({
     type: Number,
     required: [true, "Please enter price per night."],
   },
+  location: {
+    type: String,
+    required: [true, "Please enter location."],
+  },
   capacity: {
     type: Number,
     required: [true, "Please enter room capacity."],
