@@ -8,6 +8,8 @@ export const roomTypeDefs = gql`
 
   type Room {
     id: ID!
+    title: String!
+    description: String!
     roomNumber: String!
     type: String!
     pricePerNight: Float!
@@ -21,6 +23,8 @@ export const roomTypeDefs = gql`
   }
 
   input RoomInput {
+    title: String!
+    description: String!
     roomNumber: String!
     type: String!
     pricePerNight: Float!
