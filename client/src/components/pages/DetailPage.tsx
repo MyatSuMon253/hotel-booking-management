@@ -13,6 +13,8 @@ import { useParams } from "react-router";
 // import NotFound from "../common/NotFound";
 import { GET_ROOM_BY_ID } from "@/graphql/queries/room";
 import type { Room } from "@/types/room";
+import Loader from "../common/Loader";
+import NotFound from "../common/NotFound";
 
 const DetailPage = () => {
   const params = useParams<{ id: string }>();
@@ -40,13 +42,13 @@ const DetailPage = () => {
     ]
     : [];
 
-  // if (error?.graphQLErrors[0].extensions?.code === "NOT_FOUND") {
-  //   return <NotFound />;
-  // }
-  console.log(data)
+  if (error?.graphQLErrors[0].extensions?.code === "NOT_FOUND") {
+    return <NotFound />;
+  }
+
   return (
     <main className="layout">
-      {/* {loading && <Loader />} */}
+      {loading && <Loader />}
       {!loading && data?.getRoomById && (
         <div className="grid grid-cols-2 gap-4">
           <div>
@@ -57,7 +59,7 @@ const DetailPage = () => {
                     <img
                       src={img.url}
                       alt={img.public_id}
-                      className=" aspect-square object-cover  rounded-lg"
+                      className="aspect-square object-cover rounded-lg"
                     />
                   </CarouselItem>
                 ))}

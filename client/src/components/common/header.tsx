@@ -11,7 +11,6 @@ import { Button } from "../ui/button";
 // import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Header = () => {
-
   return (
     <nav className="flex items-center justify-between layout">
       <Link to="/" className="text-4xl font-extrabold">
