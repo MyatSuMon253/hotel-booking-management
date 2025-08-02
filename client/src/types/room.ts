@@ -1,6 +1,7 @@
 export type Room = {
   id: string;
-  title: string;
+  title?: string;
+  description?: string;
   roomNumber?: string;
   type?: string;
   pricePerNight: number;

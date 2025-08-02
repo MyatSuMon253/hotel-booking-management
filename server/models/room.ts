@@ -1,6 +1,14 @@
 import mongoose from "mongoose";
 
 const roomSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: [true, "Please enter room title."],
+  },
+  description: {
+    type: String,
+    required: [true, "Please enter room description."],
+  },
   roomNumber: {
     type: String,
     required: [true, "Please enter room number."],
