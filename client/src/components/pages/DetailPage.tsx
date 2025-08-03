@@ -1,18 +1,16 @@
 // import { GET_SINGLE_ROOM } from "@/graphql/queries/room";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { GET_ROOM_BY_ID } from "@/graphql/queries/room";
+import type { Room } from "@/types/room";
 import { useQuery } from "@apollo/client";
 import { BadgeCheck, CircleX, Hash, House, MapPin, Users } from "lucide-react";
 import { useParams } from "react-router";
-// import {
-//   Carousel,
-//   CarouselContent,
-//   CarouselItem,
-//   CarouselNext,
-//   CarouselPrevious,
-// } from "@/components/ui/carousel";
-// import Loader from "../common/Loader";
-// import NotFound from "../common/NotFound";
-import { GET_ROOM_BY_ID } from "@/graphql/queries/room";
-import type { Room } from "@/types/room";
 import Loader from "../common/Loader";
 import NotFound from "../common/NotFound";
 
@@ -52,7 +50,7 @@ const DetailPage = () => {
       {!loading && data?.getRoomById && (
         <div className="grid grid-cols-2 gap-4">
           <div>
-            {/* <Carousel>
+            <Carousel>
               <CarouselContent>
                 {room?.images.map((img, index) => (
                   <CarouselItem key={index}>
@@ -66,7 +64,7 @@ const DetailPage = () => {
               </CarouselContent>
               <CarouselPrevious />
               <CarouselNext />
-            </Carousel> */}
+            </Carousel>
           </div>
           <div>
             <h2 className="text-2xl font-bold mb-2">{room?.title}</h2>
