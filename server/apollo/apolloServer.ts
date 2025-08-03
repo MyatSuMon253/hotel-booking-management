@@ -4,11 +4,13 @@ import { makeExecutableSchema } from "@graphql-tools/schema";
 import cors from 'cors';
 import { Application, json } from "express";
 import { roomResolvers } from "../graphql/resolvers/room";
+import { userResolvers } from "../graphql/resolvers/user";
 import { roomTypeDefs } from "../graphql/typeDefs/room";
+import { userTypeDefs } from "../graphql/typeDefs/user";
 
 export const startApolloServer = async (app: Application) => {
-  const typeDefs = [roomTypeDefs];
-  const resolvers = [roomResolvers];
+  const typeDefs = [roomTypeDefs, userTypeDefs];
+  const resolvers = [roomResolvers, userResolvers];
 
   const schema = makeExecutableSchema({
     typeDefs, resolvers
