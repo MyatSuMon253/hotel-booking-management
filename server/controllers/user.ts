@@ -1,7 +1,8 @@
 import bcrypt from "bcryptjs";
+import { Response } from "express";
+import jwt from "jsonwebtoken";
 import { User } from "../models/user";
 import { UserInput } from "../types/user";
-// import jwt from "jsonwebtoken";
 
 export const register = async (userInput: UserInput) => {
   const { name, email, password } = userInput;
@@ -15,20 +16,28 @@ export const register = async (userInput: UserInput) => {
   return await User.create({ name, email, password });
 }
 
-export const login = async (email: string, password: string) => {
-  const userDoc = await User.findOne({ email }).select("+password");
+export const login =
+  async (email: string, password: string, res: Response) => {
+    const userDoc = await User.findOne({ email }).select("+password");
 
-  if (!userDoc) {
-    throw new Error("Invalid Email or Password");
+    if (!userDoc) {
+      throw new Error("Invaild Email or Password.");
+    }
+
+    const isPassMatch = await bcrypt.compare(password, userDoc.password);
+
+    if (!isPassMatch) {
+      throw new Error("Invaild Email or Password.");
+    }
+
+    const token = jwt.sign({ _id: userDoc._id }, process.env.JWT_SECRET!, {
+      expiresIn: "7d",
+    });
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    return userDoc;
   }
-
-  const isMatch = await bcrypt.compare(password, userDoc.password);
-
-  if (!isMatch) {
-    throw new Error("Invalid Email or Password");
-  }
-
-  return {
-    user: userDoc,
-  };
-}

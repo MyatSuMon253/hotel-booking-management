@@ -1,3 +1,4 @@
+import { Response } from "express";
 import { login, register } from "../../controllers/user";
 import { UserInput } from "../../types/user";
 
@@ -8,10 +9,10 @@ export const userResolvers = {
       userInput: UserInput
     }) =>
       register(userInput),
-    login: async (_: any, { email, password }: {
-      email: string;
-      password: string;
-    }) =>
-      login(email, password),
+    login: async (
+      _: any,
+      { email, password }: { email: string; password: string },
+      { res }: { res: Response }
+    ) => login(email, password, res)
   },
 };
