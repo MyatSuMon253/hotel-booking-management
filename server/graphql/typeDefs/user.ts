@@ -32,17 +32,17 @@ export const userTypeDefs = gql`
   #   logout: Boolean
   # }
 
-  # type Mutation {
-  #   register(userInput: UserInput!): User
-  #   login(email: String!, password: String!): User
-  #   uploadAvatar(image: String!): Boolean
-  #   updateUserProfile(userInfo: UpdateUserInput!): Boolean
-  #   updateUserPassword(oldPassword: String!, newPassword: String!): Boolean
-  #   forgetPassword(email: String!): Boolean
-  #   resetPassword(
-  #     token: String!
-  #     newPassword: String!
-  #     confirmNewPassword: String!
-  #   ): Boolean
-  # }
+  type Mutation {
+    register(userInput: UserInput!): User
+    # login(email: String!, password: String!): User
+    # uploadAvatar(image: String!): Boolean
+    # updateUserProfile(userInfo: UpdateUserInput!): Boolean
+    # updateUserPassword(oldPassword: String!, newPassword: String!): Boolean
+    # forgetPassword(email: String!): Boolean
+    # resetPassword(
+    #   token: String!
+    #   newPassword: String!
+    #   confirmNewPassword: String!
+    # ): Boolean
+  }
 `;
