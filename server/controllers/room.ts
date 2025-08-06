@@ -1,17 +1,18 @@
+import { errorHandler } from "middlewares/errorHandler";
 import Room from "../models/room";
 import { Room as RoomType } from "../types/room";
 
-export const getAllRooms = async () => {
+export const getAllRooms = errorHandler(async () => {
   const rooms = await Room.find();
   return rooms
-}
+})
 
-export const createNewRoom = async (roomInput: RoomType) => {
+export const createNewRoom = errorHandler(async (roomInput: RoomType) => {
   const newRoom = await Room.create(roomInput)
   return newRoom;
-}
+})
 
-export const getRoomById = async (roomId: string) => {
+export const getRoomById = errorHandler(async (roomId: string) => {
   const room = await Room.findById(roomId);
 
   if (!room) {
@@ -19,9 +20,9 @@ export const getRoomById = async (roomId: string) => {
   }
 
   return room;
-}
+})
 
-export const updateRoom = async (roomId: string, roomInput: RoomType) => {
+export const updateRoom = errorHandler(async (roomId: string, roomInput: RoomType) => {
   const room = await Room.findById(roomId);
 
   if (!room) {
@@ -31,9 +32,9 @@ export const updateRoom = async (roomId: string, roomInput: RoomType) => {
   await room.set(roomInput).save();
 
   return "Room is updated successfully";
-}
+})
 
-export const deleteRoom = async (roomId: string) => {
+export const deleteRoom = errorHandler(async (roomId: string) => {
   const room = await Room.findById(roomId);
 
   if (!room) {
@@ -43,4 +44,4 @@ export const deleteRoom = async (roomId: string) => {
   await room.deleteOne();
 
   return "Room is deleted successfully";
-}
+}) 

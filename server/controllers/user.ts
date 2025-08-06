@@ -1,10 +1,11 @@
 import bcrypt from "bcryptjs";
 import { Response } from "express";
 import jwt from "jsonwebtoken";
+import { errorHandler } from "middlewares/errorHandler";
 import { User } from "../models/user";
 import { UserInput } from "../types/user";
 
-export const register = async (userInput: UserInput) => {
+export const register = errorHandler(async (userInput: UserInput) => {
   const { name, email, password } = userInput;
 
   const user = await User.findOne({ email });
@@ -14,9 +15,9 @@ export const register = async (userInput: UserInput) => {
   }
 
   return await User.create({ name, email, password });
-}
+})
 
-export const login =
+export const login = errorHandler(
   async (email: string, password: string, res: Response) => {
     const userDoc = await User.findOne({ email }).select("+password");
 
@@ -40,4 +41,4 @@ export const login =
     });
 
     return userDoc;
-  }
+  })
