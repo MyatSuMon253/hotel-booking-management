@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import { Response } from "express";
 import jwt from "jsonwebtoken";
-import { errorHandler } from "middlewares/errorHandler";
+import errorHandler from "../middlewares/errorHandler";
 import { User } from "../models/user";
 import { UserInput } from "../types/user";
 

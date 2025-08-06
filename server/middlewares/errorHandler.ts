@@ -1,4 +1,4 @@
-export const errorHandler = (controllerFunction: Function) => (...args: unknown[]) => {
+export default (controllerFunction: Function) => (...args: unknown[]) => {
   return Promise.resolve(controllerFunction(...args)).catch(err => {
     console.log(err.name);
 
