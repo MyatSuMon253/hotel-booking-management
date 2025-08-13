@@ -1,7 +1,7 @@
 export default (controllerFunction: Function) =>
   (...args: unknown[]) => {
     return Promise.resolve(controllerFunction(...args)).catch((err) => {
-      console.log(err.name);
+      console.log(err.name, err);
 
       if (err.name === "CastError") {
         const message = `Resource not found. Invalid: ${err.path}: ${err.value}`;
@@ -16,6 +16,7 @@ export default (controllerFunction: Function) =>
       }
 
       if (err.name === "MongoServerError") {
+        console.log(err)
         const message = "Email is already exists";
         throw message;
       }
