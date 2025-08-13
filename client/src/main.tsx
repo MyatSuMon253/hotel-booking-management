@@ -1,12 +1,14 @@
-import { ApolloProvider } from '@apollo/client'
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { createBrowserRouter, RouterProvider } from 'react-router'
-import client from './apollo/apolloClient.ts'
-import Layout from './components/layout/layout.tsx'
-import DetailPage from './components/pages/DetailPage.tsx'
-import HomePage from './components/pages/HomePage.tsx'
-import './index.css'
+import { ApolloProvider } from "@apollo/client";
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router";
+import { Toaster } from "sonner";
+import client from "./apollo/apolloClient.ts";
+import Layout from "./components/layout/layout.tsx";
+import DetailPage from "./components/pages/DetailPage.tsx";
+import HomePage from "./components/pages/HomePage.tsx";
+import RegisterPage from "./components/pages/RegisterPage.tsx";
+import "./index.css";
 
 const router = createBrowserRouter([
   {
@@ -15,20 +17,25 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <HomePage />
+        element: <HomePage />,
       },
       {
         path: "/room/:id",
-        element: <DetailPage />
-      }
-    ]
-  }
-])
+        element: <DetailPage />,
+      },
+      {
+        path: "/register",
+        element: <RegisterPage />,
+      },
+    ],
+  },
+]);
 
-createRoot(document.getElementById('root')!).render(
+createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ApolloProvider client={client}>
       <RouterProvider router={router} />
+      <Toaster richColors />
     </ApolloProvider>
-  </StrictMode>,
-)
+  </StrictMode>
+);

@@ -1,14 +1,5 @@
 import { Link } from "react-router";
 import { Button } from "../ui/button";
-// import {
-//   DropdownMenu,
-//   DropdownMenuContent,
-//   DropdownMenuItem,
-//   DropdownMenuLabel,
-//   DropdownMenuSeparator,
-//   DropdownMenuTrigger,
-// } from "@/components/ui/dropdown-menu";
-// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Header = () => {
   return (
@@ -21,10 +12,10 @@ const Header = () => {
       </div>
       <div>
         <Button asChild>
-          <Link to={"/login"}>Login</Link>
+          <Link to="/login">Login</Link>
         </Button>
         <Button variant={"outline"} asChild>
-          <Link to={"/register"}>Register</Link>
+          <Link to="/register">Register</Link>
         </Button>
       </div>
     </nav >
