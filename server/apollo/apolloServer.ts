@@ -7,6 +7,8 @@ import { roomResolvers } from "../graphql/resolvers/room";
 import { userResolvers } from "../graphql/resolvers/user";
 import { roomTypeDefs } from "../graphql/typeDefs/room";
 import { userTypeDefs } from "../graphql/typeDefs/user";
+import { applyMiddleware } from "graphql-middleware";
+import { permissions } from "middlewares/permissions";
 
 export const startApolloServer = async (app: Application) => {
   const typeDefs = [roomTypeDefs, userTypeDefs];
@@ -16,7 +18,9 @@ export const startApolloServer = async (app: Application) => {
     typeDefs, resolvers
   })
 
-  const apolloServer = new ApolloServer({ schema });
+  const schemaWithPermissions = applyMiddleware(schema, permissions)
+
+  const apolloServer = new ApolloServer({ schema: schemaWithPermissions });
 
   await apolloServer.start();
 
