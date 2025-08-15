@@ -28,11 +28,6 @@ import {
 
 const LoginPage = () => {
   const naviagte = useNavigate();
-  // const isAuthenticated = useReactiveVar(isAuthenticatedVar);
-
-  // useEffect(() => {
-  //   if (isAuthenticated) naviagte("/");
-  // }, [isAuthenticated, naviagte]);
 
   const [login, { loading }] = useMutation(LOGIN_MUTATION, {
     onCompleted() {

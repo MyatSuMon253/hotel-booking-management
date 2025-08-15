@@ -1,8 +1,9 @@
+import cookieParser from 'cookie-parser';
 import dotenv from "dotenv";
 import express from "express";
 import { startApolloServer } from "./apollo/apolloServer";
 import { dbConnect } from "./config/dbConnect";
-const cookieParser = require("cookie-parser");
+
 dotenv.config({ path: "config/.env.local" });
 
 const app = express();
