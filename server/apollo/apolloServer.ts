@@ -3,12 +3,18 @@ import { expressMiddleware } from "@apollo/server/express4";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import cors from "cors";
 import { Application, json, Request, Response } from "express";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import { applyMiddleware } from "graphql-middleware";
+import jwt from "jsonwebtoken";
+import { permissions } from "middlewares/permissions";
 import { roomResolvers } from "../graphql/resolvers/room";
 import { userResolvers } from "../graphql/resolvers/user";
 import { roomTypeDefs } from "../graphql/typeDefs/room";
 import { userTypeDefs } from "../graphql/typeDefs/user";
 import { User } from "../models/user";
+
+type JwtPayload = {
+  _id: string;
+};
 
 export const startApolloServer = async (app: Application) => {
   const typeDefs = [roomTypeDefs, userTypeDefs];
@@ -19,9 +25,9 @@ export const startApolloServer = async (app: Application) => {
     resolvers,
   });
 
-  // const schemaWithPermissions = applyMiddleware(schema, permissions)
+  const schemaWithShield = applyMiddleware(schema, permissions);
 
-  const apolloServer = new ApolloServer({ schema });
+  const apolloServer = new ApolloServer({ schema: schemaWithShield });
 
   await apolloServer.start();
 

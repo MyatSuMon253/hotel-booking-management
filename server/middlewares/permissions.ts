@@ -1,3 +1,3 @@
-// import { shield } from "graphql-shield/typings/types";
+import { shield } from "graphql-shield/typings/types";
 
-// export const permissions = shield({})
+export const permissions = shield({}, {});

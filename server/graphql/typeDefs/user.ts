@@ -27,10 +27,9 @@ export const userTypeDefs = gql`
     updatedAt: String!
   }
 
-  # type Query {
-  #   currentUser: User
-  #   logout: Boolean
-  # }
+  type Query {
+    currentUser: User
+  }
 
   type Mutation {
     register(userInput: UserInput!): User
