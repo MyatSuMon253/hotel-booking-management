@@ -1,12 +1,9 @@
-import { Link, useNavigate } from "react-router";
 import {
   isAuthenticatedVar,
   isLoadingVar,
   userInfoVar,
 } from "@/apollo/apollo-vars";
-import { CURRENT_USER, LOGOUT } from "@/graphql/queries/user";
-import { useLazyQuery, useQuery } from "@apollo/client";
-import { Button } from "../ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,7 +12,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { CURRENT_USER, LOGOUT } from "@/graphql/queries/user";
+import { useLazyQuery, useQuery } from "@apollo/client";
+import { Link, useNavigate } from "react-router";
+import { Button } from "../ui/button";
 
 const Header = () => {
   const navigate = useNavigate();

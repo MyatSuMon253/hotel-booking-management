@@ -7,6 +7,10 @@ export const userResolvers = {
     currentUser: async (_: any, __: any, { user }: { user: any }) => {
       return user;
     },
+    logout: async (_: any, __: any, { res }: { res: Response }) => {
+      res.cookie('token', null, { maxAge: 0 })
+      return true
+    }
   },
   Mutation: {
     register: async (
