@@ -1,3 +1,4 @@
+import { isAuthenticatedVar } from "@/apollo/apollo-vars";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -12,8 +13,9 @@ import { Input } from "@/components/ui/input";
 import { LOGIN_MUTATION } from "@/graphql/mutations/auth";
 import { CURRENT_USER } from "@/graphql/queries/user";
 import { loginSchema } from "@/schema/auth";
-import { useMutation } from "@apollo/client";
+import { useMutation, useReactiveVar } from "@apollo/client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
@@ -28,6 +30,13 @@ import {
 
 const LoginPage = () => {
   const naviagte = useNavigate();
+  const isAuthenticated = useReactiveVar(isAuthenticatedVar);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      naviagte("/");
+    }
+  }, [isAuthenticated, naviagte]);
 
   const [login, { loading }] = useMutation(LOGIN_MUTATION, {
     onCompleted() {
@@ -53,7 +62,7 @@ const LoginPage = () => {
         variables: { email, password },
       });
     } catch (err: any) {
-      form.reset()
+      form.reset();
       console.log(err.message);
       toast.error(
         err.message.includes(":") ? err.message.split(":")[1] : err.message

@@ -1,3 +1,4 @@
+import { isAuthenticatedVar } from "@/apollo/apollo-vars";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,7 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { REGISTER_MUTATION } from "@/graphql/mutations/auth";
 import { registerSchema } from "@/schema/auth";
-import { useMutation } from "@apollo/client";
+import { useMutation, useReactiveVar } from "@apollo/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -28,6 +29,13 @@ import { z } from "zod";
 
 const RegisterPage = () => {
   const naviagte = useNavigate();
+  const isAuthenticated = useReactiveVar(isAuthenticatedVar);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      naviagte("/");
+    }
+  }, [isAuthenticated, naviagte]);
 
   const [register, { loading, error }] = useMutation(REGISTER_MUTATION, {
     onCompleted() {
