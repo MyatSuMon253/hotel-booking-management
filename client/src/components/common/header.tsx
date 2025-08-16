@@ -10,7 +10,7 @@ const Header = () => {
       <div className="space-x-4">
         <h1>Header</h1>
       </div>
-      <div>
+      <div className="flex items-center space-x-4">
         <Button asChild>
           <Link to="/login">Login</Link>
         </Button>

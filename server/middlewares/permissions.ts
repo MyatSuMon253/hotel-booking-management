@@ -1,3 +1,17 @@
-import { shield } from "graphql-shield/typings/types";
+import { rule, shield } from "graphql-shield";
 
-export const permissions = shield({}, {});
+const isAuthenticated = rule({ cache: "contextual" })(
+  async (parent, args, context) => {
+    return context?.user !== null;
+  }
+);
+
+const isAdmin = rule({ cache: "contextual" })(async (parent, args, context) => {
+  return context?.user?.role.includes("admin");
+});
+
+export const permissions = shield({
+  Query: {
+    currentUser: isAuthenticated,
+  },
+});

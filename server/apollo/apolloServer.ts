@@ -5,7 +5,7 @@ import cors from "cors";
 import { Application, json, Request, Response } from "express";
 import { applyMiddleware } from "graphql-middleware";
 import jwt from "jsonwebtoken";
-import { permissions } from "middlewares/permissions";
+import { permissions } from "../middlewares/permissions";
 import { roomResolvers } from "../graphql/resolvers/room";
 import { userResolvers } from "../graphql/resolvers/user";
 import { roomTypeDefs } from "../graphql/typeDefs/room";
