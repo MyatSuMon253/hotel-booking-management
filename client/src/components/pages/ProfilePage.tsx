@@ -1,5 +1,7 @@
 const ProfilePage = () => {
-  return <div>ProfilePage</div>;
+  return <main className="layout">
+    <h1>Profile</h1>
+  </main>
 };
 
 export default ProfilePage;
