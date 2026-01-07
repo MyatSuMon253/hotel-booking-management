@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import errorHandler from "../middlewares/errorHandler";
 import { User } from "../models/user";
 import { UserInput } from "../types/user";
+import { deleteImage, uploadSingleImage } from "../utils/cloudinary";
 
 export const register = errorHandler(async (userInput: UserInput) => {
   const { name, email, password } = userInput;
@@ -41,4 +42,27 @@ export const login = errorHandler(
     });
 
     return userDoc;
+  })
+
+  export const uploadAvatar = errorHandler(async(image: string, userId: string)=> {
+    const userDoc = await User.findById(userId)
+
+    if (!userDoc) {
+      throw new Error('User not found!')
+    }
+
+   const response = await uploadSingleImage(image, 'baganhotel/avatar')
+
+   if (userDoc.avatar?.public_id) {
+    await deleteImage(userDoc.avatar?.public_id)
+   }
+
+   await User.findByIdAndUpdate(userId, {
+    avatar: {
+      url: response.image_url,
+      public_id: response.public_id
+    }
+   })
+
+    return true
   })
