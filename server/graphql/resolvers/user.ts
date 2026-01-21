@@ -26,6 +26,8 @@ export const userResolvers = {
       { email, password }: { email: string; password: string },
       { res }: { res: Response }
     ) => login(email, password, res),
-    uploadAvatar: async (_: any, { image }: { image: string }, { user }: { user: IUser }) => uploadAvatar(image, user.id)
+    uploadAvatar: async (
+      _: any, { image }: { image: string }, { user }: { user: IUser }
+    ) => uploadAvatar(image, user._id)
   },
 };

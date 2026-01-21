@@ -1,13 +1,11 @@
-import { Outlet } from 'react-router'
-import Header from '../common/Header'
+import AvatarUpload from "../profile/AvatarUpload";
 
 const Layout = () => {
   return (
-    <main>
-      <Header />
-      <Outlet />
+    <main className="layout space-y-4 mb-4">
+      <AvatarUpload />
     </main>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;

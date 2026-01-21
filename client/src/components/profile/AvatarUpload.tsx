@@ -16,7 +16,7 @@ import { AVATAR_UPLOAD_MUTATION } from "@/graphql/mutations/user";
 import { toast } from "sonner";
 import { CURRENT_USER } from "@/graphql/queries/user";
 
-const ProfilePage = () => {
+const AvatarUpload = () => {
   const [avatar, setAvatar] = useState<string | null>(null);
   const user = useReactiveVar(userInfoVar);
 
@@ -93,4 +93,4 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage;
+export default AvatarUpload;
