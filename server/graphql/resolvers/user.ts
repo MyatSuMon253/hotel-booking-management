@@ -1,5 +1,10 @@
 import { Response } from "express";
-import { login, register, uploadAvatar } from "../../controllers/user";
+import {
+  login,
+  register,
+  updateUserProfile,
+  uploadAvatar,
+} from "../../controllers/user";
 import { IUser, UserInput } from "../../types/user";
 
 export const userResolvers = {
@@ -8,9 +13,9 @@ export const userResolvers = {
       return user;
     },
     logout: async (_: any, __: any, { res }: { res: Response }) => {
-      res.cookie('token', null, { maxAge: 0 })
-      return true
-    }
+      res.cookie("token", null, { maxAge: 0 });
+      return true;
+    },
   },
   Mutation: {
     register: async (
@@ -19,15 +24,22 @@ export const userResolvers = {
         userInput,
       }: {
         userInput: UserInput;
-      }
+      },
     ) => register(userInput),
     login: async (
       _: any,
       { email, password }: { email: string; password: string },
-      { res }: { res: Response }
+      { res }: { res: Response },
     ) => login(email, password, res),
     uploadAvatar: async (
-      _: any, { image }: { image: string }, { user }: { user: IUser }
-    ) => uploadAvatar(image, user._id)
+      _: any,
+      { image }: { image: string },
+      { user }: { user: IUser },
+    ) => uploadAvatar(image, user._id),
+    updateUserProfile: async (
+      _: any,
+      { userInfo }: { userInfo: Partial<UserInput> },
+      { user }: { user: IUser },
+    ) => updateUserProfile(userInfo, user._id),
   },
 };

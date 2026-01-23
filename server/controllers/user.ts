@@ -16,7 +16,7 @@ export const register = errorHandler(async (userInput: UserInput) => {
   }
 
   return await User.create({ name, email, password });
-})
+});
 
 export const login = errorHandler(
   async (email: string, password: string, res: Response) => {
@@ -42,27 +42,44 @@ export const login = errorHandler(
     });
 
     return userDoc;
-  })
+  },
+);
 
-  export const uploadAvatar = errorHandler(async(image: string, userId: string)=> {
-    const userDoc = await User.findById(userId)
+export const uploadAvatar = errorHandler(
+  async (image: string, userId: string) => {
+    const userDoc = await User.findById(userId);
 
     if (!userDoc) {
-      throw new Error('User not found!')
+      throw new Error("User not found!");
     }
 
-   const response = await uploadSingleImage(image, 'baganhotel/avatar')
+    const response = await uploadSingleImage(image, "baganhotel/avatar");
 
-   if (userDoc.avatar?.public_id) {
-    await deleteImage(userDoc.avatar?.public_id)
-   }
-
-   await User.findByIdAndUpdate(userId, {
-    avatar: {
-      url: response.image_url,
-      public_id: response.public_id
+    if (userDoc.avatar?.public_id) {
+      await deleteImage(userDoc.avatar?.public_id);
     }
-   })
 
-    return true
-  })
+    await User.findByIdAndUpdate(userId, {
+      avatar: {
+        url: response.image_url,
+        public_id: response.public_id,
+      },
+    });
+
+    return true;
+  },
+);
+
+export const updateUserProfile = errorHandler(
+  async (userInfo: Partial<UserInput>, userId: string) => {
+    const userDoc = await User.findById(userId);
+
+    if (!userDoc) {
+      throw new Error("User not found!");
+    }
+
+    userDoc.set(userInfo).save();
+
+    return true;
+  },
+);

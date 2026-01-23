@@ -1,9 +1,11 @@
-import AvatarUpload from "../profile/AvatarUpload";
+import { Outlet } from "react-router";
+import Header from "../common/header";
 
 const Layout = () => {
   return (
-    <main className="layout space-y-4 mb-4">
-      <AvatarUpload />
+    <main>
+      <Header />
+      <Outlet />
     </main>
   );
 };

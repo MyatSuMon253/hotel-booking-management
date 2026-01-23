@@ -36,5 +36,6 @@ export const userTypeDefs = gql`
     register(userInput: UserInput!): User
     login(email: String!, password: String!): User
     uploadAvatar(image: String!): Boolean
+    updateUserProfile(userInfo: UpdateUserInput!): Boolean
   }
 `;
