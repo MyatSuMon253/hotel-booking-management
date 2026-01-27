@@ -1,4 +1,5 @@
 import AvatarUpload from "../profile/AvatarUpload";
+import UpdatePassword from "../profile/UpdatePassword";
 import UserInfo from "../profile/UserInfo";
 
 const ProfilePage = () => {
@@ -6,6 +7,7 @@ const ProfilePage = () => {
     <main className="layout space-y-4 mb-4">
       <AvatarUpload />
       <UserInfo />
+      <UpdatePassword />
     </main>
   );
 };
