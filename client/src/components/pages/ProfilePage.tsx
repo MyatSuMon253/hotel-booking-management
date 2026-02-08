@@ -1,4 +1,5 @@
 import AvatarUpload from "../profile/AvatarUpload";
+import ForgetPassword from "../profile/ForgetPassword";
 import UpdatePassword from "../profile/UpdatePassword";
 import UserInfo from "../profile/UserInfo";
 
@@ -8,6 +9,7 @@ const ProfilePage = () => {
       <AvatarUpload />
       <UserInfo />
       <UpdatePassword />
+      <ForgetPassword />
     </main>
   );
 };

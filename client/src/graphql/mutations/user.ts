@@ -17,3 +17,9 @@ export const UPDATE_USER_PASSWORD_MUTATION = gql`
     updateUserPassword(oldPassword: $oldPassword, newPassword: $newPassword)
   }
 `;
+
+export const FORGET_PASSWORD_MUTATION = gql`
+  mutation ForgetPassword($email: String!) {
+    forgetPassword(email: $email)
+  }
+`;

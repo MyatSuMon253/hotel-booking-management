@@ -13,6 +13,7 @@ import ProfilePage from "./components/pages/ProfilePage.tsx";
 import ProtectPage from "./components/pages/ProtectPage.tsx";
 import RegisterPage from "./components/pages/RegisterPage.tsx";
 import "./index.css";
+import ResetPasswordPage from "./components/pages/ResetPasswordPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
           </ProtectPage>
         ),
       },
+      {
+        path: "/reset-password/:token",
+        element: <ResetPasswordPage />,
+      },
     ],
   },
 ]);
@@ -61,5 +66,5 @@ createRoot(document.getElementById("root")!).render(
       <RouterProvider router={router} />
       <Toaster richColors />
     </ApolloProvider>
-  </StrictMode>
+  </StrictMode>,
 );

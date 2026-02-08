@@ -5,6 +5,9 @@ import errorHandler from "../middlewares/errorHandler";
 import { User } from "../models/user";
 import { UserInput } from "../types/user";
 import { deleteImage, uploadSingleImage } from "../utils/cloudinary";
+import { forgetPasswordEmailTemplate } from "../utils/forget-password-email";
+import { sendEmail } from "../utils/sendEmail";
+import crypto from "crypto";
 
 export const register = errorHandler(async (userInput: UserInput) => {
   const { name, email, password } = userInput;
@@ -104,3 +107,35 @@ export const updateUserPassword = errorHandler(
     return true;
   },
 );
+
+export const forgetPassword = errorHandler(async (customer_email: string) => {
+  const user = await User.findOne({ email: customer_email });
+
+  if (!user) {
+    throw new Error("User not found with this email address.");
+  }
+
+  const token = user.generatePasswordResetToken();
+  await user.save();
+
+  const resetUrl = `${process.env.CLIENT_URL}/reset-password/${token}`;
+
+  const body = forgetPasswordEmailTemplate(resetUrl);
+
+  try {
+    await sendEmail({
+      customer_email: user.email,
+      subject: "Your password is reset.",
+      body,
+    });
+  } catch (error: any) {
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+
+    await user.save();
+
+    throw new Error(error?.message);
+  }
+
+  return true;
+});
