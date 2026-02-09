@@ -24,3 +24,17 @@ export const updateUserPasswordSchema = z
     message: "Password do not match!",
     path: ["confirmPassword"],
   });
+
+export const resetPasswordSchema = z
+  .object({
+    newPassword: z
+      .string()
+      .min(6, { message: "Password must be at least 6 characters long." }),
+    confirmNewPassword: z
+      .string({ error: "Please enter password again" })
+      .min(6, { message: "Password must be at least 6 characters long." }),
+  })
+  .refine((data) => data.newPassword === data.confirmNewPassword, {
+    message: "Password do not match!",
+    path: ["confirmPassword"],
+  });

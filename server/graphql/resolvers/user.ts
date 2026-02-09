@@ -3,6 +3,7 @@ import {
   forgetPassword,
   login,
   register,
+  resetPassword,
   updateUserPassword,
   updateUserProfile,
   uploadAvatar,
@@ -53,6 +54,16 @@ export const userResolvers = {
     ) => updateUserPassword(oldPassword, newPassword, user._id),
     forgetPassword: async (_: any, { email }: { email: string }) => {
       forgetPassword(email);
+    },
+    resetPassword: async (
+      _: any,
+      {
+        token,
+        newPassword,
+        confirmNewPassword,
+      }: { token: string; newPassword: string; confirmNewPassword: string },
+    ) => {
+      resetPassword(token, newPassword, confirmNewPassword);
     },
   },
 };

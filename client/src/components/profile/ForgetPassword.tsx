@@ -42,7 +42,7 @@ const ForgetPassword = () => {
       </CardHeader>
       <CardContent>
         <Button onClick={forgetPasswordHandler} disabled={loading}>
-          Forget Password
+          {loading ? "Sending email..." : "Forget Password"}
         </Button>
       </CardContent>
     </Card>

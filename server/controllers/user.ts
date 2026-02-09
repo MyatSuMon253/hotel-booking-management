@@ -139,3 +139,29 @@ export const forgetPassword = errorHandler(async (customer_email: string) => {
 
   return true;
 });
+
+export const resetPassword = errorHandler(
+  async (token: string, newPassword: string, confirmNewPassword: string) => {
+    const reset_token = crypto.createHash("sha256").update(token).digest("hex");
+
+    const user = await User.findOne({
+      resetPasswordToken: reset_token,
+      resetPasswordExpire: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      throw new Error("Token is invalid");
+    }
+
+    if (newPassword !== confirmNewPassword) {
+      throw new Error("Password do not match");
+    }
+
+    user.password = newPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save();
+
+    return true;
+  },
+);

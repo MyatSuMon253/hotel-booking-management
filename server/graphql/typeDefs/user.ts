@@ -39,5 +39,6 @@ export const userTypeDefs = gql`
     updateUserProfile(userInfo: UpdateUserInput!): Boolean
     updateUserPassword(oldPassword: String!, newPassword: String!): Boolean
     forgetPassword(email: String!): Boolean
+    resetPassword(token: String!, newPassword: String!, confirmNewPassword: String!): Boolean
   }
 `;

@@ -23,3 +23,9 @@ export const FORGET_PASSWORD_MUTATION = gql`
     forgetPassword(email: $email)
   }
 `;
+
+export const RESET_PASSWORD_MUTATION = gql`
+  mutation ResetPassword($token: String!, $newPassword: String!, $confirmNewPassword: String!) {
+    resetPassword(token: $token, newPassword: $newPassword, confirmNewPassword: $confirmNewPassword)
+  }
+`;
