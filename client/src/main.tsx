@@ -14,6 +14,8 @@ import ProtectPage from "./components/pages/ProtectPage.tsx";
 import RegisterPage from "./components/pages/RegisterPage.tsx";
 import "./index.css";
 import ResetPasswordPage from "./components/pages/ResetPasswordPage.tsx";
+import ForgetPassword from "./components/profile/ForgetPassword.tsx";
+import ForgetPasswordPage from "./components/pages/ForgetPasswordPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -52,6 +54,7 @@ const router = createBrowserRouter([
           </ProtectPage>
         ),
       },
+      { path: "/reset", element: <ForgetPasswordPage /> },
       {
         path: "/reset-password/:token",
         element: <ResetPasswordPage />,

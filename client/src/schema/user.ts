@@ -38,3 +38,10 @@ export const resetPasswordSchema = z
     message: "Password do not match!",
     path: ["confirmPassword"],
   });
+
+export const forgetPassword = z.object({
+  email: z
+    .string()
+    .email({ message: "Please enter a vaild email address." })
+    .toLowerCase(),
+});
