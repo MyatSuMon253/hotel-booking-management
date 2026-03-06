@@ -1,0 +1,192 @@
+@startuml HMS_Backup_Plan
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+
+skinparam node {
+  BackgroundColor #EBF5FB
+  BorderColor #2471A3
+  FontStyle bold
+}
+
+skinparam component {
+  BackgroundColor #FFFFFF
+  BorderColor #5D6D7E
+}
+
+skinparam database {
+  BackgroundColor #FEF9E7
+  BorderColor #D4AC0D
+}
+
+skinparam cloud {
+  BackgroundColor #EAFAF1
+  BorderColor #1E8449
+}
+
+skinparam rectangle {
+  BackgroundColor #FDEDEC
+  BorderColor #C0392B
+}
+
+skinparam storage {
+  BackgroundColor #F4ECF7
+  BorderColor #8E44AD
+}
+
+skinparam sequence {
+  ArrowColor #2C3E50
+}
+
+title Hotel Management System — Backup Plan Diagram
+
+' ══════════════════════════════════════════════════════
+'  PRODUCTION SYSTEM (Backup Sources)
+' ══════════════════════════════════════════════════════
+node "Production System\n(HMS Server)" as prod {
+
+  database "MongoDB\nDatabase" as mongodb {
+    component "Reservations" as res
+    component "Customer Records" as cust
+    component "Financial\nTransactions" as fin
+    component "Reports" as rep
+  }
+
+  node "Application Layer" as app_layer {
+    component "HMS Application\nFiles (Node.js)" as app_files
+    component "Configuration\nSettings (.env)" as config
+  }
+}
+
+' ══════════════════════════════════════════════════════
+'  BACKUP SCHEDULER / AUTOMATION ENGINE
+' ══════════════════════════════════════════════════════
+node "Backup Automation Engine" as scheduler {
+  component "Cron Job\nScheduler" as cron
+  component "Daily Backup\nAgent\n(00:00 every day)" as daily_agent
+  component "Weekly Backup\nAgent\n(Sunday 01:00)" as weekly_agent
+  component "Encryption\nModule (AES-256)" as encrypt
+
+  cron --> daily_agent  : triggers
+  cron --> weekly_agent : triggers
+  daily_agent  --> encrypt : encrypts before upload
+  weekly_agent --> encrypt : encrypts before upload
+}
+
+' ══════════════════════════════════════════════════════
+'  CLOUD BACKUP STORAGE
+' ══════════════════════════════════════════════════════
+cloud "Cloud Backup Server" as cloud_storage {
+
+  storage "Daily Backup Store\n─────────────────\nRetention: 30 days\nScope: Database only" as daily_store {
+    component "DB Snapshot\n(encrypted .bak)" as daily_bak
+  }
+
+  storage "Weekly Full Backup Store\n─────────────────────────\nRetention: 90 days\nScope: DB + App + Config" as weekly_store {
+    component "Full System Archive\n(encrypted .tar.gz)" as weekly_bak
+  }
+
+  node "Access Control Layer" as acl {
+    component "Role-Based\nAccess (Admin only)" as rbac
+    component "Audit Log\n(who accessed when)" as audit
+  }
+}
+
+' ══════════════════════════════════════════════════════
+'  RECOVERY SYSTEM
+' ══════════════════════════════════════════════════════
+rectangle "Disaster Recovery" as recovery {
+  component "Recovery\nDashboard" as rec_dashboard
+  component "Restore\nScript" as restore_script
+  component "Recovery\nDrill Log\n(Scheduled Quarterly)" as drill_log
+
+  rec_dashboard --> restore_script : triggers restore
+  restore_script --> drill_log     : logs result
+}
+
+' ══════════════════════════════════════════════════════
+'  MONITORING & ALERTS
+' ══════════════════════════════════════════════════════
+node "Monitoring & Alerting" as monitor {
+  component "Backup Status\nMonitor" as status_mon
+  component "Email / SMS\nAlert Service" as alert_svc
+  status_mon --> alert_svc : on failure
+}
+
+' ══════════════════════════════════════════════════════
+'  AUTHORIZED PERSONNEL
+' ══════════════════════════════════════════════════════
+actor "Hotel Owner\n(Admin)" as owner
+actor "IT Administrator" as it_admin
+
+' ══════════════════════════════════════════════════════
+'  CONNECTIONS — BACKUP FLOW
+' ══════════════════════════════════════════════════════
+
+' Sources → Scheduler
+mongodb    --> daily_agent  : "daily DB snapshot"
+mongodb    --> weekly_agent : "weekly DB snapshot"
+app_layer  --> weekly_agent : "app files + config\n(weekly only)"
+
+' Scheduler → Cloud Storage
+encrypt --> daily_store  : "upload encrypted\ndaily backup"
+encrypt --> weekly_store : "upload encrypted\nweekly backup"
+
+' Cloud Storage → Access Control
+daily_store  --> acl : "protected by"
+weekly_store --> acl : "protected by"
+
+' Cloud Storage → Recovery
+daily_store  --> restore_script : "restore from\ndaily snapshot"
+weekly_store --> restore_script : "restore from\nfull backup"
+
+' Monitoring
+scheduler --> status_mon : "reports status\nafter each job"
+
+' Authorized Access
+owner    --> acl : "authorized access"
+it_admin --> acl : "authorized access"
+it_admin --> rec_dashboard : "initiates recovery / drill"
+it_admin --> scheduler     : "manages & configures"
+
+' Recovery back to Production
+restore_script --> prod : "data restored\nto production"
+
+' ══════════════════════════════════════════════════════
+'  LEGEND & NOTES
+' ══════════════════════════════════════════════════════
+legend right
+  |= Backup Type       |= Frequency   |= Scope                        |= Retention |
+  | Daily Backup        | Every day     | Database only                  | 30 days    |
+  | Weekly Full Backup  | Every Sunday  | Database + App Files + Config  | 90 days    |
+  |= Security          |= Detail                                                     |
+  | Encryption          | AES-256 before upload to cloud                             |
+  | Access Control      | Admin-only, role-based with audit logging                  |
+  | Recovery Drills     | Quarterly scheduled tests                                  |
+endlegend
+
+note right of encrypt
+  All backups are encrypted with
+  <b>AES-256</b> before leaving
+  the production server.
+  Decryption keys are stored
+  separately from backup files.
+end note
+
+note right of daily_store
+  <b>Retention Policy:</b>
+  Daily  → kept for <b>30 days</b>
+  Weekly → kept for <b>90 days</b>
+  Older backups are automatically
+  purged by the scheduler.
+end note
+
+note bottom of recovery
+  Recovery drills are conducted
+  <b>quarterly</b> to verify that
+  backups can be restored quickly
+  and data integrity is maintained.
+end note
+
+@enduml

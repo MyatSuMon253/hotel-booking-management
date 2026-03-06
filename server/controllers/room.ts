@@ -1,22 +1,25 @@
+import APIFilters from "../utils/apiFilters";
 import errorHandler from "../middlewares/errorHandler";
 import Room from "../models/room";
 import { Room as RoomType } from "../types/room";
 import { NotFoundError } from "../utils/not-found";
 
-export const getAllRooms = errorHandler(async () => {
-  const rooms = await Room.find();
+export const getAllRooms = errorHandler(async (query: string) => {
+  const apiFilters = new APIFilters(Room).search(query);
+
+  const rooms = await apiFilters.model;
 
   if (!rooms) {
     throw new NotFoundError("Rooms not found");
   }
 
-  return rooms
-})
+  return rooms;
+});
 
 export const createNewRoom = errorHandler(async (roomInput: RoomType) => {
-  const newRoom = await Room.create(roomInput)
+  const newRoom = await Room.create(roomInput);
   return newRoom;
-})
+});
 
 export const getRoomById = errorHandler(async (roomId: string) => {
   const room = await Room.findById(roomId);
@@ -26,19 +29,21 @@ export const getRoomById = errorHandler(async (roomId: string) => {
   }
 
   return room;
-})
+});
 
-export const updateRoom = errorHandler(async (roomId: string, roomInput: RoomType) => {
-  const room = await Room.findById(roomId);
+export const updateRoom = errorHandler(
+  async (roomId: string, roomInput: RoomType) => {
+    const room = await Room.findById(roomId);
 
-  if (!room) {
-    throw new NotFoundError("Room not found");
-  }
+    if (!room) {
+      throw new NotFoundError("Room not found");
+    }
 
-  await room.set(roomInput).save();
+    await room.set(roomInput).save();
 
-  return "Room is updated successfully";
-})
+    return "Room is updated successfully";
+  },
+);
 
 export const deleteRoom = errorHandler(async (roomId: string) => {
   const room = await Room.findById(roomId);
@@ -50,4 +55,4 @@ export const deleteRoom = errorHandler(async (roomId: string) => {
   await room.deleteOne();
 
   return "Room is deleted successfully";
-}) 
+});

@@ -1,0 +1,158 @@
+@startuml HMS_Class_Diagram
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam classAttributeIconSize 0
+
+title Hotel Management System — Class Diagram
+
+' ══════════════════════════════════════════════════════
+'  ENUMERATIONS
+' ══════════════════════════════════════════════════════
+
+enum UserRole {
+  user
+  admin
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
+  REFUNDED
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED_AMOUNT
+}
+
+' ══════════════════════════════════════════════════════
+'  VALUE OBJECTS / EMBEDDED TYPES
+' ══════════════════════════════════════════════════════
+
+class Avatar {
+  + url : String
+  + public_id : String
+}
+
+class RoomImage {
+  + url : String
+  + public_id : String
+}
+
+' ══════════════════════════════════════════════════════
+'  CORE DOMAIN CLASSES
+' ══════════════════════════════════════════════════════
+
+class User {
+  + _id : ObjectId
+  + name : String
+  + email : String <<unique>>
+  - password : String <<select: false>>
+  + role : UserRole[]
+  + resetPasswordToken : String
+  + resetPasswordExpire : Date
+  + createdAt : Date
+  + updatedAt : Date
+  --
+  + generatePasswordResetToken() : String
+  + comparePassword(entered: String) : Boolean
+}
+
+class Room {
+  + _id : ObjectId
+  + title : String
+  + description : String
+  + roomNumber : String <<unique>>
+  + type : String
+  + pricePerNight : Float
+  + capacity : Int
+  + location : String
+  + isAvailable : Boolean
+  + reviews : String[]
+  + createdAt : Date
+  + updatedAt : Date
+}
+
+' ══════════════════════════════════════════════════════
+'  NEW: BOOKING
+' ══════════════════════════════════════════════════════
+
+class Booking {
+  + _id : ObjectId
+  + checkInDate : Date
+  + checkOutDate : Date
+  + numberOfGuests : Int
+  + totalPrice : Float
+  + status : BookingStatus
+  + paymentStatus : PaymentStatus
+  + specialRequests : String
+  + appliedPromoCode : String
+  + discountAmount : Float
+  + createdAt : Date
+  + updatedAt : Date
+  --
+  + calculateTotalPrice() : Float
+  + calculateNights() : Int
+  + cancel() : Boolean
+}
+
+' ══════════════════════════════════════════════════════
+'  NEW: PROMOTION
+' ══════════════════════════════════════════════════════
+
+class Promotion {
+  + _id : ObjectId
+  + title : String
+  + description : String
+  + code : String <<unique>>
+  + discountType : DiscountType
+  + discountValue : Float
+  + startDate : Date
+  + endDate : Date
+  + isActive : Boolean
+  + minimumNights : Int
+  + usageLimit : Int
+  + usedCount : Int
+  + createdAt : Date
+  + updatedAt : Date
+  --
+  + isValid() : Boolean
+  + isExpired() : Boolean
+  + hasReachedLimit() : Boolean
+  + applyDiscount(price: Float) : Float
+}
+
+' ══════════════════════════════════════════════════════
+'  RELATIONSHIPS
+' ══════════════════════════════════════════════════════
+
+' Composition — embedded sub-documents
+User "1" *-- "0..1" Avatar        : has >
+Room "1" *-- "0..*" RoomImage     : has >
+
+' Enumerations
+User     ..> UserRole       : uses >
+Booking  ..> BookingStatus  : uses >
+Booking  ..> PaymentStatus  : uses >
+Promotion ..> DiscountType  : uses >
+
+' Associations — references (foreign keys / ObjectId refs)
+Booking "0..*" --> "1" User   : booked by >
+Booking "0..*" --> "1" Room   : reserves >
+
+' Promotion can optionally target specific rooms
+Promotion "0..*" --> "0..*" Room : applies to >
+
+' Booking optionally references a Promotion (via code)
+Booking "0..*" ..> "0..1" Promotion : uses promo >
+
+@enduml

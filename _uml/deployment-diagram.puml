@@ -1,0 +1,121 @@
+@startuml
+Bob -> Alice : hello
+
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+
+skinparam node {
+  BackgroundColor #E8F4FD
+  BorderColor #2980B9
+  FontStyle bold
+}
+
+skinparam component {
+  BackgroundColor #FFFFFF
+  BorderColor #5D6D7E
+}
+
+skinparam database {
+  BackgroundColor #FEF9E7
+  BorderColor #D4AC0D
+}
+
+skinparam cloud {
+  BackgroundColor #F0FFF0
+  BorderColor #27AE60
+}
+
+skinparam rectangle {
+  BackgroundColor #F9EBEA
+  BorderColor #E74C3C
+}
+
+title Hotel Management System (HMS) — Deployment Diagram
+
+' ─── CLIENT ZONE ─────────────────────────────────────────────────────────────
+node "Client Devices" as clients {
+
+  node "Staff Terminal\n(Browser)" as staff_browser {
+    component "Room & Booking\nManagement UI" as staff_ui
+  }
+
+  node "Hotel Owner Dashboard\n(Browser)" as owner_browser {
+    component "Analytics &\nAdmin Panel" as owner_ui
+  }
+
+  node "Customer Device\n(Browser / Mobile)" as customer_browser {
+    component "Room Search &\nReservation UI" as customer_ui
+  }
+}
+
+' ─── INTERNET ────────────────────────────────────────────────────────────────
+cloud "Internet / HTTPS" as internet {
+}
+
+' ─── PRODUCTION CLOUD PLATFORM ───────────────────────────────────────────────
+node "Secure Cloud Platform / Hotel Server" as prod_infra {
+
+  node "Web Server\n(Static Host)" as web_server {
+    component "React SPA" as spa
+    component "Client-side Routing" as router
+    spa --> router
+  }
+
+  node "Application Server\n(Node.js)" as app_server {
+    component "[Express.js]\nHTTP Server" as express
+    component "[Apollo Server 4]\nGraphQL API\n/graphql" as apollo
+    component "[graphql-shield]\nPermission Layer" as shield
+    component "[JWT + bcryptjs]\nAuth Service" as auth
+    component "[Nodemailer]\nEmail Service" as mailer
+    component "[Cloudinary SDK]\nMedia Upload\nService" as cloudinary_sdk
+
+    express --> apollo
+    apollo --> shield
+    shield --> auth
+  }
+
+  database "MongoDB Atlas /\nLocal MongoDB" as mongodb {
+    component "users" as col_users
+    component "rooms" as col_rooms
+    component "bookings" as col_bookings
+    component "resetTokens" as col_tokens
+  }
+
+  app_server --> mongodb : "Mongoose ODM\n(mongoose ^8)"
+}
+
+' ─── EXTERNAL SERVICES ───────────────────────────────────────────────────────
+cloud "External Services" as ext {
+  node "Cloudinary CDN" as cloudinary {
+    component "Room Image\nStorage" as img_store
+  }
+
+  node "SMTP Mail Server\n(e.g., Gmail / SendGrid)" as smtp {
+    component "Password Reset\nEmails" as email_svc
+  }
+}
+
+' ─── DATA MIGRATION SOURCE ───────────────────────────────────────────────────
+rectangle "Data Migration\n(Pre-launch)" as migration {
+  component "Paper-based Records\n(Rooms / Customers /\nReservations)" as paper
+  component "DB Seeder Script" as seeder
+  paper --> seeder : "Manual Entry &\nValidation"
+  seeder --> mongodb : "Bulk Insert"
+}
+
+' ─── CONNECTIONS ─────────────────────────────────────────────────────────────
+staff_ui    --> internet : "HTTPS"
+owner_ui    --> internet : "HTTPS"
+customer_ui --> internet : "HTTPS"
+
+internet --> spa        : "HTTPS (Static Assets)"
+internet --> apollo     : "HTTPS\nGraphQL over HTTP"
+
+spa --> apollo          : "Apollo Client\nGraphQL Queries\n& Mutations"
+
+mailer        --> smtp          : "SMTP / TLS"
+cloudinary_sdk --> cloudinary   : "HTTPS / REST API"
+
+@enduml
