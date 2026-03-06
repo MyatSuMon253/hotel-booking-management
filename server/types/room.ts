@@ -12,9 +12,17 @@ export type Room = {
   reviews: string[];
   createdAt: string;
   updatedAt: string;
-}
+};
 
 type RoomImage = {
   url: string;
   public_id: string;
-}
+};
+
+export type RoomFilters = {
+  type?: string;
+  pricePerNight?: number;
+  capacity?: number;
+  isAvailable?: boolean;
+  location?: string;
+};

@@ -5,12 +5,14 @@ import {
   getRoomById,
   updateRoom,
 } from "../../controllers/room";
-import { Room as RoomType } from "../../types/room";
+import { RoomFilters, Room as RoomType } from "../../types/room";
 
 export const roomResolvers = {
   Query: {
-    getAllRooms: async (_: any, { query }: { query: string }) =>
-      await getAllRooms(query),
+    getAllRooms: async (
+      _: any,
+      { query, filters }: { query: string; filters: RoomFilters },
+    ) => await getAllRooms(query, filters),
     getRoomById: async (_: any, { roomId }: { roomId: string }) =>
       await getRoomById(roomId),
   },
