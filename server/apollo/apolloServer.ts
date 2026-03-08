@@ -11,14 +11,16 @@ import { userResolvers } from "../graphql/resolvers/user";
 import { roomTypeDefs } from "../graphql/typeDefs/room";
 import { userTypeDefs } from "../graphql/typeDefs/user";
 import { User } from "../models/user";
+import { bookingTypeDefs } from "../graphql/typeDefs/booking";
+import { bookingResolvers } from "../graphql/resolvers/booking";
 
 type JwtPayload = {
   _id: string;
 };
 
 export const startApolloServer = async (app: Application) => {
-  const typeDefs = [roomTypeDefs, userTypeDefs];
-  const resolvers = [roomResolvers, userResolvers];
+  const typeDefs = [roomTypeDefs, userTypeDefs, bookingTypeDefs];
+  const resolvers = [roomResolvers, userResolvers, bookingResolvers];
 
   const schema = makeExecutableSchema({
     typeDefs,
@@ -47,7 +49,7 @@ export const startApolloServer = async (app: Application) => {
           try {
             const decodedToken = jwt.verify(
               token,
-              process.env.JWT_SECRET!
+              process.env.JWT_SECRET!,
             ) as JwtPayload;
             user = await User.findById(decodedToken._id);
             console.log("Authenticated user:", user?.email || "not found");
@@ -60,6 +62,6 @@ export const startApolloServer = async (app: Application) => {
         }
         return { req, res, user };
       },
-    })
+    }),
   );
 };
