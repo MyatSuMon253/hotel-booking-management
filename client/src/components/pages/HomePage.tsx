@@ -7,9 +7,21 @@ import { useSearchParams } from "react-router";
 
 const HomePage = () => {
   const [searchParams] = useSearchParams();
-  const query = searchParams?.get('filter')
+  const query = searchParams?.get("filter");
+  const location = searchParams.get("location");
+  const type = searchParams.get("type");
+  const capacity = searchParams.get("capacity");
+  const isAvailable = searchParams.get("available");
 
-  const variables = {query};
+  const filters = {
+    ...(location && { location }),
+    ...(type && { type }),
+    ...(capacity && { capacity }),
+    ...(isAvailable !== null && { isAvailable: isAvailable === "true" }),
+  };
+
+  console.log(filters);
+  const variables = { query, filters };
   const { data, loading, error } = useQuery(GET_ALL_ROOMS, { variables });
 
   return (

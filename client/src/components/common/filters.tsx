@@ -10,11 +10,20 @@ import { Input } from "../ui/input";
 import { LucideSearch, LucideX } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router";
 import { updateSearchParams } from "@/lib/helpers";
+import { Count, Locations, Types } from "@/lib/filterData";
+import { Checkbox } from "../ui/checkbox";
 
 const Filters = () => {
-  const [searchKey, setSearchKey] = useState<string>("");
-  let [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  let [searchParams] = useSearchParams();
+  const [searchKey, setSearchKey] = useState<string>("");
+
+  const [filters, setFilters] = useState({
+    location: searchParams.get("location"),
+    type: searchParams.get("type"),
+    capacity: searchParams.get("capacity"),
+    available: searchParams.get("available"),
+  });
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -33,6 +42,31 @@ const Filters = () => {
     searchParams.delete("filter");
     const url = `${window.location.pathname}?${searchParams.toString()}`;
     navigate(url);
+  };
+
+  const updateURL = (filters: any) => {
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value) {
+        searchParams = updateSearchParams(searchParams, key, value as string);
+      } else {
+        searchParams.delete(key);
+      }
+
+      const url = `${window.location.pathname}?${searchParams.toString()}`;
+      navigate(url)
+    });
+  };
+
+  const handleCheckboxClick = (filterType: string, value: any) => {
+    setFilters((prev: any) => {
+      const updatedFilters = {
+        ...prev,
+        [filterType]: prev[filterType] === value ? null : value,
+      };
+
+      updateURL(updatedFilters);
+      return updatedFilters;
+    });
   };
 
   return (
@@ -55,6 +89,54 @@ const Filters = () => {
             onClick={handleClear}
           />
         </form>
+        <h2 className="font-semibold mt4 mb-2">Location</h2>
+        <div className="space-y-2">
+          {Locations?.map((loc, index) => (
+            <div key={index} className="flex items-center gap-2">
+              <Checkbox
+                checked={loc === filters.location}
+                onCheckedChange={() => handleCheckboxClick("location", loc)}
+              />
+              <span className="text-sm font-medium text-gray-500">{loc}</span>
+            </div>
+          ))}
+        </div>
+        <h2 className="font-semibold mt4 mb-2">Type</h2>
+        <div className="space-y-2">
+          {Types?.map((type, index) => (
+            <div key={index} className="flex items-center gap-2">
+              <Checkbox
+                checked={type === filters.type}
+                onCheckedChange={() => handleCheckboxClick("type", type)}
+              />
+              <span className="text-sm font-medium text-gray-500">{type}</span>
+            </div>
+          ))}
+        </div>
+        <h2 className="font-semibold mt4 mb-2">Capacity</h2>
+        <div className="space-y-2">
+          {Count?.map((count, index) => (
+            <div key={index} className="flex items-center gap-2">
+              <Checkbox
+                checked={count.toString() === filters.capacity}
+                onCheckedChange={() =>
+                  handleCheckboxClick("capacity", count.toString())
+                }
+              />
+              <span className="text-sm font-medium text-gray-500">{count}</span>
+            </div>
+          ))}
+        </div>
+        <h2 className="font-semibold mt4 mb-2">Available</h2>
+        <div className="flex items-center gap-2">
+          <Checkbox
+            checked={filters.available === "true"}
+            onCheckedChange={() => handleCheckboxClick("available", "true")}
+          />
+          <span className="text-sm font-medium text-gray-500">
+            Only show available rooms
+          </span>
+        </div>
       </CardContent>
     </Card>
   );
