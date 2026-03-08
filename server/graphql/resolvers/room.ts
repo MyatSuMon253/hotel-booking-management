@@ -11,8 +11,12 @@ export const roomResolvers = {
   Query: {
     getAllRooms: async (
       _: any,
-      { query, filters }: { query: string; filters: RoomFilters },
-    ) => await getAllRooms(query, filters),
+      {
+        query,
+        filters,
+        page,
+      }: { query: string; filters: RoomFilters; page: number },
+    ) => await getAllRooms(query, filters, page),
     getRoomById: async (_: any, { roomId }: { roomId: string }) =>
       await getRoomById(roomId),
   },

@@ -40,6 +40,13 @@ class APIFilters {
     this.model = this.model.find(JSON.parse(filterToString));
     return this;
   }
+
+  pagination(page: string | number, perPage: number) {
+    const currentPage = Number(page);
+    const skipCount = perPage * (currentPage - 1);
+
+    this.model = this.model.limit(perPage).skip(skipCount);
+  }
 }
 
 export default APIFilters;

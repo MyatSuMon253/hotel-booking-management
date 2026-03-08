@@ -46,7 +46,7 @@ const Header = () => {
   return (
     <nav className="flex items-center justify-between layout py-10">
       <Link to="/" className="text-4xl font-extrabold">
-        Bagan Hotel
+        Rangoon Heritage
       </Link>
       <div className="space-x-4">
         {loading && <span>...</span>}

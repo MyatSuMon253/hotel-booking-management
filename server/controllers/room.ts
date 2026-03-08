@@ -5,16 +5,21 @@ import { RoomFilters, Room as RoomType } from "../types/room";
 import { NotFoundError } from "../utils/not-found";
 
 export const getAllRooms = errorHandler(
-  async (query: string, filters: RoomFilters) => {
+  async (query: string, filters: RoomFilters, page: number) => {
+    const perPage = 5;
     const apiFilters = new APIFilters(Room).search(query).filters(filters);
 
-    const rooms = await apiFilters.model;
+    let rooms = await apiFilters.model;
+    const totalRoomCount = rooms.length;
+
+    apiFilters.pagination(page, perPage);
+    rooms = await apiFilters.model.clone();
 
     if (!rooms) {
       throw new NotFoundError("Rooms not found");
     }
 
-    return rooms;
+    return { rooms, pagination: { totalRoomCount, perPage } };
   },
 );
 
