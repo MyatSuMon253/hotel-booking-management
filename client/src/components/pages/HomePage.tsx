@@ -1,9 +1,11 @@
 import { GET_ALL_ROOMS } from "@/graphql/queries/room";
 import type { Room } from "@/types/room";
 import { useQuery } from "@apollo/client";
+import { useSearchParams } from "react-router";
+
 import RoomCard from "../home/RoomCard";
 import Filters from "../common/filters";
-import { useSearchParams } from "react-router";
+import Pagination from "../common/Pagination";
 
 const HomePage = () => {
   const [searchParams] = useSearchParams();
@@ -12,16 +14,17 @@ const HomePage = () => {
   const type = searchParams.get("type");
   const capacity = searchParams.get("capacity");
   const isAvailable = searchParams.get("available");
+  const page = parseInt(searchParams.get("page") || "1", 10);
 
   const filters = {
     ...(location && { location }),
     ...(type && { type }),
-    ...(capacity && { capacity }),
+    ...(capacity && { capacity: parseInt(capacity) }),
     ...(isAvailable !== null && { isAvailable: isAvailable === "true" }),
   };
 
   console.log(filters);
-  const variables = { query, filters };
+  const variables = { query, filters, page };
   const { data, loading, error } = useQuery(GET_ALL_ROOMS, { variables });
 
   return (
@@ -44,6 +47,10 @@ const HomePage = () => {
             </section>
           )}
         </div>
+        <Pagination
+          totalRoomCount={data?.getAllRooms?.pagination?.totalRoomCount}
+          perPage={data?.getAllRooms?.pagination?.perPage}
+        />
       </div>
     </main>
   );

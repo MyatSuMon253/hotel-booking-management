@@ -6,12 +6,13 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { Input } from "../ui/input";
 import { LucideSearch, LucideX } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router";
+
 import { updateSearchParams } from "@/lib/helpers";
 import { Count, Locations, Types } from "@/lib/filterData";
 import { Checkbox } from "../ui/checkbox";
+import { Input } from "../ui/input";
 
 const Filters = () => {
   const navigate = useNavigate();
