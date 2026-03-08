@@ -23,9 +23,8 @@ const HomePage = () => {
     ...(isAvailable !== null && { isAvailable: isAvailable === "true" }),
   };
 
-  console.log(filters);
   const variables = { query, filters, page };
-  const { data, loading, error } = useQuery(GET_ALL_ROOMS, { variables });
+  const { data, loading } = useQuery(GET_ALL_ROOMS, { variables });
 
   return (
     <main className="layout grid grid-cols-4 gap-6">
@@ -46,11 +45,17 @@ const HomePage = () => {
               ))}
             </section>
           )}
+          {data?.getAllRooms?.rooms?.length === 0 && (
+            <h3 className="text-4xl">Room Not Found</h3>
+          )}
         </div>
-        <Pagination
-          totalRoomCount={data?.getAllRooms?.pagination?.totalRoomCount}
-          perPage={data?.getAllRooms?.pagination?.perPage}
-        />
+        {data?.getAllRooms?.pagination?.totalRoomCount >
+          data?.getAllRooms?.pagination?.perPage && (
+          <Pagination
+            totalRoomCount={data?.getAllRooms?.pagination?.totalRoomCount}
+            perPage={data?.getAllRooms?.pagination?.perPage}
+          />
+        )}
       </div>
     </main>
   );

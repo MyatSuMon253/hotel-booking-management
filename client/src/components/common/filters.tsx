@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "../ui/card";
 import { LucideSearch, LucideX } from "lucide-react";
-import { useNavigate, useSearchParams } from "react-router";
+import { useLocation, useNavigate, useSearchParams } from "react-router";
 
 import { updateSearchParams } from "@/lib/helpers";
 import { Count, Locations, Types } from "@/lib/filterData";
@@ -17,6 +17,7 @@ import { Input } from "../ui/input";
 const Filters = () => {
   const navigate = useNavigate();
   let [searchParams] = useSearchParams();
+  const location = useLocation();
   const [searchKey, setSearchKey] = useState<string>("");
 
   const [filters, setFilters] = useState({
@@ -40,9 +41,6 @@ const Filters = () => {
 
   const handleClear = () => {
     setSearchKey("");
-    searchParams.delete("filter");
-    const url = `${window.location.pathname}?${searchParams.toString()}`;
-    navigate(url);
   };
 
   const updateURL = (filters: any) => {
@@ -54,7 +52,7 @@ const Filters = () => {
       }
 
       const url = `${window.location.pathname}?${searchParams.toString()}`;
-      navigate(url)
+      navigate(url);
     });
   };
 
@@ -69,6 +67,25 @@ const Filters = () => {
       return updatedFilters;
     });
   };
+
+  useEffect(() => {
+    if (searchKey.trim().length === 0) {
+      searchParams.delete("filter");
+      const url = `${window.location.pathname}?${searchParams.toString()}`;
+      navigate(url);
+    }
+  }, [searchKey]);
+
+  useEffect(() => {
+    if (location.pathname === "/" && !location.search) {
+      setFilters({
+        location: null,
+        type: null,
+        capacity: null,
+        available: null,
+      });
+    }
+  }, [location]);
 
   return (
     <Card className="col-span-1 h-fit">
