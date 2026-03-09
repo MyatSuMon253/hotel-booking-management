@@ -1,3 +1,5 @@
+import { format } from "date-fns";
+
 export const updateSearchParams = (
   searchParams: URLSearchParams,
   key: string,
@@ -10,4 +12,12 @@ export const updateSearchParams = (
   }
 
   return searchParams;
+};
+
+export const formatDate = (date: Date | string) => {
+  if (typeof date === "string") {
+    date = new Date(parseInt(date));
+  }
+
+  return format(date, "yyyy, MM-dd");
 };
