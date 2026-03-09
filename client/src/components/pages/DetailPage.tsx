@@ -14,6 +14,7 @@ import { useParams } from "react-router";
 import Loader from "../common/Loader";
 import NotFound from "../common/NotFound";
 import BookingForm from "../booking/BookingForm";
+import { Badge } from "../ui/badge";
 
 const DetailPage = () => {
   const params = useParams<{ id: string }>();
@@ -26,19 +27,19 @@ const DetailPage = () => {
 
   const items = room
     ? [
-      {
-        value: room.capacity,
-        icon: <Users className="w-5 h-5" />,
-      },
-      {
-        value: room.type,
-        icon: <House className="w-5 h-5" />,
-      },
-      {
-        value: room.location,
-        icon: <MapPin className="w-5 h-5" />,
-      },
-    ]
+        {
+          value: room.capacity,
+          icon: <Users className="w-5 h-5" />,
+        },
+        {
+          value: room.type,
+          icon: <House className="w-5 h-5" />,
+        },
+        {
+          value: room.location,
+          icon: <MapPin className="w-5 h-5" />,
+        },
+      ]
     : [];
 
   if (error?.graphQLErrors[0].extensions?.code === "NOT_FOUND") {
@@ -102,20 +103,14 @@ const DetailPage = () => {
               <p className="mt-4 text-yellow-900 font-medium text-sm">
                 Reviews ({room?.reviews.length})
               </p>
-              <Reviews
-                roomId={room?.id!}
-                reviews={room?.reviews!}
-                canReview={data?.canReview}
-                refetch={refetch}
-              />
             </div>
           </div>
           <div className=" col-span-3">
             {room?.isAvailable && (
               <BookingForm
                 rentPerDay={room?.pricePerNight!}
-                roomId={room?.id!}
-                disabledDates={disabledDates}
+                // roomId={room?.id!}
+                // disabledDates={disabledDates}
               />
             )}
           </div>

@@ -65,7 +65,7 @@ const RangeCalendar = ({
     onDateChange(newDate)
   }
 
-  const parsedDisabledDates = []
+  // const parsedDisabledDates = []
 
   return (
     <div>
@@ -101,18 +101,18 @@ const RangeCalendar = ({
             selected={currentDate}
             onSelect={handleDateChange}
             numberOfMonths={2}
-            disabled={[
-              ...parsedDisabledDates,
-              isDisabled && { before: new Date() },
-            ]}
+            // disabled={[
+            //   ...parsedDisabledDates,
+            //   isDisabled && { before: new Date() },
+            // ]}
           />
         </PopoverContent>
       </Popover>
-      {!isAvailable && (
+      {/* {!isAvailable && (
         <div className="text-sm font-medium bg-red-200 text-red-600 py-2 px-4 mt-2 rounded-md">
           Dates are already booked by others.
         </div>
-      )}
+      )} */}
     </div>
   );
 };

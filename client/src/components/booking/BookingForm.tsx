@@ -2,7 +2,7 @@ import { userInfoVar } from "@/apollo/apollo-vars";
 import { bookingFormSchema } from "@/schema/booking";
 import { useReactiveVar } from "@apollo/client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
@@ -26,13 +26,19 @@ import type z from "zod";
 import RangeCalendar from "./RangeCalendar";
 import { Textarea } from "../ui/textarea";
 import type { DateRange } from "react-day-picker";
+import { calculateAmount, getDaysOfRent } from "@/lib/helpers";
 
 interface BookingFormProps {
-  dates: DateRange | undefined;
+  dates?: DateRange | undefined;
   disabledDates?: string[];
+  rentPerDay?: number;
 }
 
-const BookingForm = ({dates, disabledDates}:BookingFormProps) => {
+const BookingForm = ({
+  dates,
+  disabledDates,
+  rentPerDay = 0,
+}: BookingFormProps) => {
   const user = useReactiveVar(userInfoVar);
   const navigate = useNavigate();
 
@@ -51,6 +57,23 @@ const BookingForm = ({dates, disabledDates}:BookingFormProps) => {
 
   const dateRange = form.watch("dateRange");
 
+  const [daysOfRent, setDaysOfRent] = useState(0);
+  const [amount, setAmount] = useState({
+    rent: 0,
+    tax: 0,
+    discount: 0,
+    total: 0,
+  });
+
+  useEffect(() => {
+    const days = getDaysOfRent(dateRange);
+    setDaysOfRent(days);
+  }, [dateRange]);
+
+  useEffect(() => {
+    setAmount(calculateAmount(rentPerDay, daysOfRent));
+  }, [daysOfRent, rentPerDay]);
+
   useEffect(() => {
     if (user) {
       form.reset({
@@ -59,7 +82,7 @@ const BookingForm = ({dates, disabledDates}:BookingFormProps) => {
         email: user.email,
       });
     }
-  }, []);
+  }, [user]);
 
   const onSubmit = (values: z.infer<typeof bookingFormSchema>) => {
     // const { dateRange, name, email, additionalNote } = values;
@@ -112,7 +135,7 @@ const BookingForm = ({dates, disabledDates}:BookingFormProps) => {
                       dates={dates}
                       disabledDates={disabledDates}
                       onDateChange={field.onChange}
-                      onAvailabilityChange={setIsBookingAvailable}
+                      //   onAvailabilityChange={setIsBookingAvailable}
                     />
                   </FormControl>
                   <FormMessage />
@@ -168,7 +191,7 @@ const BookingForm = ({dates, disabledDates}:BookingFormProps) => {
               <Button
                 type="submit"
                 className="w-full"
-                disabled={loading || !isBookingAvailable || daysOfRent <= 0}
+                // disabled={loading || !isBookingAvailable || daysOfRent <= 0}
               >
                 Place Booking
               </Button>
