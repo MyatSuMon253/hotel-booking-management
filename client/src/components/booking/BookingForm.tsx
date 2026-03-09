@@ -1,6 +1,6 @@
 import { userInfoVar } from "@/apollo/apollo-vars";
 import { bookingFormSchema } from "@/schema/booking";
-import { useReactiveVar } from "@apollo/client";
+import { useMutation, useReactiveVar } from "@apollo/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -26,18 +26,22 @@ import type z from "zod";
 import RangeCalendar from "./RangeCalendar";
 import { Textarea } from "../ui/textarea";
 import type { DateRange } from "react-day-picker";
-import { calculateAmount, getDaysOfRent } from "@/lib/helpers";
+import { adjustTimeZone, calculateAmount, getDaysOfRent } from "@/lib/helpers";
+import { toast } from "sonner";
+import { CREATE_BOOKING_MUTATION } from "@/graphql/mutations/booking";
 
 interface BookingFormProps {
   dates?: DateRange | undefined;
   disabledDates?: string[];
   rentPerDay?: number;
+  roomId: string;
 }
 
 const BookingForm = ({
   dates,
   disabledDates,
   rentPerDay = 0,
+  roomId,
 }: BookingFormProps) => {
   const user = useReactiveVar(userInfoVar);
   const navigate = useNavigate();
@@ -84,9 +88,42 @@ const BookingForm = ({
     }
   }, [user]);
 
-  const onSubmit = (values: z.infer<typeof bookingFormSchema>) => {
-    // const { dateRange, name, email, additionalNote } = values;
-    console.log(values);
+  const [createBooking, { loading }] = useMutation(CREATE_BOOKING_MUTATION, {
+    onCompleted() {
+      toast.success("Booking successful.");
+    },
+  });
+
+  const onSubmit = async (values: z.infer<typeof bookingFormSchema>) => {
+    const { dateRange, name, email, additionalNote } = values;
+
+    if (!dateRange.from || !dateRange.to || daysOfRent <= 0) {
+      return toast.error("Please select booking dates");
+    }
+
+    const customer = {
+      name,
+      email,
+    };
+
+    const newBookingData = {
+      amount,
+      customer,
+      daysOfRent,
+      rentPerDay,
+      room: roomId,
+      startDate: adjustTimeZone(dateRange.from),
+      endDate: adjustTimeZone(dateRange.to),
+      additionalNote,
+    };
+
+    const { data } = await createBooking({
+      variables: { bookingInput: newBookingData },
+    });
+
+    if (data) {
+      return navigate(`/bookings/${data?.createNewBooking?.id}/payment`);
+    }
   };
 
   return (
@@ -177,7 +214,7 @@ const BookingForm = ({
                   <span className="font-medium"> {amount.rent.toFixed(2)}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span>Tax (10%):</span>
+                  <span>Tax (5%):</span>
                   <span className="font-medium"> {amount.tax.toFixed(2)}</span>
                 </div>
                 <hr />
@@ -191,7 +228,7 @@ const BookingForm = ({
               <Button
                 type="submit"
                 className="w-full"
-                // disabled={loading || !isBookingAvailable || daysOfRent <= 0}
+                disabled={loading || daysOfRent <= 0}
               >
                 Place Booking
               </Button>

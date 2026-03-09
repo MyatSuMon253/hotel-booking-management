@@ -47,3 +47,13 @@ export const getDaysOfRent = (range?: DateRange | undefined) => {
 
   return differenceInDays(to, from);
 };
+
+export const adjustTimeZone = (date: Date | undefined) => {
+  if (!date) return null;
+
+  const localDate = new Date(date);
+
+  localDate.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+
+  return localDate;
+};

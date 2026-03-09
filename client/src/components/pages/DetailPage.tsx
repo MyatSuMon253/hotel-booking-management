@@ -109,7 +109,7 @@ const DetailPage = () => {
             {room?.isAvailable && (
               <BookingForm
                 rentPerDay={room?.pricePerNight!}
-                // roomId={room?.id!}
+                roomId={room?.id!}
                 // disabledDates={disabledDates}
               />
             )}
