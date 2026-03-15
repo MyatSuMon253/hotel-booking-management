@@ -7,3 +7,12 @@ export const CREATE_BOOKING_MUTATION = gql`
     }
   }
 `;
+
+export const UPDATE_BOOKING_PAYMENT = gql`
+  mutation UpdateBookingPayment(
+    $bookingId: String!
+    $bookingInput: updateBookingPaymentInput!
+  ) {
+    updateBookingPayment(bookingId: $bookingId, bookingInput: $bookingInput)
+  }
+`;

@@ -16,6 +16,7 @@ import "./index.css";
 import ResetPasswordPage from "./components/pages/ResetPasswordPage.tsx";
 import ForgetPassword from "./components/profile/ForgetPassword.tsx";
 import ForgetPasswordPage from "./components/pages/ForgetPasswordPage.tsx";
+import PaymentPage from "./components/pages/payment.tsx";
 
 const router = createBrowserRouter([
   {
@@ -27,7 +28,7 @@ const router = createBrowserRouter([
         element: <HomePage />,
       },
       {
-        path: "/room/:id",
+        path: "/rooms/:id",
         element: <DetailPage />,
       },
       {
@@ -58,6 +59,14 @@ const router = createBrowserRouter([
       {
         path: "/reset-password/:token",
         element: <ResetPasswordPage />,
+      },
+      {
+        path: "/bookings/:id/payment",
+        element: (
+          <ProtectPage>
+            <PaymentPage />
+          </ProtectPage>
+        ),
       },
     ],
   },
