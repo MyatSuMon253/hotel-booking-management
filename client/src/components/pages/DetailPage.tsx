@@ -6,7 +6,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { GET_ROOM_BY_ID } from "@/graphql/queries/room";
+import { GET_ROOM_BY_ID, GET_SINGLE_ROOM } from "@/graphql/queries/room";
 import type { Room } from "@/types/room";
 import { useQuery } from "@apollo/client";
 import { BadgeCheck, CircleX, Hash, House, MapPin, Users } from "lucide-react";
@@ -19,11 +19,13 @@ import { Badge } from "../ui/badge";
 const DetailPage = () => {
   const params = useParams<{ id: string }>();
 
-  const { data, loading, error } = useQuery(GET_ROOM_BY_ID, {
-    variables: { roomId: params.id },
+  const { data, loading, error } = useQuery(GET_SINGLE_ROOM, {
+    variables: { roomId: params.id, getBookedDatesByIdRoomId2: params.id },
   });
 
   const room: Room | undefined = data?.getRoomById;
+
+  const disabledDates = data?.getBookedDatesById;
 
   const items = room
     ? [
@@ -100,9 +102,9 @@ const DetailPage = () => {
                   </div>
                 ))}
               </div>
-              <p className="mt-4 text-yellow-900 font-medium text-sm">
+              {/* <p className="mt-4 text-yellow-900 font-medium text-sm">
                 Reviews ({room?.reviews.length})
-              </p>
+              </p> */}
             </div>
           </div>
           <div className=" col-span-3">
@@ -110,7 +112,7 @@ const DetailPage = () => {
               <BookingForm
                 rentPerDay={room?.pricePerNight!}
                 roomId={room?.id!}
-                // disabledDates={disabledDates}
+                disabledDates={disabledDates} 
               />
             )}
           </div>

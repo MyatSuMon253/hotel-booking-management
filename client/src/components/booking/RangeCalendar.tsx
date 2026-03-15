@@ -28,6 +28,8 @@ const RangeCalendar = ({
   isDisabled,
 }: RangeCalendarProps) => {
   const [searchParams] = useSearchParams();
+  const [isAvailable, setIsAvailable] = useState(true);
+
   const startDate = searchParams.get("startDate");
   const endDate = searchParams.get("endDate");
 
@@ -55,17 +57,54 @@ const RangeCalendar = ({
     }
   }, [isControlled, dates]);
 
-  const currentDate = isControlled?  dates: internalDate;
+  const currentDate = isControlled ? dates : internalDate;
 
   const handleDateChange = (newDate: DateRange | undefined) => {
     if (!isControlled) {
-        setInternalDate(newDate)
+      setInternalDate(newDate);
     }
 
-    onDateChange(newDate)
-  }
+    if (!newDate?.from || !newDate?.to) {
+      setInternalDate(newDate);
+      onAvailabilityChange?.(true);
+      onDateChange(newDate);
+      return;
+    }
 
-  // const parsedDisabledDates = []
+    if (hasDisabledDatesInRange(newDate)) {
+      toast.error("Dates are already booked by others.");
+      setIsAvailable(false);
+      onAvailabilityChange?.(false);
+      return;
+    }
+
+    setIsAvailable(true);
+    onAvailabilityChange?.(true);
+    setInternalDate(newDate);
+    onDateChange(newDate);
+  };
+
+  const parsedDisabledDates =
+    disabledDates?.map((timestamp) => new Date(parseInt(timestamp))) || [];
+
+  const isDisabledDate = (date: Date) => {
+    return parsedDisabledDates.some((disabledDate) =>
+      isSameDay(disabledDate, date),
+    );
+  };
+
+  const hasDisabledDatesInRange = (range?: DateRange) => {
+    if (!range?.from || !range?.to) return false;
+
+    let startDate = new Date(range.from);
+
+    while (startDate <= range.to) {
+      if (isDisabledDate(startDate)) return true;
+      startDate = addDays(startDate, 1);
+    }
+
+    return false;
+  };
 
   return (
     <div>
@@ -101,18 +140,15 @@ const RangeCalendar = ({
             selected={currentDate}
             onSelect={handleDateChange}
             numberOfMonths={2}
-            // disabled={[
-            //   ...parsedDisabledDates,
-            //   isDisabled && { before: new Date() },
-            // ]}
+            disabled={[...parsedDisabledDates, { before: new Date() }]}
           />
         </PopoverContent>
       </Popover>
-      {/* {!isAvailable && (
+      {!isAvailable && (
         <div className="text-sm font-medium bg-red-200 text-red-600 py-2 px-4 mt-2 rounded-md">
           Dates are already booked by others.
         </div>
-      )} */}
+      )}
     </div>
   );
 };

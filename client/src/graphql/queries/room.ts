@@ -24,23 +24,47 @@ export const GET_ALL_ROOMS = gql`
   }
 `;
 
-export const GET_ROOM_BY_ID = gql`
-  query GetRoomById($roomId: String!) {
+export const GET_SINGLE_ROOM = gql`
+  query Query(
+    $roomId: String!
+    $getBookedDatesByIdRoomId2: String!
+  ) {
     getRoomById(roomId: $roomId) {
-      id
-      title
-      description
-      roomNumber
-      type
-      pricePerNight
       capacity
+      description
+      id
+      type
+      images {
+        public_id
+        url
+      }
+      isAvailable
+      location
+      pricePerNight
+      roomNumber
+      title
+      type
+    }
+    getBookedDatesById(roomId: $getBookedDatesByIdRoomId2)
+  }
+`;
+
+export const GET_ROOM_BY_ID = gql`
+  query Query($roomId: String!) {
+    getRoomById(roomId: $roomId) {
+      title
+      type
+      roomNumber
+      pricePerNight
       location
       isAvailable
       images {
         url
         public_id
       }
-      reviews
+      id
+      description
+      capacity
     }
   }
 `;

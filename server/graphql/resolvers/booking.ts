@@ -1,6 +1,7 @@
 import { BookingInput } from "types/booking";
 import {
   createNewBooking,
+  getBookedDatesById,
   getBookingById,
   updateBookingPayment,
 } from "../../controllers/booking";
@@ -13,6 +14,8 @@ export const bookingResolvers = {
       { bookingId }: { bookingId: string },
       { user }: { user: IUser },
     ) => getBookingById(bookingId, user),
+    getBookedDatesById: async (_: any, { roomId }: { roomId: string }) =>
+      getBookedDatesById(roomId),
   },
   Mutation: {
     createNewBooking: async (

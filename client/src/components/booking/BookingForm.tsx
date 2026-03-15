@@ -46,6 +46,8 @@ const BookingForm = ({
   const user = useReactiveVar(userInfoVar);
   const navigate = useNavigate();
 
+  const [isBookingAvailable, setIsBookingAvailable] = useState(true);
+
   const form = useForm<z.infer<typeof bookingFormSchema>>({
     resolver: zodResolver(bookingFormSchema),
     defaultValues: {
@@ -172,7 +174,7 @@ const BookingForm = ({
                       dates={dates}
                       disabledDates={disabledDates}
                       onDateChange={field.onChange}
-                      //   onAvailabilityChange={setIsBookingAvailable}
+                      onAvailabilityChange={setIsBookingAvailable}
                     />
                   </FormControl>
                   <FormMessage />
@@ -228,7 +230,7 @@ const BookingForm = ({
               <Button
                 type="submit"
                 className="w-full"
-                disabled={loading || daysOfRent <= 0}
+                disabled={loading || !isBookingAvailable || daysOfRent <= 0}
               >
                 Place Booking
               </Button>

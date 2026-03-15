@@ -69,11 +69,12 @@ export const bookingTypeDefs = gql`
   }
 
   input updateBookingPaymentInput {
-    paymentInfo: PaymentInfoInput
+    paymentInfo: PaymentInfoInput 
   }
 
   type Query {
     getBookingById(bookingId: String!): Booking!
+    getBookedDatesById(roomId: String!): [String]!
   }
 
   type Mutation {

@@ -52,3 +52,26 @@ export const updateBookingPayment = errorHandler(
     return true;
   },
 );
+
+export const getBookedDatesById = errorHandler(async (roomId: string) => {
+  const bookings = await Booking.find({ room: roomId });
+
+  const bookedDates = bookings.flatMap((booking) => {
+    const startDate = new Date(booking.startDate);
+    const endDate = new Date(booking.endDate);
+
+    const dates = [];
+
+    for (
+      let date = new Date(startDate);
+      date <= endDate;
+      date.setDate(date.getDate() + 1)
+    ) {
+      dates.push(new Date(date));
+    }
+
+    return dates;
+  });
+
+  return bookedDates;
+});
