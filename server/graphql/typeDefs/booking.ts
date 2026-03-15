@@ -69,12 +69,24 @@ export const bookingTypeDefs = gql`
   }
 
   input updateBookingPaymentInput {
-    paymentInfo: PaymentInfoInput 
+    paymentInfo: PaymentInfoInput
+  }
+
+  type BookingMeta {
+    totalBookings: Int!
+    unpaidBookings: Int!
+    needToPay: Float!
+  }
+
+  type BookingListResponse {
+    bookings: [Booking!]!
+    meta: BookingMeta!
   }
 
   type Query {
     getBookingById(bookingId: String!): Booking!
     getBookedDatesById(roomId: String!): [String]!
+    getBookingByUser: BookingListResponse!
   }
 
   type Mutation {

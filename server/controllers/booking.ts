@@ -75,3 +75,28 @@ export const getBookedDatesById = errorHandler(async (roomId: string) => {
 
   return bookedDates;
 });
+
+export const getBookingByUser = errorHandler(async (userId: string) => {
+  const bookings = await Booking.find({ user: userId })
+    .populate("room")
+    .sort({ createdAt: -1 });
+
+  const totalBookings = bookings.length;
+
+  const unpaidBookings = bookings.filter(
+    (booking) => booking.paymentInfo?.status !== "paid",
+  );
+
+  const needToPay = unpaidBookings.reduce((sum, booking) => {
+    return sum + (booking?.amount?.total || 0);
+  }, 0);
+
+  return {
+    bookings,
+    meta: {
+      totalBookings,
+      unpaidBookings: unpaidBookings.length,
+      needToPay,
+    },
+  };
+});
