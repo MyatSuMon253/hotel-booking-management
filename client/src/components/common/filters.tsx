@@ -131,20 +131,6 @@ const Filters = () => {
             </div>
           ))}
         </div>
-        <h2 className="font-semibold mt4 mb-2">Capacity</h2>
-        <div className="space-y-2">
-          {Count?.map((count, index) => (
-            <div key={index} className="flex items-center gap-2">
-              <Checkbox
-                checked={count.toString() === filters.capacity}
-                onCheckedChange={() =>
-                  handleCheckboxClick("capacity", count.toString())
-                }
-              />
-              <span className="text-sm font-medium text-gray-500">{count}</span>
-            </div>
-          ))}
-        </div>
         <h2 className="font-semibold mt4 mb-2">Available</h2>
         <div className="flex items-center gap-2">
           <Checkbox

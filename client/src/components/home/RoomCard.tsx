@@ -38,7 +38,12 @@ const RoomCard = ({ room }: RoomCardProps) => {
           {room.reviews.length} reviews
         </span>
       </div>
-      <p className="font-bold text-xl">$ {room.pricePerNight}</p>
+      <p className="font-bold text-xl">
+        $ {room.pricePerNight}/{" "}
+        <span className="text-sm font-medium text-muted-foreground">
+          per night
+        </span>
+      </p>
     </Link>
   );
 };
