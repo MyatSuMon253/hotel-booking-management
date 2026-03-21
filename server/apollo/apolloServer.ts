@@ -13,14 +13,26 @@ import { userTypeDefs } from "../graphql/typeDefs/user";
 import { User } from "../models/user";
 import { bookingTypeDefs } from "../graphql/typeDefs/booking";
 import { bookingResolvers } from "../graphql/resolvers/booking";
+import { paymentTypeDefs } from "graphql/typeDefs/payment";
+import { paymentResolver } from "graphql/resolvers/payment";
 
 type JwtPayload = {
   _id: string;
 };
 
 export const startApolloServer = async (app: Application) => {
-  const typeDefs = [roomTypeDefs, userTypeDefs, bookingTypeDefs];
-  const resolvers = [roomResolvers, userResolvers, bookingResolvers];
+  const typeDefs = [
+    roomTypeDefs,
+    userTypeDefs,
+    bookingTypeDefs,
+    paymentTypeDefs,
+  ];
+  const resolvers = [
+    roomResolvers,
+    userResolvers,
+    bookingResolvers,
+    paymentResolver,
+  ];
 
   const schema = makeExecutableSchema({
     typeDefs,
