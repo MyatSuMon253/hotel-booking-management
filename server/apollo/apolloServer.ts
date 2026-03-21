@@ -15,6 +15,7 @@ import { bookingTypeDefs } from "../graphql/typeDefs/booking";
 import { bookingResolvers } from "../graphql/resolvers/booking";
 import { paymentTypeDefs } from "graphql/typeDefs/payment";
 import { paymentResolver } from "graphql/resolvers/payment";
+import { webhookHandler } from "controllers/payment";
 
 type JwtPayload = {
   _id: string;
@@ -76,4 +77,23 @@ export const startApolloServer = async (app: Application) => {
       },
     }),
   );
+
+  app.post("/api/payment/webhook", async (req: Request, res: Response) => {
+    const signature = req.headers["stripe-signature"];
+    const rawBody = req.rawBody;
+
+    const isSucces = await webhookHandler(signature, rawBody);
+    if (isSucces) {
+      res
+        .status(200)
+        .json({
+          success: true,
+          message: "Webhook received and processed successfully.",
+        });
+    } else {
+      res
+        .status(400)
+        .json({ success: false, message: "Webhook processing failed." });
+    }
+  });
 };

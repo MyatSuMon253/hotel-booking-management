@@ -3,6 +3,7 @@ import { Booking } from "models/booking";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
 export const stripeCheckoutSession = errorHandler(async (bookingId: string) => {
   const booking = await Booking.findById(bookingId).populate("room");
@@ -36,3 +37,32 @@ export const stripeCheckoutSession = errorHandler(async (bookingId: string) => {
 
   return { url: session.url };
 });
+
+export const webhookHandler = errorHandler(
+  async (signature: string, rawBody: string) => {
+    try {
+      const event = stripe.webhooks.constructEvent(
+        rawBody,
+        signature,
+        endpointSecret,
+      );
+
+      if (event.type === "checkout.session.completed") {
+        const session = event.data.object as Stripe.Checkout.Session;
+        const bookingId = session.client_reference_id;
+
+        const paymentInfo = {
+          id: session.payment_intent,
+          status: session.payment_status,
+          method: session.payment_method_types[0],
+        };
+
+        await Booking.findByIdAndUpdate(bookingId, paymentInfo);
+
+        return true;
+      }
+    } catch (error: any) {
+      throw new Error(`Webhook Error: ${error?.message}`);
+    }
+  },
+);
