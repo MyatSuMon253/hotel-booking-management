@@ -13,9 +13,9 @@ import { userTypeDefs } from "../graphql/typeDefs/user";
 import { User } from "../models/user";
 import { bookingTypeDefs } from "../graphql/typeDefs/booking";
 import { bookingResolvers } from "../graphql/resolvers/booking";
-import { paymentTypeDefs } from "graphql/typeDefs/payment";
-import { paymentResolver } from "graphql/resolvers/payment";
-import { webhookHandler } from "controllers/payment";
+import { paymentTypeDefs } from "../graphql/typeDefs/payment";
+import { paymentResolver } from "../graphql/resolvers/payment";
+import { webhookHandler } from "../controllers/payment";
 
 type JwtPayload = {
   _id: string;
@@ -84,12 +84,10 @@ export const startApolloServer = async (app: Application) => {
 
     const isSucces = await webhookHandler(signature, rawBody);
     if (isSucces) {
-      res
-        .status(200)
-        .json({
-          success: true,
-          message: "Webhook received and processed successfully.",
-        });
+      res.status(200).json({
+        success: true,
+        message: "Webhook received and processed successfully.",
+      });
     } else {
       res
         .status(400)

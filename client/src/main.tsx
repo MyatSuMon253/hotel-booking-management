@@ -14,9 +14,8 @@ import ProtectPage from "./components/pages/ProtectPage.tsx";
 import RegisterPage from "./components/pages/RegisterPage.tsx";
 import "./index.css";
 import ResetPasswordPage from "./components/pages/ResetPasswordPage.tsx";
-import ForgetPassword from "./components/profile/ForgetPassword.tsx";
 import ForgetPasswordPage from "./components/pages/ForgetPasswordPage.tsx";
-import PaymentPage from "./components/pages/payment.tsx";
+import PaymentPage from "./components/pages/Payment.tsx";
 import Bookings from "./components/pages/Bookings.tsx";
 
 const router = createBrowserRouter([

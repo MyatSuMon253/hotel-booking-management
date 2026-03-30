@@ -1,5 +1,5 @@
-import errorHandler from "middlewares/errorHandler";
-import { Booking } from "models/booking";
+import errorHandler from "../middlewares/errorHandler";
+import { Booking } from "../models/booking";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
@@ -48,16 +48,18 @@ export const webhookHandler = errorHandler(
       );
 
       if (event.type === "checkout.session.completed") {
+        console.log(event.data.object)
+
         const session = event.data.object as Stripe.Checkout.Session;
         const bookingId = session.client_reference_id;
 
         const paymentInfo = {
           id: session.payment_intent,
-          status: session.payment_status,
+          status: session.payment_status || 'paid',
           method: session.payment_method_types[0],
         };
 
-        await Booking.findByIdAndUpdate(bookingId, paymentInfo);
+        await Booking.findByIdAndUpdate(bookingId, { paymentInfo });
 
         return true;
       }
