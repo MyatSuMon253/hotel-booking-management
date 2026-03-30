@@ -17,6 +17,7 @@ import ResetPasswordPage from "./components/pages/ResetPasswordPage.tsx";
 import ForgetPasswordPage from "./components/pages/ForgetPasswordPage.tsx";
 import PaymentPage from "./components/pages/Payment.tsx";
 import Bookings from "./components/pages/Bookings.tsx";
+import InvoiceApp from "./components/invoice/Invoice.tsx";
 
 const router = createBrowserRouter([
   {
@@ -73,6 +74,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectPage>
             <Bookings />
+          </ProtectPage>
+        ),
+      },
+      {
+        path: "/invoice/:id",
+        element: (
+          <ProtectPage>
+            <InvoiceApp />
           </ProtectPage>
         ),
       },

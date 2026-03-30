@@ -1,2 +1,2 @@
 1. stripe login 
-2. stripe listen --events checkout.session.completed --forward-to localhost:8080/api/payment/webhook
+2. stripe listen --events checkout.session.completed --forward-to localhost:4444/api/payment/webhook
