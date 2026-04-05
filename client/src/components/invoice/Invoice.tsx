@@ -4,8 +4,8 @@ import { Printer, Calendar, Bed } from "lucide-react";
 import { useParams } from "react-router";
 import Loader from "../common/Loader";
 import NotFound from "../common/NotFound";
-// import html2canvas from "html2canvas-pro";
-// import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas-pro";
+import { jsPDF } from "jspdf";
 
 const InvoiceApp = () => {
   const params = useParams();
@@ -65,22 +65,22 @@ const InvoiceApp = () => {
     // Add a temp class for cleaner export
     input.classList.add("exporting");
 
-    // html2canvas(input, {
-    //   backgroundColor: "#ffffff", // force white
-    //   scale: 2, // sharper PDF
-    // }).then((canvas) => {
-    //   input.classList.remove("exporting");
+    html2canvas(input, {
+      backgroundColor: "#ffffff", // force white
+      scale: 2, // sharper PDF
+    }).then((canvas) => {
+      input.classList.remove("exporting");
 
-    //   const imgData = canvas.toDataURL("image/png");
-    //   const pdf = new jsPDF("p", "mm", "a4");
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
 
-    //   const pageWidth = pdf.internal.pageSize.getWidth();
-    //   const imgWidth = pageWidth;
-    //   const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const imgWidth = pageWidth;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-    //   pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-    //   pdf.save(`golden-compass-invoice-${booking.id}.pdf`);
-    // });
+      pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+      pdf.save(`rangoon-heritage-invoice-${booking.id}.pdf`);
+    });
   };
 
   return (
