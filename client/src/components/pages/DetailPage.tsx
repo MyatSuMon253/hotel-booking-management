@@ -1,4 +1,8 @@
-// import { GET_SINGLE_ROOM } from "@/graphql/queries/room";
+import { GET_SINGLE_ROOM } from "@/graphql/queries/room";
+import { useQuery } from "@apollo/client";
+import { AirVent, MapPin, Soup, WavesLadder, Wifi } from "lucide-react";
+import { useParams } from "react-router";
+
 import {
   Carousel,
   CarouselContent,
@@ -6,22 +10,24 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { GET_ROOM_BY_ID, GET_SINGLE_ROOM } from "@/graphql/queries/room";
-import type { Room } from "@/types/room";
-import { useQuery } from "@apollo/client";
-import { BadgeCheck, CircleX, Hash, House, MapPin, Users } from "lucide-react";
-import { useParams } from "react-router";
 import Loader from "../common/Loader";
 import NotFound from "../common/NotFound";
 import BookingForm from "../booking/BookingForm";
 import { Badge } from "../ui/badge";
+import Reviews from "../review/reviews";
+import type { Room } from "@/types/room";
 
 const DetailPage = () => {
   const params = useParams<{ id: string }>();
 
-  const { data, loading, error } = useQuery(GET_SINGLE_ROOM, {
-    variables: { roomId: params.id, getBookedDatesByIdRoomId2: params.id },
+  const { data, loading, error, refetch } = useQuery(GET_SINGLE_ROOM, {
+    variables: {
+      roomId: params.id,
+      getBookedDatesByIdRoomId2: params.id,
+      reviewRoomId: params.id,
+    },
   });
+  console.log(data);
 
   const room: Room | undefined = data?.getRoomById;
 
@@ -30,16 +36,20 @@ const DetailPage = () => {
   const items = room
     ? [
         {
-          value: room.capacity,
-          icon: <Users className="w-5 h-5" />,
+          value: "Wifi",
+          icon: <Wifi />,
         },
         {
-          value: room.type,
-          icon: <House className="w-5 h-5" />,
+          value: "A/C",
+          icon: <AirVent />,
         },
         {
-          value: room.location,
-          icon: <MapPin className="w-5 h-5" />,
+          value: "Breakfast",
+          icon: <Soup />,
+        },
+        {
+          value: "Pool",
+          icon: <WavesLadder />,
         },
       ]
     : [];
@@ -102,9 +112,15 @@ const DetailPage = () => {
                   </div>
                 ))}
               </div>
-              {/* <p className="mt-4 text-yellow-900 font-medium text-sm">
-                Reviews ({room?.reviews.length})
-              </p> */}
+              <p className="mt-4 text-yellow-900 font-medium text-sm">
+                Reviews ({room?.reviews?.length || 0})
+              </p>
+              <Reviews
+                roomId={room?.id!}
+                reviews={room?.reviews!}
+                canReview={data?.canReview}
+                refetch={refetch}
+              />
             </div>
           </div>
           <div className=" col-span-3">

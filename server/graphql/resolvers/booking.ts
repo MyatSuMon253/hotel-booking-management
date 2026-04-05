@@ -1,4 +1,3 @@
-import { BookingInput } from "types/booking";
 import {
   createNewBooking,
   getBookedDatesById,
@@ -6,7 +5,8 @@ import {
   getBookingByUser,
   updateBookingPayment,
 } from "../../controllers/booking";
-import { IUser } from "types/user";
+import { BookingInput } from "../../types/booking";
+import { IUser } from "../../types/user";
 
 export const bookingResolvers = {
   Query: {
