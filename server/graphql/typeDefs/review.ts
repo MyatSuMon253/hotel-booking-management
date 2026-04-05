@@ -17,6 +17,10 @@ export const reviewTypeDefs = gql`
     roomId: ID!
   }
 
+  type Query {
+    canReview(reviewRoomId: ID!): Boolean
+  }
+
   type Mutation {
     createAndUpdateReview(reviewInput: reviewInput!): Review
   }
