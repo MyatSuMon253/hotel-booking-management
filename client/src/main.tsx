@@ -3,8 +3,8 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import { Toaster } from "sonner";
+
 import client from "./apollo/apolloClient.ts";
-import Layout from "./components/layout/layout.tsx";
 import DashboardPage from "./components/pages/DashboardPage.tsx";
 import DetailPage from "./components/pages/DetailPage.tsx";
 import HomePage from "./components/pages/HomePage.tsx";
@@ -18,6 +18,8 @@ import ForgetPasswordPage from "./components/pages/ForgetPasswordPage.tsx";
 import PaymentPage from "./components/pages/Payment.tsx";
 import Bookings from "./components/pages/Bookings.tsx";
 import InvoiceApp from "./components/invoice/Invoice.tsx";
+import Dashboard from "./components/admin/dashboard/Dashboard.tsx";
+import Layout from "./components/layout/Layout.tsx";
 
 const router = createBrowserRouter([
   {
@@ -47,6 +49,10 @@ const router = createBrowserRouter([
             <ProfilePage />
           </ProtectPage>
         ),
+      },
+      {
+        path: "/admin/dashboard",
+        element: <Dashboard />,
       },
       {
         path: "/dashboard",

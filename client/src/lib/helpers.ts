@@ -1,4 +1,5 @@
 import { differenceInDays, format } from "date-fns";
+import type { DateRange } from "react-day-picker";
 
 export const updateSearchParams = (
   searchParams: URLSearchParams,
@@ -56,4 +57,8 @@ export const adjustTimeZone = (date: Date | undefined) => {
   localDate.setMinutes(date.getMinutes() - date.getTimezoneOffset());
 
   return localDate;
+};
+
+export const formatAmount = (amount: number) => {
+  return new Intl.NumberFormat("en-US").format(amount);
 };

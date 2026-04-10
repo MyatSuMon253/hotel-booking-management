@@ -60,3 +60,19 @@ export const GET_BOOKING_BY_USER = gql`
     }
   }
 `;
+
+export const GET_DASHBOARD_META_DATA = gql`
+  query ExampleQuery($startDate: String!, $endDate: String!) {
+    getDashboardMetaData(startDate: $startDate, endDate: $endDate) {
+      sales {
+        date
+        sales
+        bookings
+      }
+      totalSales
+      totalBookings
+      totalPendingAmount
+      totalPaidCashAmount
+    }
+  }
+`;
