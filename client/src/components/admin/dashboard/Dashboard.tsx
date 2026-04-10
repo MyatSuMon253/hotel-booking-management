@@ -5,7 +5,8 @@ import { adjustTimeZone } from "@/lib/helpers";
 import StatusCard from "./StatusCard";
 import AdminLayout from "@/components/layout/AdminLayout";
 import type { DateRange } from "react-day-picker";
-import RangeCalendar from "@/components/booking/RangeCalendar";
+import { SalesChart } from "./SalesChart";
+import { RangeCalendar } from "@/components/booking/RangeCalendar";
 
 function Dashboard() {
   const [dates, setDates] = useState<DateRange | undefined>({
@@ -48,7 +49,7 @@ function Dashboard() {
           dates={dates}
           isDisabled={false}
         />
-      </div>
+      </div> 
       <div className="grid grid-cols-4 gap-4 mb-4">
         <StatusCard
           label="Bookings"
@@ -59,7 +60,7 @@ function Dashboard() {
         <StatusCard label="Paid Cash" value={metadata?.totalPaidCashAmount} />
         <StatusCard label="Pending Cash" value={metadata?.totalPendingAmount} />
       </div>
-      {/* <SalesChart chartData={metadata?.sales} dates={dates} /> */}
+      <SalesChart chartData={metadata?.sales} dates={dates} />
     </AdminLayout>
   );
 }

@@ -1,5 +1,9 @@
-import type { DateRange } from "react-day-picker";
+"use client";
+
+import { type DateRange } from "react-day-picker";
+
 import { Calendar } from "@/components/ui/calendar";
+
 import {
   Popover,
   PopoverContent,
@@ -8,11 +12,11 @@ import {
 import { ArrowRightLeft, CalendarDays, ChevronDown } from "lucide-react";
 import { useSearchParams } from "react-router";
 import { useEffect, useState } from "react";
+import { formatDate } from "@/lib/helpers";
 import { addDays, isSameDay } from "date-fns";
 import { toast } from "sonner";
-import { formatDate } from "@/lib/helpers";
 
-interface RangeCalendarProps extends React.HTMLAttributes<HTMLDivElement> {
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
   dates?: DateRange | undefined;
   disabledDates?: string[];
   onDateChange: (date: DateRange | undefined) => void;
@@ -20,16 +24,15 @@ interface RangeCalendarProps extends React.HTMLAttributes<HTMLDivElement> {
   isDisabled?: boolean;
 }
 
-const RangeCalendar = ({
+export function RangeCalendar({
   dates,
   disabledDates,
   onDateChange,
   onAvailabilityChange,
-  isDisabled,
-}: RangeCalendarProps) => {
+  isDisabled = true,
+}: Props) {
   const [searchParams] = useSearchParams();
   const [isAvailable, setIsAvailable] = useState(true);
-
   const startDate = searchParams.get("startDate");
   const endDate = searchParams.get("endDate");
 
@@ -55,7 +58,7 @@ const RangeCalendar = ({
     if (isControlled) {
       setInternalDate(dates);
     }
-  }, [isControlled, dates]);
+  }, [dates, isControlled]);
 
   const currentDate = isControlled ? dates : internalDate;
 
@@ -87,19 +90,19 @@ const RangeCalendar = ({
   const parsedDisabledDates =
     disabledDates?.map((timestamp) => new Date(parseInt(timestamp))) || [];
 
-  const isDisabledDate = (date: Date) => {
-    return parsedDisabledDates.some((disabledDate) =>
-      isSameDay(disabledDate, date),
+  const isDiabledDate = (date: Date) => {
+    return parsedDisabledDates.some((disableDate) =>
+      isSameDay(disableDate, date),
     );
   };
 
-  const hasDisabledDatesInRange = (range?: DateRange) => {
-    if (!range?.from || !range?.to) return false;
+  const hasDisabledDatesInRange = (range: DateRange | undefined) => {
+    if (!range?.from || !range.to) return false;
 
     let startDate = new Date(range.from);
 
     while (startDate <= range.to) {
-      if (isDisabledDate(startDate)) return true;
+      if (isDiabledDate(startDate)) return true;
       startDate = addDays(startDate, 1);
     }
 
@@ -140,7 +143,10 @@ const RangeCalendar = ({
             selected={currentDate}
             onSelect={handleDateChange}
             numberOfMonths={2}
-            disabled={[...parsedDisabledDates, { before: new Date() }]}
+            disabled={[
+              ...parsedDisabledDates,
+              isDisabled && { before: new Date() },
+            ]}
           />
         </PopoverContent>
       </Popover>
@@ -151,6 +157,4 @@ const RangeCalendar = ({
       )}
     </div>
   );
-};
-
-export default RangeCalendar;
+}
