@@ -83,10 +83,28 @@ export const bookingTypeDefs = gql`
     meta: BookingMeta!
   }
 
+  type Sale {
+    date: String
+    sales: Float
+    bookings: Int
+  }
+
+  type DashboardMetaData {
+    sales: [Sale]
+    totalSales: Float
+    totalBookings: Int
+    totalPendingAmount: Float
+    totalPaidCashAmount: Float
+  }
+
   type Query {
     getBookingById(bookingId: String!): Booking!
     getBookedDatesById(roomId: String!): [String]!
     getBookingByUser: BookingListResponse!
+    getDashboardMetaData(
+      startDate: String!
+      endDate: String!
+    ): DashboardMetaData!
   }
 
   type Mutation {

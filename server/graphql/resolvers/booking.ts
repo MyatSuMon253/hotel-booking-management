@@ -3,6 +3,7 @@ import {
   getBookedDatesById,
   getBookingById,
   getBookingByUser,
+  getDashboardMetaData,
   updateBookingPayment,
 } from "../../controllers/booking";
 import { BookingInput } from "../../types/booking";
@@ -22,6 +23,10 @@ export const bookingResolvers = {
       _args: any,
       { user }: { user: IUser },
     ) => getBookingByUser(user.id),
+    getDashboardMetaData: async (
+      _: any,
+      { startDate, endDate }: { startDate: Date; endDate: Date },
+    ) => getDashboardMetaData(startDate, endDate),
   },
   Mutation: {
     createNewBooking: async (
