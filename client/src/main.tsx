@@ -20,6 +20,7 @@ import Bookings from "./components/pages/Bookings.tsx";
 import InvoiceApp from "./components/invoice/Invoice.tsx";
 import Dashboard from "./components/admin/dashboard/Dashboard.tsx";
 import Layout from "./components/layout/Layout.tsx";
+import ManageRoom from "./components/pages/ManageRoom.tsx";
 
 const router = createBrowserRouter([
   {
@@ -52,13 +53,17 @@ const router = createBrowserRouter([
       },
       {
         path: "/admin/dashboard",
-        element: <Dashboard />,
+        element: (
+          <ProtectPage>
+            <Dashboard />
+          </ProtectPage>
+        ),
       },
       {
-        path: "/dashboard",
+        path: "/admin/rooms",
         element: (
-          <ProtectPage roles={["admin"]}>
-            <DashboardPage />
+          <ProtectPage>
+            <ManageRoom />
           </ProtectPage>
         ),
       },

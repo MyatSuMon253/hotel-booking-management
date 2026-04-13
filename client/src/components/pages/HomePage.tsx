@@ -4,8 +4,8 @@ import { useQuery } from "@apollo/client";
 import { useSearchParams } from "react-router";
 
 import RoomCard from "../home/RoomCard";
-import Filters from "../common/filters";
 import Pagination from "../common/Pagination";
+import Filters from "../common/Filters";
 
 const HomePage = () => {
   const [searchParams] = useSearchParams();

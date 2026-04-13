@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export const GET_ALL_ROOMS = gql`
+export const  GET_ALL_ROOMS = gql`
   query GetAllRooms($page: Int, $query: String, $filters: RoomFilters) {
     getAllRooms(page: $page, query: $query, filters: $filters) {
       pagination {

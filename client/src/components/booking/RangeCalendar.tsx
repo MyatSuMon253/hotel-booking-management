@@ -158,3 +158,5 @@ export function RangeCalendar({
     </div>
   );
 }
+
+export default RangeCalendar;
