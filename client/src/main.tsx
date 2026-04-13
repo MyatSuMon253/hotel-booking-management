@@ -5,7 +5,6 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import { Toaster } from "sonner";
 
 import client from "./apollo/apolloClient.ts";
-import DashboardPage from "./components/pages/DashboardPage.tsx";
 import DetailPage from "./components/pages/DetailPage.tsx";
 import HomePage from "./components/pages/HomePage.tsx";
 import LoginPage from "./components/pages/LoginPage.tsx";
@@ -21,6 +20,8 @@ import InvoiceApp from "./components/invoice/Invoice.tsx";
 import Dashboard from "./components/admin/dashboard/Dashboard.tsx";
 import Layout from "./components/layout/Layout.tsx";
 import ManageRoom from "./components/pages/ManageRoom.tsx";
+import CreateRoom from "./components/admin/room/CreateRoom.tsx";
+import UpdateRoom from "./components/admin/room/UpdateRoom.tsx";
 
 const router = createBrowserRouter([
   {
@@ -64,6 +65,22 @@ const router = createBrowserRouter([
         element: (
           <ProtectPage>
             <ManageRoom />
+          </ProtectPage>
+        ),
+      },
+      {
+        path: "/admin/rooms/create",
+        element: (
+          <ProtectPage>
+            <CreateRoom />
+          </ProtectPage>
+        ),
+      },
+      {
+        path: "/admin/rooms/edit/:id",
+        element: (
+          <ProtectPage>
+            <UpdateRoom />
           </ProtectPage>
         ),
       },

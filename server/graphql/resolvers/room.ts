@@ -1,6 +1,7 @@
 import {
   createNewRoom,
   deleteRoom,
+  deleteRoomImage,
   getAllRooms,
   getRoomById,
   updateRoom,
@@ -29,5 +30,9 @@ export const roomResolvers = {
     ) => await updateRoom(roomId, roomInput),
     deleteRoom: async (_: any, { roomId }: { roomId: string }) =>
       await deleteRoom(roomId),
+    deleteRoomImage: async (
+      _: any,
+      { roomId, imageId }: { roomId: string; imageId: string },
+    ) => await deleteRoomImage(roomId, imageId),
   },
 };

@@ -73,5 +73,6 @@ export const roomTypeDefs = gql`
     createNewRoom(roomInput: RoomInput!): Room!
     updateRoom(roomId: ID!, roomInput: RoomInput!): String!
     deleteRoom(roomId: ID!): String!
+    deleteRoomImage(roomId: ID!, imageId: String!): Boolean
   }
 `;

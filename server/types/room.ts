@@ -1,15 +1,14 @@
 export type Room = {
-  id: string;
+  roomNumber: string;
   title: string;
   description: string;
-  roomNumber: string;
   type: string;
   pricePerNight: number;
   capacity: number;
-  location: string;
   isAvailable: boolean;
   images: RoomImage[];
   reviews: string[];
+  location: string;
   createdAt: string;
   updatedAt: string;
 };
@@ -25,4 +24,16 @@ export type RoomFilters = {
   capacity?: number;
   isAvailable?: boolean;
   location?: string;
+};
+
+export type RoomInput = {
+  roomNumber: string;
+  title: string;
+  description: string;
+  type: string;
+  pricePerNight: number;
+  capacity: number;
+  isAvailable: boolean;
+  images: string[];
+  location: string;
 };

@@ -64,7 +64,7 @@ export const uploadAvatar = errorHandler(
 
     await User.findByIdAndUpdate(userId, {
       avatar: {
-        url: response.image_url,
+        url: response.img_url,
         public_id: response.public_id,
       },
     });

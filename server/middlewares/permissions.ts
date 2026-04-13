@@ -21,6 +21,7 @@ export const permissions = shield({
     createNewRoom: and(isAuthenticated, isAdmin),
     updateRoom: and(isAuthenticated, isAdmin),
     deleteRoom: and(isAuthenticated, isAdmin),
+    deleteRoomImage: and(isAuthenticated, isAdmin),
 
     uploadAvatar: isAuthenticated,
     updateUserProfile: isAuthenticated,

@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export const  GET_ALL_ROOMS = gql`
+export const GET_ALL_ROOMS = gql`
   query GetAllRooms($page: Int, $query: String, $filters: RoomFilters) {
     getAllRooms(page: $page, query: $query, filters: $filters) {
       pagination {
@@ -24,11 +24,20 @@ export const  GET_ALL_ROOMS = gql`
   }
 `;
 
+export const GET_ALL_ROOMS_WITHOUT_FILTERS = gql`
+  query Query {
+    getAllRoomsWithoutFilters {
+      title
+      pricePerNight
+      location
+      type
+      id
+    }
+  }
+`;
+
 export const GET_SINGLE_ROOM = gql`
-  query Query(
-    $roomId: String!
-    $getBookedDatesByIdRoomId2: String!
-  ) {
+  query Query($roomId: String!, $getBookedDatesByIdRoomId2: String!) {
     getRoomById(roomId: $roomId) {
       capacity
       description
