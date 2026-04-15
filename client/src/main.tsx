@@ -55,7 +55,7 @@ const router = createBrowserRouter([
       {
         path: "/admin/dashboard",
         element: (
-          <ProtectPage>
+          <ProtectPage roles={["admin"]}>
             <Dashboard />
           </ProtectPage>
         ),
@@ -63,7 +63,7 @@ const router = createBrowserRouter([
       {
         path: "/admin/rooms",
         element: (
-          <ProtectPage>
+          <ProtectPage roles={["admin"]}>
             <ManageRoom />
           </ProtectPage>
         ),
@@ -71,7 +71,7 @@ const router = createBrowserRouter([
       {
         path: "/admin/rooms/create",
         element: (
-          <ProtectPage>
+          <ProtectPage roles={["admin"]}>
             <CreateRoom />
           </ProtectPage>
         ),
@@ -79,7 +79,7 @@ const router = createBrowserRouter([
       {
         path: "/admin/rooms/edit/:id",
         element: (
-          <ProtectPage>
+          <ProtectPage roles={["admin"]}>
             <UpdateRoom />
           </ProtectPage>
         ),

@@ -13,12 +13,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { CURRENT_USER, LOGOUT } from "@/graphql/queries/user";
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { useLazyQuery, useQuery, useReactiveVar } from "@apollo/client";
 import { Link, useNavigate } from "react-router";
 import { Button } from "../ui/button";
 
 const Header = () => {
   const navigate = useNavigate();
+  const userInfo = useReactiveVar(userInfoVar);
 
   const { data, loading } = useQuery(CURRENT_USER, {
     onCompleted: (data) => {
@@ -46,7 +47,7 @@ const Header = () => {
   return (
     <nav className="flex items-center justify-between layout py-10">
       <Link to="/" className="text-4xl font-extrabold">
-        Rangoon Heritage
+        Golden Compass
       </Link>
       <div className="space-x-4">
         {loading && <span>...</span>}
@@ -69,8 +70,20 @@ const Header = () => {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
+              {userInfo?.role?.includes("admin") && (
+                <>
+                  {" "}
+                  <DropdownMenuItem>
+                    <Link to={"/admin/dashboard"}>Dashboard</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                </>
+              )}
               <DropdownMenuItem>
                 <Link to={"/profile"}>Profile</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link to={"/bookings"}>Bookings</Link>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={logoutHandler}>
                 <span className="text-red-600">Logout</span>

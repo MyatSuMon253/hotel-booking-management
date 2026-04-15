@@ -12,21 +12,33 @@ const isAdmin = rule({ cache: "contextual" })(async (parent, args, context) => {
   return context?.user?.role.includes("admin");
 });
 
-export const permissions = shield({
-  Query: {
-    currentUser: isAuthenticated,
-    logout: isAuthenticated,
-  },
-  Mutation: {
-    createNewRoom: and(isAuthenticated, isAdmin),
-    updateRoom: and(isAuthenticated, isAdmin),
-    deleteRoom: and(isAuthenticated, isAdmin),
-    deleteRoomImage: and(isAuthenticated, isAdmin),
+export const permissions = shield(
+  {
+    Query: {
+      currentUser: isAuthenticated,
+      logout: isAuthenticated,
 
-    uploadAvatar: isAuthenticated,
-    updateUserProfile: isAuthenticated,
-    updateUserPassword: isAuthenticated,
-    forgetPassword: isAuthenticated,
-    resetPassword: isAuthenticated,
+      getDashboardMetaData: and(isAuthenticated, isAdmin),
+      getAllBookings: and(isAuthenticated, isAdmin),
+      getAllReviews: and(isAuthenticated, isAdmin),
+    },
+    Mutation: {
+      createNewRoom: and(isAuthenticated, isAdmin),
+      updateRoom: and(isAuthenticated, isAdmin),
+      deleteRoom: and(isAuthenticated, isAdmin),
+      deleteRoomImage: and(isAuthenticated, isAdmin),
+      deleteReviewById: and(isAuthenticated, isAdmin),
+
+      uploadAvatar: isAuthenticated,
+      updateUserProfile: isAuthenticated,
+      updateUserPassword: isAuthenticated,
+      forgetPassword: isAuthenticated,
+      resetPassword: isAuthenticated,
+      createAndUpdateReview: isAuthenticated,
+      createNewBooking: isAuthenticated,
+      updateBookingPayment: isAuthenticated,
+      stripeCheckoutSession: isAuthenticated,
+    },
   },
-});
+  { debug: true },
+);
