@@ -1,5 +1,6 @@
 import {
   createNewBooking,
+  getAllBookings,
   getBookedDatesById,
   getBookingById,
   getBookingByUser,
@@ -23,6 +24,7 @@ export const bookingResolvers = {
       _args: any,
       { user }: { user: IUser },
     ) => getBookingByUser(user.id),
+    getAllBookings: async () => getAllBookings(),
     getDashboardMetaData: async (
       _: any,
       { startDate, endDate }: { startDate: Date; endDate: Date },

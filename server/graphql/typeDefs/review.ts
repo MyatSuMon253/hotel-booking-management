@@ -18,10 +18,12 @@ export const reviewTypeDefs = gql`
   }
 
   type Query {
+    getAllReviews: [Review!]!
     canReview(reviewRoomId: ID!): Boolean
   }
 
   type Mutation {
+    deleteReviewById(reviewId: ID!): Boolean
     createAndUpdateReview(reviewInput: reviewInput!): Review
   }
 `;

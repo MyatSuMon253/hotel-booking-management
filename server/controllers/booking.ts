@@ -227,6 +227,11 @@ const getMetaData = errorHandler(async (startDate: Date, endDate: Date) => {
   };
 });
 
+export const getAllBookings = errorHandler(async () => {
+  const bookings = await Booking.find().populate("room").populate("user").sort({ createdAt: -1 });
+  return bookings;
+});
+
 export const getDashboardMetaData = errorHandler(
   async (startDate: Date, endDate: Date) => {
     startDate = new Date(startDate);

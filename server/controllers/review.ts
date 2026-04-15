@@ -39,6 +39,27 @@ export const createAndUpdateReview = errorHandler(
   },
 );
 
+export const deleteReviewById = errorHandler(async (reviewId: string) => {
+  const review = await Review.findById(reviewId);
+
+  if (!review) {
+    throw new Error("Review not found");
+  }
+
+  await Room.findByIdAndUpdate(review.room, {
+    $pull: { reviews: review._id },
+  });
+
+  await Review.findByIdAndDelete(reviewId);
+
+  return true;
+});
+
+export const getAllReviews = errorHandler(async () => {
+  const reviews = await Review.find().populate("user").populate("room").sort({ createdAt: -1 });
+  return reviews;
+});
+
 export const canReview = errorHandler(
   async (roomId: string, userId: string) => {
     const booking = await Booking.findOne({

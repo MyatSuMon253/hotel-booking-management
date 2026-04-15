@@ -98,6 +98,7 @@ export const bookingTypeDefs = gql`
   }
 
   type Query {
+    getAllBookings: [Booking!]!
     getBookingById(bookingId: String!): Booking!
     getBookedDatesById(roomId: String!): [String]!
     getBookingByUser: BookingListResponse!
