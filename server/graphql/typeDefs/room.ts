@@ -17,7 +17,7 @@ export const roomTypeDefs = gql`
     location: String!
     isAvailable: Boolean!
     images: [RoomImage]
-    reviews: [String]
+    reviews: [Review]
     createdAt: String
     updatedAt: String
   }
