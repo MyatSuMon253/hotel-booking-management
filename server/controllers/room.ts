@@ -24,6 +24,11 @@ export const getAllRooms = errorHandler(
   },
 );
 
+export const getAllRoomsWithoutFilters = errorHandler(async () => {
+  const rooms = await Room.find().sort({ createdAt: -1 });
+  return rooms;
+});
+
 export const createNewRoom = errorHandler(async (roomInput: RoomInput) => {
   let uploadedImageUrls: { img_url: string; public_id: string }[] = [];
 

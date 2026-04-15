@@ -25,7 +25,6 @@ class APIFilters {
       : {};
 
     this.model = this.model.find({ ...searchQuery });
-
     return this;
   }
 
@@ -33,7 +32,7 @@ class APIFilters {
     const copiedFilters = { ...filters };
     let filterToString = JSON.stringify(copiedFilters);
     filterToString = filterToString.replace(
-      /\b(gt| gte| lt| lte)\b/g,
+      /\b(gt|gte|lt|lte)\b/g,
       (match) => `$${match}`,
     );
 
@@ -42,10 +41,21 @@ class APIFilters {
   }
 
   pagination(page: string | number, perPage: number) {
-    const currentPage = Number(page);
+    const currentPage = Number(page) || 1;
     const skipCount = perPage * (currentPage - 1);
 
     this.model = this.model.limit(perPage).skip(skipCount);
+    return this;
+  }
+
+  populate(field: string) {
+    this.model = this.model.populate(field);
+    return this;
+  }
+
+  sort(option: any) {
+    this.model = this.model.sort({ createdAt: -1 });
+    return this;
   }
 }
 
