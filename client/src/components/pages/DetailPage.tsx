@@ -54,7 +54,7 @@ const DetailPage = () => {
       ]
     : [];
 
-  if (error?.graphQLErrors[0].extensions?.code === "NOT_FOUND") {
+  if (error?.graphQLErrors[0]?.extensions?.code === "NOT_FOUND") {
     return <NotFound />;
   }
 
@@ -102,13 +102,13 @@ const DetailPage = () => {
                 </span>
               </p>
               <div className="grid grid-cols-4 border border-gray-200 rounded-md p-4">
-                {items.map((item, index) => (
+                {items?.map((item, index) => (
                   <div
                     key={index}
                     className="flex items-center justify-center flex-col text-muted-foreground"
                   >
-                    {item.icon}
-                    <span className="text-sm font-medium">{item.value}</span>
+                    {item?.icon}
+                    <span className="text-sm font-medium">{item?.value}</span>
                   </div>
                 ))}
               </div>

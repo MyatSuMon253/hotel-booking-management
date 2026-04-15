@@ -1,24 +1,27 @@
 import { gql } from "@apollo/client";
 
 export const GET_ALL_ROOMS = gql`
-  query GetAllRooms($page: Int, $query: String, $filters: RoomFilters) {
-    getAllRooms(page: $page, query: $query, filters: $filters) {
+  query GetAllRooms($query: String, $page: Int, $filters: RoomFilters) {
+    getAllRooms(query: $query, page: $page, filters: $filters) {
       pagination {
-        totalRoomCount
         perPage
+        totalRoomCount
       }
       rooms {
         id
         title
-        description
+        type
         images {
+          public_id
           url
         }
-        reviews
-        pricePerNight
-        capacity
         location
-        isAvailable
+        pricePerNight
+
+        ratings {
+          value
+          count
+        }
       }
     }
   }
@@ -37,7 +40,11 @@ export const GET_ALL_ROOMS_WITHOUT_FILTERS = gql`
 `;
 
 export const GET_SINGLE_ROOM = gql`
-  query Query($roomId: String!, $getBookedDatesByIdRoomId2: String!) {
+  query Query(
+    $roomId: String!
+    $getBookedDatesByIdRoomId2: String!
+    $reviewRoomId: ID!
+  ) {
     getRoomById(roomId: $roomId) {
       capacity
       description
@@ -50,11 +57,23 @@ export const GET_SINGLE_ROOM = gql`
       isAvailable
       location
       pricePerNight
+      reviews {
+        id
+        user {
+          id
+          name
+        }
+        rating
+        comment
+        createdAt
+        updatedAt
+      }
       roomNumber
       title
       type
     }
     getBookedDatesById(roomId: $getBookedDatesByIdRoomId2)
+    canReview(reviewRoomId: $reviewRoomId)
   }
 `;
 

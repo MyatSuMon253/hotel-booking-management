@@ -73,6 +73,9 @@ roomSchema.virtual("ratings").get(function () {
   };
 });
 
+roomSchema.set("toJSON", { virtuals: true });
+roomSchema.set("toObject", { virtuals: true });
+
 const Room = mongoose.model("Room", roomSchema);
 
 export default Room;

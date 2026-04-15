@@ -1,8 +1,8 @@
-import { cn } from "@/lib/utils";
-import type { Room } from "@/types/room";
-import { MapPin, Star } from "lucide-react";
-import { useState } from "react";
 import { Link } from "react-router";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+import Rating from "../room/Rating";
+import type { Room } from "@/types/room";
 
 type RoomCardProps = {
   room: Room;
@@ -10,9 +10,8 @@ type RoomCardProps = {
 
 const RoomCard = ({ room }: RoomCardProps) => {
   const [loading, setLoading] = useState(true);
-
   return (
-    <Link to={`/rooms/${room?.id}`}>
+    <Link to={`/rooms/${room.id}`}>
       {loading && (
         <div className="w-full aspect-video bg-gray-300 flex items-center justify-center rounded-lg animate-pulse">
           <p>loading</p>
@@ -28,20 +27,12 @@ const RoomCard = ({ room }: RoomCardProps) => {
 
       <div className="">
         <h2 className="text-lg font-bold mt-1">{room.title}</h2>
-        <MapPin className="inline w-5 h-5 text-gray-400 mr-1" />
-        <span className="text-sm font-medium text-gray-400">
-          {room.location}
-        </span>
-        <div></div>
-        <Star className="inline w-5 h-5 text-gray-400 mr-1" />
-        <span className="text-sm font-medium text-gray-400">
-          {room.reviews.length} reviews
-        </span>
+        <Rating count={room?.ratings.count} value={room.ratings.value} />
       </div>
       <p className="font-bold text-xl">
-        $ {room.pricePerNight}/{" "}
+        $ {room.pricePerNight}{" "}
         <span className="text-sm font-medium text-muted-foreground">
-          per night
+          /night
         </span>
       </p>
     </Link>

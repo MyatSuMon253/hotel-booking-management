@@ -35,4 +35,7 @@ export const roomResolvers = {
       { roomId, imageId }: { roomId: string; imageId: string },
     ) => await deleteRoomImage(roomId, imageId),
   },
+  Room: {
+    ratings: (parent: any)=> parent.ratings
+  }
 };

@@ -75,4 +75,13 @@ export const roomTypeDefs = gql`
     deleteRoom(roomId: ID!): String!
     deleteRoomImage(roomId: ID!, imageId: String!): Boolean
   }
+
+  type Rating {
+    value: Float!
+    count: Int!
+  }
+
+  type Room {
+    ratings: Rating!
+  }
 `;

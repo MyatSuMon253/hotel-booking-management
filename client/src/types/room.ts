@@ -2,18 +2,23 @@ import type { IReview } from "./review";
 
 export type Room = {
   id: string;
+  roomNumber: string;
   title?: string;
   description?: string;
-  roomNumber?: string;
-  type?: string;
+  type: string;
   pricePerNight: number;
   capacity: number;
-  location: string;
-  isAvailable?: boolean;
+  isAvailable: boolean;
   images: RoomImage[];
   reviews: IReview[];
-  createdAt?: string;
-  updatedAt?: string;
+  location: string;
+  createdAt: string;
+  updatedAt: string;
+  canReview: boolean;
+  ratings: {
+    value: number;
+    count: number;
+  };
 };
 
 type RoomImage = {
