@@ -3,7 +3,6 @@ import errorHandler from "../middlewares/errorHandler";
 import { Booking } from "../models/booking";
 import { NotFoundError } from "../utils/not-found";
 import { BookingInput } from "../types/booking";
-import { group } from "console";
 
 export const createNewBooking = errorHandler(
   async (bookingInput: any, userId: string) => {
@@ -228,7 +227,10 @@ const getMetaData = errorHandler(async (startDate: Date, endDate: Date) => {
 });
 
 export const getAllBookings = errorHandler(async () => {
-  const bookings = await Booking.find().populate("room").populate("user").sort({ createdAt: -1 });
+  const bookings = await Booking.find()
+    .populate("room")
+    .populate("user")
+    .sort({ createdAt: -1 });
   return bookings;
 });
 

@@ -76,3 +76,30 @@ export const GET_DASHBOARD_META_DATA = gql`
     }
   }
 `;
+
+export const GET_ALL_BOOKING = gql`
+  query Query {
+    getAllBookings {
+      id
+      room {
+        title
+        id
+      }
+      endDate
+      startDate
+      amount {
+        total
+      }
+      paymentInfo {
+        status
+        method
+      }
+      customer {
+        name
+        email
+      }
+      daysOfRent
+      additionalNote
+    }
+  }
+`;
