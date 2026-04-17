@@ -18,6 +18,9 @@ import { paymentResolver } from "../graphql/resolvers/payment";
 import { webhookHandler } from "../controllers/payment";
 import { reviewTypeDefs } from "../graphql/typeDefs/review";
 import { reviewResolvers } from "../graphql/resolvers/review";
+import { createServer } from "http";
+import { WebSocketServer } from "ws";
+import { useServer } from "graphql-ws/use/ws";
 
 type JwtPayload = {
   _id: string;
@@ -46,7 +49,34 @@ export const startApolloServer = async (app: Application) => {
 
   const schemaWithShield = applyMiddleware(schema, permissions);
 
-  const apolloServer = new ApolloServer({ schema: schemaWithShield });
+  const httpServer = createServer(app);
+
+  const wsServer = new WebSocketServer({
+    server: httpServer,
+    path: "/graphql",
+  });
+
+  const wsCleanup = useServer(
+    {
+      schema: schemaWithShield,
+    },
+    wsServer,
+  );
+
+  const apolloServer = new ApolloServer({
+    schema: schemaWithShield,
+    plugins: [
+      {
+        async serverWillStart() {
+          return {
+            async drainServer() {
+              await wsCleanup.dispose();
+            },
+          };
+        },
+      },
+    ],
+  });
 
   await apolloServer.start();
 
@@ -97,5 +127,11 @@ export const startApolloServer = async (app: Application) => {
         .status(400)
         .json({ success: false, message: "Webhook processing failed." });
     }
+  });
+
+  const PORT = process.env.PORT || 4040;
+
+  httpServer.listen(PORT, () => {
+    console.log("Server is running on PORT: ", PORT);
   });
 };

@@ -3,12 +3,17 @@ import errorHandler from "../middlewares/errorHandler";
 import { Booking } from "../models/booking";
 import { NotFoundError } from "../utils/not-found";
 import { BookingInput } from "../types/booking";
+import { pubsub } from "../apollo/pubsub";
 
 export const createNewBooking = errorHandler(
   async (bookingInput: any, userId: string) => {
     const newBooking = await Booking.create({
       ...bookingInput,
       user: userId,
+    });
+
+    pubsub.publish("NEW_BOOKING", {
+      newBookingNoti: "Ne",
     });
 
     return newBooking;

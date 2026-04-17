@@ -1,3 +1,4 @@
+import { pubsub } from "../../apollo/pubsub";
 import {
   createNewBooking,
   getAllBookings,
@@ -11,6 +12,13 @@ import { BookingInput } from "../../types/booking";
 import { IUser } from "../../types/user";
 
 export const bookingResolvers = {
+  Subscription: {
+    newBookingNoti: {
+      subscribe: () => {
+        return pubsub.asyncIterableIterator(["NEW_BOOKING"]);
+      }
+    }
+  },
   Query: {
     getBookingById: async (
       _: any,

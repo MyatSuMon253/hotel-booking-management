@@ -115,4 +115,8 @@ export const bookingTypeDefs = gql`
       bookingInput: updateBookingPaymentInput!
     ): Boolean
   }
+
+  type Subscription {
+    newBookingNoti: String
+  }
 `;
