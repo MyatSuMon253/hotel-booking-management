@@ -23,6 +23,7 @@ import ManageRoom from "./components/pages/ManageRoom.tsx";
 import CreateRoom from "./components/admin/room/CreateRoom.tsx";
 import UpdateRoom from "./components/admin/room/UpdateRoom.tsx";
 import BookingList from "./components/admin/booking/BookingList.tsx";
+import ReviewList from "./components/admin/review/ReviewList.tsx";
 
 const router = createBrowserRouter([
   {
@@ -90,6 +91,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectPage roles={["admin"]}>
             <BookingList />
+          </ProtectPage>
+        ),
+      },
+      {
+        path: "/admin/reviews",
+        element: (
+          <ProtectPage roles={["admin"]}>
+            <ReviewList />
           </ProtectPage>
         ),
       },
