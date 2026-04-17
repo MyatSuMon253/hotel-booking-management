@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { Link } from "react-router";
 import type { ColumnDef } from "@tanstack/react-table";
+import { useMutation } from "@apollo/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,8 +24,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "sonner";
 
 import type { BookingRow } from "@/types/booking";
+import { GET_ALL_BOOKING } from "@/graphql/queries/booking";
+import { UPDATE_BOOKING_PAYMENT } from "@/graphql/mutations/booking";
 
 export const columns: ColumnDef<BookingRow>[] = [
   {
@@ -82,6 +87,35 @@ export const columns: ColumnDef<BookingRow>[] = [
     id: "actions",
     header: "",
     cell: ({ row }) => {
+      const [updateBooking, { loading }] = useMutation(UPDATE_BOOKING_PAYMENT, {
+        onCompleted: () => {
+          toast.success("Booking payment updated");
+        },
+        refetchQueries: [GET_ALL_BOOKING],
+      });
+
+      const [paymentStatus, setPaymentStatus] = useState<
+        "paid" | "pending" | string
+      >(row.original.paymentStatus);
+      const [paymentMethod, setPaymentMethod] = useState<
+        "card" | "cash" | string
+      >(row.original.paymentMethod);
+
+      const updateBookingHandler = async () => {
+        const bookingInput = {
+          paymentInfo: {
+            status: paymentStatus,
+            method: paymentMethod,
+          },
+        };
+        await updateBooking({
+          variables: {
+            bookingId: row.original.id,
+            bookingInput,
+          },
+        });
+      };
+
       return (
         <Dialog>
           <form>
@@ -135,8 +169,8 @@ export const columns: ColumnDef<BookingRow>[] = [
                         <div>
                           <Label className="mb-2">Payment Method</Label>
                           <Select
-                          // value={paymentMethod}
-                          // onValueChange={setPaymentMethod}
+                            value={paymentMethod}
+                            onValueChange={setPaymentMethod}
                           >
                             <SelectTrigger className="w-full">
                               <SelectValue placeholder="Select payment method" />
@@ -153,8 +187,8 @@ export const columns: ColumnDef<BookingRow>[] = [
                         <div className="mt-4">
                           <Label className="mb-2">Payment Status</Label>
                           <Select
-                          // value={paymentStatus}
-                          // onValueChange={setPaymentStatus}
+                            value={paymentStatus}
+                            onValueChange={setPaymentStatus}
                           >
                             <SelectTrigger className="w-full">
                               <SelectValue placeholder="Select payment status" />
@@ -180,8 +214,8 @@ export const columns: ColumnDef<BookingRow>[] = [
                   </DialogClose>
                   <Button
                     type="button"
-                    // onClick={updateBookingHandler}
-                    // disabled={loading}
+                    onClick={updateBookingHandler}
+                    disabled={loading}
                   >
                     Save changes
                   </Button>
