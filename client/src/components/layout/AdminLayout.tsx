@@ -1,6 +1,9 @@
+import { NEW_BOOKING_SUBSCRIPTION } from "@/graphql/subscriptions/booking";
 import { cn } from "@/lib/utils";
-import React from "react";
+import { useSubscription } from "@apollo/client";
+import React, { useEffect } from "react";
 import { NavLink } from "react-router";
+import { toast } from "sonner";
 
 interface Props {
   children: React.ReactNode;
@@ -26,6 +29,15 @@ const CONTROLS = [
 ];
 
 function AdminLayout({ children }: Props) {
+  const { data } = useSubscription(NEW_BOOKING_SUBSCRIPTION);
+  console.log(data);
+
+  useEffect(() => {
+    if (data) {
+      toast.success(data?.newBookingNoti);
+    }
+  }, [data]);
+
   return (
     <main className="layout grid grid-cols-5 gap-4">
       <div className=" flex flex-col col-span-1 gap-2">
