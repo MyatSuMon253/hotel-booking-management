@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import ConfirmDialog from "@/components/common/ConfirmDialog";
 import { DELETE_ROOM_MUTATION } from "@/graphql/mutations/room";
 import { GET_ALL_ROOMS_WITHOUT_FILTERS } from "@/graphql/queries/room";
 import type { Room } from "@/types/room";
@@ -43,30 +44,30 @@ export const columns: ColumnDef<Room>[] = [
         onCompleted: () => {
           toast.success("Room deleted.");
         },
+        onError: (err) => toast.error(err.message),
         refetchQueries: [GET_ALL_ROOMS_WITHOUT_FILTERS],
       });
-
-      const handleDeleteRoom = async (id: string) => {
-        await deleteRoom({
-          variables: {
-            roomId: id,
-          },
-        });
-      };
 
       return (
         <div className="space-x-3">
           <Button size={"sm"} variant={"outline"} asChild>
             <Link to={`/admin/rooms/edit/${row.original.id}`}>Edit</Link>
           </Button>
-          <Button
-            size={"sm"}
-            variant={"destructive"}
-            onClick={() => handleDeleteRoom(row.original.id)}
-            disabled={loading}
-          >
-            Delete
-          </Button>
+          <ConfirmDialog
+            title={`Delete "${row.original.title}"?`}
+            description="This removes the room and its images. Bookings already tied to it are kept for history. This cannot be undone."
+            confirmLabel="Delete room"
+            pendingLabel="Deleting..."
+            loading={loading}
+            onConfirm={async () => {
+              await deleteRoom({ variables: { roomId: row.original.id } });
+            }}
+            trigger={
+              <Button size={"sm"} variant={"destructive"} disabled={loading}>
+                Delete
+              </Button>
+            }
+          />
         </div>
       );
     },

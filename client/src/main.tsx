@@ -15,6 +15,7 @@ import "./index.css";
 import ResetPasswordPage from "./components/pages/ResetPasswordPage.tsx";
 import ForgetPasswordPage from "./components/pages/ForgetPasswordPage.tsx";
 import PaymentPage from "./components/pages/Payment.tsx";
+import PaymentConfirmation from "./components/pages/PaymentConfirmation.tsx";
 import Bookings from "./components/pages/Bookings.tsx";
 import InvoiceApp from "./components/invoice/Invoice.tsx";
 import Dashboard from "./components/admin/dashboard/Dashboard.tsx";
@@ -112,6 +113,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectPage>
             <PaymentPage />
+          </ProtectPage>
+        ),
+      },
+      {
+        path: "/bookings/:id/confirmation",
+        element: (
+          <ProtectPage>
+            <PaymentConfirmation />
           </ProtectPage>
         ),
       },

@@ -21,7 +21,7 @@ const Filters = () => {
   const [searchKey, setSearchKey] = useState<string>("");
 
   const [filters, setFilters] = useState({
-    location: searchParams.get("location"),
+    // location: searchParams.get("location"),
     type: searchParams.get("type"),
     capacity: searchParams.get("capacity"),
     available: searchParams.get("available"),
@@ -79,7 +79,7 @@ const Filters = () => {
   useEffect(() => {
     if (location.pathname === "/" && !location.search) {
       setFilters({
-        location: null,
+        // location: null,
         type: null,
         capacity: null,
         available: null,
@@ -107,7 +107,7 @@ const Filters = () => {
             onClick={handleClear}
           />
         </form>
-        <h2 className="font-semibold mt4 mb-2">Location</h2>
+        {/* <h2 className="font-semibold mt4 mb-2">Location</h2>
         <div className="space-y-2">
           {Locations?.map((loc, index) => (
             <div key={index} className="flex items-center gap-2">
@@ -118,7 +118,7 @@ const Filters = () => {
               <span className="text-sm font-medium text-gray-500">{loc}</span>
             </div>
           ))}
-        </div>
+        </div> */}
         <h2 className="font-semibold mt4 mb-2">Type</h2>
         <div className="space-y-2">
           {Types?.map((type, index) => (

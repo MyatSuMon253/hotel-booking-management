@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import ConfirmDialog from "@/components/common/ConfirmDialog";
 import { DELETE_REVIEW_BY_ID_MUTATION } from "@/graphql/mutations/review";
 import { GET_ALL_REVIEWS } from "@/graphql/queries/review";
 import type { IReview } from "@/types/review";
@@ -48,29 +49,27 @@ export const columns: ColumnDef<IReview>[] = [
           onCompleted: () => {
             toast.success("Review deleted.");
           },
+          onError: (err) => toast.error(err.message),
           refetchQueries: [GET_ALL_REVIEWS],
         },
       );
 
-      const handleDeleteReview = async (id: string) => {
-        console.log(id);
-
-        await deleteReview({
-          variables: {
-            reviewId: id,
-          },
-        });
-      };
-
       return (
-        <Button
-          size={"sm"}
-          variant={"destructive"}
-          onClick={() => handleDeleteReview(row.original.id)}
-          disabled={loading}
-        >
-          Delete
-        </Button>
+        <ConfirmDialog
+          title="Delete this review?"
+          description="The review will be removed from the room permanently. This cannot be undone."
+          confirmLabel="Delete review"
+          pendingLabel="Deleting..."
+          loading={loading}
+          onConfirm={async () => {
+            await deleteReview({ variables: { reviewId: row.original.id } });
+          }}
+          trigger={
+            <Button size={"sm"} variant={"destructive"} disabled={loading}>
+              Delete
+            </Button>
+          }
+        />
       );
     },
   },

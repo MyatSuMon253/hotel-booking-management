@@ -87,9 +87,9 @@ const DetailPage = () => {
                 <Badge variant={"outline"} className="text-xs">
                   {room?.type}
                 </Badge>
-                <Badge variant={"outline"} className="text-xs">
+                {/* <Badge variant={"outline"} className="text-xs">
                   <MapPin /> <span>{room?.location}</span>
-                </Badge>
+                </Badge> */}
               </div>
 
               <p className="text-sm font-medium text-gray-400 mt-4">

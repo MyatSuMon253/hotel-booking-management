@@ -32,8 +32,8 @@ function PaymentPage() {
 
   const [updateBookingPayment] = useMutation(UPDATE_BOOKING_PAYMENT, {
     onCompleted: () => {
-      toast.success("Booking payment method confirmed.");
-      navigate("/bookings");
+      toast.success("Booking confirmed — pay at check-in.");
+      navigate(`/bookings/${params.id}/confirmation`);
     },
     refetchQueries: [GET_BOOKING_BY_USER],
   });

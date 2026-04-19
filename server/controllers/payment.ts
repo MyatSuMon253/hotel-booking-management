@@ -15,8 +15,8 @@ export const stripeCheckoutSession = errorHandler(async (bookingId: string) => {
 
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
-    success_url: `${process.env.CLIENT_URL}/bookings`,
-    cancel_url: `${process.env.CLIENT_URL}/bookings`,
+    success_url: `${process.env.CLIENT_URL}/bookings/${booking.id}/confirmation?status=success`,
+    cancel_url: `${process.env.CLIENT_URL}/bookings/${booking.id}/payment?status=cancelled`,
     client_reference_id: booking.id,
     customer_email: booking.customer.email,
     mode: "payment",
