@@ -94,12 +94,30 @@ export const bookingTypeDefs = gql`
     bookings: Int
   }
 
+  type PaymentMethodMetric {
+    method: String
+    count: Int
+    totalAmount: Float
+  }
+
+  type BookingStatusMetric {
+    status: String
+    count: Int
+  }
+
   type DashboardMetaData {
     sales: [Sale]
     totalSales: Float
     totalBookings: Int
     totalPendingAmount: Float
     totalPaidCashAmount: Float
+    totalCardSales: Float
+    totalConfirmedBookings: Int
+    totalCancelledBookings: Int
+    averageBookingValue: Float
+    totalRoomsBooked: Int
+    paymentMethodDistribution: [PaymentMethodMetric]
+    statusDistribution: [BookingStatusMetric]
   }
 
   type Query {

@@ -236,6 +236,87 @@ const getMetaData = errorHandler(async (startDate: Date, endDate: Date) => {
             },
           },
         ],
+        paymentMethodData: [
+          {
+            $group: {
+              _id: "$paymentInfo.method",
+              count: { $sum: 1 },
+              totalAmount: { $sum: "$amount.total" },
+            },
+          },
+          {
+            $project: {
+              _id: 0,
+              method: "$_id",
+              count: 1,
+              totalAmount: 1,
+            },
+          },
+        ],
+        statusData: [
+          {
+            $group: {
+              _id: "$status",
+              count: { $sum: 1 },
+            },
+          },
+          {
+            $project: {
+              _id: 0,
+              status: "$_id",
+              count: 1,
+            },
+          },
+        ],
+        cardSalesData: [
+          {
+            $match: {
+              "paymentInfo.status": "paid",
+              "paymentInfo.method": "card",
+            },
+          },
+          {
+            $group: {
+              _id: null,
+              totalCardSales: { $sum: "$amount.total" },
+            },
+          },
+        ],
+        confirmedBookingsData: [
+          {
+            $match: { status: "confirmed" },
+          },
+          {
+            $group: {
+              _id: null,
+              totalConfirmedBookings: { $sum: 1 },
+            },
+          },
+        ],
+        cancelledBookingsData: [
+          {
+            $match: { status: "cancelled" },
+          },
+          {
+            $group: {
+              _id: null,
+              totalCancelledBookings: { $sum: 1 },
+            },
+          },
+        ],
+        roomsBookedData: [
+          {
+            $group: {
+              _id: null,
+              roomsBooked: { $addToSet: "$room" },
+            },
+          },
+          {
+            $project: {
+              roomsBooked: { $size: "$roomsBooked" },
+            },
+          },
+        ],
       },
     },
   ]);
@@ -244,6 +325,12 @@ const getMetaData = errorHandler(async (startDate: Date, endDate: Date) => {
     salesData: salesDataResult = [],
     pendingCashData: pendingCashDataResult = [],
     paidCashData: paidCashDataResult = [],
+    paymentMethodData: paymentMethodDataResult = [],
+    statusData: statusDataResult = [],
+    cardSalesData: cardSalesDataResult = [],
+    confirmedBookingsData: confirmedBookingsDataResult = [],
+    cancelledBookingsData: cancelledBookingsDataResult = [],
+    roomsBookedData: roomsBookedDataResult = [],
   } = salesDataInfo[0];
 
   const salesMap = new Map();
@@ -291,6 +378,13 @@ const getMetaData = errorHandler(async (startDate: Date, endDate: Date) => {
 
   const totalPendingAmount = pendingCashDataResult[0]?.totalPendingCash || 0;
   const totalPaidCashAmount = paidCashDataResult[0]?.totalPaidCash || 0;
+  const totalCardSales = cardSalesDataResult[0]?.totalCardSales || 0;
+  const totalConfirmedBookings =
+    confirmedBookingsDataResult[0]?.totalConfirmedBookings || 0;
+  const totalCancelledBookings =
+    cancelledBookingsDataResult[0]?.totalCancelledBookings || 0;
+  const totalRoomsBooked = roomsBookedDataResult[0]?.roomsBooked || 0;
+  const averageBookingValue = totalBookings ? totalSales / totalBookings : 0;
 
   return {
     salesData: finalSalesData,
@@ -298,6 +392,13 @@ const getMetaData = errorHandler(async (startDate: Date, endDate: Date) => {
     totalBookings,
     totalPendingAmount,
     totalPaidCashAmount,
+    totalCardSales,
+    totalConfirmedBookings,
+    totalCancelledBookings,
+    averageBookingValue,
+    totalRoomsBooked,
+    paymentMethodDistribution: paymentMethodDataResult,
+    statusDistribution: statusDataResult,
   };
 });
 
@@ -323,6 +424,13 @@ export const getDashboardMetaData = errorHandler(
       totalBookings,
       totalPendingAmount,
       totalPaidCashAmount,
+      totalCardSales,
+      totalConfirmedBookings,
+      totalCancelledBookings,
+      averageBookingValue,
+      totalRoomsBooked,
+      paymentMethodDistribution,
+      statusDistribution,
     } = await getMetaData(startDate, endDate);
 
     return {
@@ -331,6 +439,13 @@ export const getDashboardMetaData = errorHandler(
       totalBookings,
       totalPendingAmount,
       totalPaidCashAmount,
+      totalCardSales,
+      totalConfirmedBookings,
+      totalCancelledBookings,
+      averageBookingValue,
+      totalRoomsBooked,
+      paymentMethodDistribution,
+      statusDistribution,
     };
   },
 );

@@ -74,6 +74,20 @@ export const GET_DASHBOARD_META_DATA = gql`
       totalBookings
       totalPendingAmount
       totalPaidCashAmount
+      totalCardSales
+      totalConfirmedBookings
+      totalCancelledBookings
+      averageBookingValue
+      totalRoomsBooked
+      paymentMethodDistribution {
+        method
+        count
+        totalAmount
+      }
+      statusDistribution {
+        status
+        count
+      }
     }
   }
 `;

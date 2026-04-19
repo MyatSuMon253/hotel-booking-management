@@ -47,7 +47,7 @@ export function SalesChart({ chartData, dates }: Props) {
           {dates?.to?.toLocaleDateString()}
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="h-[360px]">
         <ChartContainer config={chartConfig}>
           <AreaChart
             accessibilityLayer

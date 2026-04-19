@@ -6,6 +6,9 @@ import StatusCard from "./StatusCard";
 import AdminLayout from "@/components/layout/AdminLayout";
 import type { DateRange } from "react-day-picker";
 import { SalesChart } from "./SalesChart";
+import { BookingTrendLineChart } from "./BookingTrendLineChart";
+import { PaymentMethodPieChart } from "./PaymentMethodPieChart";
+import { StatusRadarChart } from "./StatusRadarChart";
 import { RangeCalendar } from "@/components/booking/RangeCalendar";
 
 function Dashboard() {
@@ -42,25 +45,59 @@ function Dashboard() {
 
   return (
     <AdminLayout>
-      <div className="flex items-start justify-between mb-6">
-        <h2 className="text-3xl font-bold">Dashboard</h2>
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-6">
+        <div>
+          <h2 className="text-3xl font-bold">Dashboard</h2>{" "}
+          <p className="mt-2 text-sm text-muted-foreground max-w-lg">
+            A quick overview of booking performance, payment mix, and room
+            activity for the selected date range.
+          </p>{" "}
+        </div>
         <RangeCalendar
           onDateChange={(date: any) => setDates(date)}
           dates={dates}
           isDisabled={false}
         />
-      </div> 
-      <div className="grid grid-cols-4 gap-4 mb-4">
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-4">
+        <StatusCard label="Total Sales" value={metadata?.totalSales} />
         <StatusCard
-          label="Bookings"
+          label="Total Bookings"
           value={metadata?.totalBookings}
           isNumber={false}
         />
-        <StatusCard label="Sales" value={metadata?.totalSales} />
+        <StatusCard
+          label="Confirmed"
+          value={metadata?.totalConfirmedBookings}
+          isNumber={false}
+        />
+        <StatusCard
+          label="Cancelled"
+          value={metadata?.totalCancelledBookings}
+          isNumber={false}
+        />
+      </div>
+
+      {/* <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-4 mb-4">
         <StatusCard label="Paid Cash" value={metadata?.totalPaidCashAmount} />
         <StatusCard label="Pending Cash" value={metadata?.totalPendingAmount} />
+        <StatusCard label="Card Sales" value={metadata?.totalCardSales} />
+        <StatusCard
+          label="Rooms Booked"
+          value={metadata?.totalRoomsBooked}
+          isNumber={false}
+        />
+      </div> */}
+
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-2 mb-4">
+        <SalesChart chartData={metadata?.sales} dates={dates} />
+        <BookingTrendLineChart chartData={metadata?.sales} dates={dates} />
+        <PaymentMethodPieChart data={metadata?.paymentMethodDistribution} />
+        <StatusRadarChart
+          statusDistribution={metadata?.statusDistribution}
+          totalRoomsBooked={metadata?.totalRoomsBooked}
+        />
       </div>
-      <SalesChart chartData={metadata?.sales} dates={dates} />
     </AdminLayout>
   );
 }
