@@ -4,9 +4,23 @@ import { Booking } from "../models/booking";
 import { NotFoundError } from "../utils/not-found";
 import { BookingInput } from "../types/booking";
 import { pubsub } from "../apollo/pubsub";
+import { refundBookingPayment } from "./payment";
 
 export const createNewBooking = errorHandler(
   async (bookingInput: any, userId: string) => {
+    const { room, startDate, endDate } = bookingInput;
+
+    const overlapping = await Booking.findOne({
+      room,
+      status: { $ne: "cancelled" },
+      startDate: { $lt: new Date(endDate) },
+      endDate: { $gt: new Date(startDate) },
+    });
+
+    if (overlapping) {
+      throw new Error("Selected dates overlap with an existing booking");
+    }
+
     const newBooking = await Booking.create({
       ...bookingInput,
       user: userId,
@@ -52,14 +66,69 @@ export const updateBookingPayment = errorHandler(
       throw new Error("You do not have permission to view this booking!");
     }
 
-    await booking.set(bookingInput).save();
+    booking.set(bookingInput);
+
+    if (booking.paymentInfo?.method === "cash") {
+      booking.paymentInfo.status = "paid";
+      booking.status = "confirmed";
+    }
+
+    await booking.save();
 
     return true;
   },
 );
 
+export const cancelBooking = errorHandler(
+  async (bookingId: string, reason: string | undefined, user: IUser) => {
+    const booking = await Booking.findById(bookingId).populate("room");
+
+    if (!booking) {
+      throw new NotFoundError("Booking not found");
+    }
+
+    const isAdmin = user.role?.includes("admin");
+    const isOwner = booking.user.toString() === user.id;
+
+    if (!isAdmin && !isOwner) {
+      throw new Error("You do not have permission to cancel this booking!");
+    }
+
+    if (booking.status === "cancelled") {
+      throw new Error("Booking is already cancelled");
+    }
+
+    if (!isAdmin && new Date() >= new Date(booking.startDate)) {
+      throw new Error("Cannot cancel booking after check-in date");
+    }
+
+    if (
+      booking.paymentInfo?.status === "paid" &&
+      booking.paymentInfo?.method === "card" &&
+      booking.paymentInfo?.id
+    ) {
+      await refundBookingPayment(booking);
+    }
+
+    booking.status = "cancelled";
+    booking.cancelledAt = new Date();
+    if (reason) booking.cancelReason = reason;
+
+    await booking.save();
+
+    pubsub.publish("BOOKING_CANCELLED", {
+      bookingCancelledNoti: booking.id,
+    });
+
+    return booking;
+  },
+);
+
 export const getBookedDatesById = errorHandler(async (roomId: string) => {
-  const bookings = await Booking.find({ room: roomId });
+  const bookings = await Booking.find({
+    room: roomId,
+    status: { $ne: "cancelled" },
+  });
 
   const bookedDates = bookings.flatMap((booking) => {
     const startDate = new Date(booking.startDate);
@@ -89,7 +158,8 @@ export const getBookingByUser = errorHandler(async (userId: string) => {
   const totalBookings = bookings.length;
 
   const unpaidBookings = bookings.filter(
-    (booking) => booking.paymentInfo?.status !== "paid",
+    (booking) =>
+      booking.paymentInfo?.status !== "paid" && booking.status !== "cancelled",
   );
 
   const needToPay = unpaidBookings.reduce((sum, booking) => {
@@ -122,7 +192,7 @@ const getMetaData = errorHandler(async (startDate: Date, endDate: Date) => {
         /* [
           {_id: {date: "2026-04-04"}, totalSales: 1000, numOfBookings: 10},
           {_id: {date: "2026-04-04"}, totalSales: 1000, numOfBookings: 10}
-        ] 
+        ]
           {"2026-04-04": {sales: 1000, bookings: 100}}
         */
         salesData: [

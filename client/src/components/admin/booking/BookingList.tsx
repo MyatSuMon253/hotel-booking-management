@@ -35,8 +35,9 @@ function BookingList() {
       endDate: booking.endDate,
       total: booking.amount.total,
       daysOfRent: booking.daysOfRent,
-      paymentStatus: booking.paymentInfo?.status ?? "UNKNOWN",
-      paymentMethod: booking.paymentInfo?.method ?? "UNKNOWN",
+      paymentStatus: booking.paymentInfo?.status ?? "pending",
+      paymentMethod: booking.paymentInfo?.method ?? "cash",
+      status: booking.status ?? "pending",
       customerEmail: booking.customer.email,
       customerName: booking.customer.name,
     })) ?? [];

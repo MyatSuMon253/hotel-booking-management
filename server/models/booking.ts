@@ -1,5 +1,10 @@
 import mongoose from "mongoose";
-import { IBooking, PaymentMethods, PaymentStatus } from "../types/booking";
+import {
+  BookingStatus,
+  IBooking,
+  PaymentMethods,
+  PaymentStatus,
+} from "../types/booking";
 
 const bookingSchema = new mongoose.Schema<IBooking>(
   {
@@ -57,6 +62,21 @@ const bookingSchema = new mongoose.Schema<IBooking>(
           type: String,
           enum: { values: PaymentMethods, message: "Invaild payment method" },
         },
+      },
+    },
+    status: {
+      type: String,
+      enum: { values: BookingStatus, message: "Invalid booking status" },
+      default: "pending",
+    },
+    cancelledAt: Date,
+    cancelReason: String,
+    refundInfo: {
+      type: {
+        id: String,
+        amount: Number,
+        status: String,
+        refundedAt: Date,
       },
     },
     additionalNote: String,

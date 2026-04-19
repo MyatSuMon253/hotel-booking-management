@@ -37,6 +37,7 @@ export const permissions = shield(
       createAndUpdateReview: isAuthenticated,
       createNewBooking: isAuthenticated,
       updateBookingPayment: isAuthenticated,
+      cancelBooking: isAuthenticated,
       stripeCheckoutSession: isAuthenticated,
     },
   },

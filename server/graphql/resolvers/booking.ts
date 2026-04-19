@@ -1,5 +1,6 @@
 import { pubsub } from "../../apollo/pubsub";
 import {
+  cancelBooking,
   createNewBooking,
   getAllBookings,
   getBookedDatesById,
@@ -16,8 +17,13 @@ export const bookingResolvers = {
     newBookingNoti: {
       subscribe: () => {
         return pubsub.asyncIterableIterator(["NEW_BOOKING"]);
-      }
-    }
+      },
+    },
+    bookingCancelledNoti: {
+      subscribe: () => {
+        return pubsub.asyncIterableIterator(["BOOKING_CANCELLED"]);
+      },
+    },
   },
   Query: {
     getBookingById: async (
@@ -52,5 +58,10 @@ export const bookingResolvers = {
       }: { bookingId: string; bookingInput: Partial<BookingInput> },
       { user }: { user: IUser },
     ) => updateBookingPayment(bookingId, bookingInput, user),
+    cancelBooking: async (
+      _: any,
+      { bookingId, reason }: { bookingId: string; reason?: string },
+      { user }: { user: IUser },
+    ) => cancelBooking(bookingId, reason, user),
   },
 };

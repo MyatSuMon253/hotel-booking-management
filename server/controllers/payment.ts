@@ -1,5 +1,6 @@
 import errorHandler from "../middlewares/errorHandler";
 import { Booking } from "../models/booking";
+import { IBooking } from "../types/booking";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
@@ -48,18 +49,19 @@ export const webhookHandler = errorHandler(
       );
 
       if (event.type === "checkout.session.completed") {
-        console.log(event.data.object)
-
         const session = event.data.object as Stripe.Checkout.Session;
         const bookingId = session.client_reference_id;
 
         const paymentInfo = {
           id: session.payment_intent,
-          status: session.payment_status || 'paid',
+          status: session.payment_status || "paid",
           method: session.payment_method_types[0],
         };
 
-        await Booking.findByIdAndUpdate(bookingId, { paymentInfo });
+        await Booking.findByIdAndUpdate(bookingId, {
+          paymentInfo,
+          status: "confirmed",
+        });
 
         return true;
       }
@@ -68,3 +70,23 @@ export const webhookHandler = errorHandler(
     }
   },
 );
+
+export const refundBookingPayment = async (booking: IBooking & any) => {
+  if (!booking.paymentInfo?.id || booking.paymentInfo.status !== "paid") {
+    return null;
+  }
+
+  const refund = await stripe.refunds.create({
+    payment_intent: booking.paymentInfo.id,
+  });
+
+  booking.refundInfo = {
+    id: refund.id,
+    amount: (refund.amount ?? 0) / 100,
+    status: refund.status ?? "pending",
+    refundedAt: new Date(),
+  };
+  booking.paymentInfo.status = "refunded";
+
+  return refund;
+};

@@ -48,6 +48,13 @@ export const bookingTypeDefs = gql`
     method: String
   }
 
+  type RefundInfo {
+    id: String
+    amount: Float
+    status: String
+    refundedAt: String
+  }
+
   type Booking {
     id: ID
     user: User
@@ -59,13 +66,11 @@ export const bookingTypeDefs = gql`
     daysOfRent: Int!
     rentPerDay: Float!
     paymentInfo: PaymentInfo
-    additionalNote: String
-  }
-
-  input PaymentInfoInput {
-    id: String
     status: String
-    method: String
+    cancelledAt: String
+    cancelReason: String
+    refundInfo: RefundInfo
+    additionalNote: String
   }
 
   input updateBookingPaymentInput {
@@ -114,9 +119,11 @@ export const bookingTypeDefs = gql`
       bookingId: String!
       bookingInput: updateBookingPaymentInput!
     ): Boolean
+    cancelBooking(bookingId: ID!, reason: String): Booking!
   }
 
   type Subscription {
     newBookingNoti: String
+    bookingCancelledNoti: String
   }
 `;

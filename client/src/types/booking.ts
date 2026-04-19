@@ -1,3 +1,9 @@
+export type BookingStatus =
+  | "pending"
+  | "confirmed"
+  | "cancelled"
+  | "completed";
+
 export type BookingRow = {
   id: string;
   roomTitle: string;
@@ -6,8 +12,9 @@ export type BookingRow = {
   endDate: string;
   total: number;
   daysOfRent: number;
-  paymentStatus: "paid" | "pending";
+  paymentStatus: "paid" | "pending" | "refunded";
   paymentMethod: "card" | "cash";
+  status: BookingStatus;
   customerEmail: string;
   customerName: string;
 };

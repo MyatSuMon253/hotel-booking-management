@@ -50,6 +50,7 @@ export const GET_BOOKING_BY_USER = gql`
           method
           status
         }
+        status
         startDate
         endDate
         amount {
@@ -94,6 +95,7 @@ export const GET_ALL_BOOKING = gql`
         status
         method
       }
+      status
       customer {
         name
         email

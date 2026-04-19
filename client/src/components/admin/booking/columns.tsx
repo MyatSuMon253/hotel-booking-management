@@ -26,9 +26,20 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 
-import type { BookingRow } from "@/types/booking";
+import type { BookingRow, BookingStatus } from "@/types/booking";
 import { GET_ALL_BOOKING } from "@/graphql/queries/booking";
 import { UPDATE_BOOKING_PAYMENT } from "@/graphql/mutations/booking";
+import CancelBookingDialog from "@/components/booking/CancelBookingDialog";
+
+const bookingStatusVariant: Record<
+  BookingStatus,
+  "default" | "secondary" | "destructive" | "outline"
+> = {
+  pending: "secondary",
+  confirmed: "default",
+  cancelled: "destructive",
+  completed: "outline",
+};
 
 export const columns: ColumnDef<BookingRow>[] = [
   {
@@ -65,15 +76,29 @@ export const columns: ColumnDef<BookingRow>[] = [
     ),
   },
   {
-    accessorKey: "paymentStatus",
-    header: "Status",
+    accessorKey: "status",
+    header: "Booking",
     cell: ({ row }) => {
-      const status = row.original.paymentStatus.toUpperCase();
+      const status = (row.original.status ?? "pending") as BookingStatus;
       return (
-        <Badge variant={status === "PENDING" ? "secondary" : "default"}>
-          {status}
+        <Badge variant={bookingStatusVariant[status]}>
+          {status.toUpperCase()}
         </Badge>
       );
+    },
+  },
+  {
+    accessorKey: "paymentStatus",
+    header: "Payment",
+    cell: ({ row }) => {
+      const status = row.original.paymentStatus.toUpperCase();
+      const variant =
+        status === "PAID"
+          ? "default"
+          : status === "REFUNDED"
+            ? "outline"
+            : "secondary";
+      return <Badge variant={variant}>{status}</Badge>;
     },
   },
   {
@@ -207,20 +232,37 @@ export const columns: ColumnDef<BookingRow>[] = [
                   )}
                 </div>
               </div>
-              {row.original.paymentStatus === "pending" && (
-                <DialogFooter>
-                  <DialogClose asChild>
-                    <Button variant="outline">Cancel</Button>
-                  </DialogClose>
-                  <Button
-                    type="button"
-                    onClick={updateBookingHandler}
-                    disabled={loading}
-                  >
-                    Save changes
-                  </Button>
-                </DialogFooter>
+              {row.original.status !== "cancelled" && (
+                <div className="mt-4 border-t pt-4">
+                  <p className="text-sm font-medium text-destructive mb-2">
+                    Danger zone
+                  </p>
+                  <CancelBookingDialog
+                    bookingId={row.original.id}
+                    isAdmin
+                    trigger={
+                      <Button variant="destructive" className="w-full">
+                        Cancel this booking
+                      </Button>
+                    }
+                  />
+                </div>
               )}
+              {row.original.paymentStatus === "pending" &&
+                row.original.status !== "cancelled" && (
+                  <DialogFooter>
+                    <DialogClose asChild>
+                      <Button variant="outline">Close</Button>
+                    </DialogClose>
+                    <Button
+                      type="button"
+                      onClick={updateBookingHandler}
+                      disabled={loading}
+                    >
+                      Save changes
+                    </Button>
+                  </DialogFooter>
+                )}
             </DialogContent>
           </form>
         </Dialog>

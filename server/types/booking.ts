@@ -2,7 +2,13 @@ import { Room } from "./room";
 import { IUser } from "./user";
 
 export const PaymentMethods = ["card", "cash"];
-export const PaymentStatus = ["paid", "pending"];
+export const PaymentStatus = ["paid", "pending", "refunded"];
+export const BookingStatus = [
+  "pending",
+  "confirmed",
+  "cancelled",
+  "completed",
+];
 
 export interface IBooking {
   id: string;
@@ -26,6 +32,15 @@ export interface IBooking {
     id: string;
     status: string;
     method: string;
+  };
+  status: "pending" | "confirmed" | "cancelled" | "completed";
+  cancelledAt?: Date;
+  cancelReason?: string;
+  refundInfo?: {
+    id: string;
+    amount: number;
+    status: string;
+    refundedAt: Date;
   };
   additionalNote?: string;
   createdAt: string;
