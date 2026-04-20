@@ -32,6 +32,13 @@ const userSchema = new mongoose.Schema(
         message: "Please select a corret role.",
       },
     },
+    membershipTier: {
+      type: String,
+      enum: {
+        values: ["silver", "gold", "diamond"],
+        message: "Invalid membership tier.",
+      },
+    },
     resetPasswordToken: String,
     resetPasswordExpire: String,
   },

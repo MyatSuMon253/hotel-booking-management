@@ -11,6 +11,7 @@ export const CURRENT_USER = gql`
         public_id
       }
       role
+      membershipTier
       createdAt
       updatedAt
     }

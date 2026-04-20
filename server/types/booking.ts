@@ -3,12 +3,7 @@ import { IUser } from "./user";
 
 export const PaymentMethods = ["card", "cash"];
 export const PaymentStatus = ["paid", "pending", "refunded"];
-export const BookingStatus = [
-  "pending",
-  "confirmed",
-  "cancelled",
-  "completed",
-];
+export const BookingStatus = ["pending", "confirmed", "cancelled", "completed"];
 
 export interface IBooking {
   id: string;
@@ -26,6 +21,8 @@ export interface IBooking {
     tax: number;
     total: number;
   };
+  membershipTier?: "silver" | "gold" | "diamond";
+  referralCode?: string;
   daysOfRent: number;
   rentPerDay: number;
   paymentInfo: {

@@ -26,7 +26,14 @@ import type z from "zod";
 import RangeCalendar from "./RangeCalendar";
 import { Textarea } from "../ui/textarea";
 import type { DateRange } from "react-day-picker";
-import { adjustTimeZone, calculateAmount, getDaysOfRent } from "@/lib/helpers";
+import {
+  adjustTimeZone,
+  calculateAmount,
+  getDaysOfRent,
+  getMembershipDiscountPercent,
+  isReferralCodeValid,
+  REFERRAL_DISCOUNT_PERCENT,
+} from "@/lib/helpers";
 import { toast } from "sonner";
 import { CREATE_BOOKING_MUTATION } from "@/graphql/mutations/booking";
 
@@ -53,6 +60,7 @@ const BookingForm = ({
     defaultValues: {
       name: "",
       email: "",
+      referralCode: "",
       additionalNote: "",
       dateRange: {
         from: new Date(),
@@ -62,6 +70,8 @@ const BookingForm = ({
   });
 
   const dateRange = form.watch("dateRange");
+  const referralCode = form.watch("referralCode") ?? "";
+  const membershipTier = user?.membershipTier;
 
   const [daysOfRent, setDaysOfRent] = useState(0);
   const [amount, setAmount] = useState({
@@ -71,14 +81,24 @@ const BookingForm = ({
     total: 0,
   });
 
+  const referralCodeIsValid =
+    !membershipTier && isReferralCodeValid(referralCode);
+  const referralCodeHasError =
+    !membershipTier && referralCode.trim() && !referralCodeIsValid;
+  const discountPercent = membershipTier
+    ? getMembershipDiscountPercent(membershipTier)
+    : referralCodeIsValid
+      ? REFERRAL_DISCOUNT_PERCENT
+      : 0;
+
   useEffect(() => {
     const days = getDaysOfRent(dateRange);
     setDaysOfRent(days);
   }, [dateRange]);
 
   useEffect(() => {
-    setAmount(calculateAmount(rentPerDay, daysOfRent));
-  }, [daysOfRent, rentPerDay]);
+    setAmount(calculateAmount(rentPerDay, daysOfRent, discountPercent));
+  }, [daysOfRent, rentPerDay, discountPercent]);
 
   useEffect(() => {
     if (user) {
@@ -97,7 +117,13 @@ const BookingForm = ({
   });
 
   const onSubmit = async (values: z.infer<typeof bookingFormSchema>) => {
-    const { dateRange, name, email, additionalNote } = values;
+    const {
+      dateRange,
+      name,
+      email,
+      referralCode: submittedReferralCode,
+      additionalNote,
+    } = values;
 
     if (!dateRange.from || !dateRange.to || daysOfRent <= 0) {
       return toast.error("Please select booking dates");
@@ -116,6 +142,7 @@ const BookingForm = ({
       room: roomId,
       startDate: adjustTimeZone(dateRange.from),
       endDate: adjustTimeZone(dateRange.to),
+      referralCode: membershipTier ? undefined : submittedReferralCode?.trim(),
       additionalNote,
     };
 
@@ -163,6 +190,36 @@ const BookingForm = ({
                 </FormItem>
               )}
             />
+            {!membershipTier && (
+              <FormField
+                control={form.control}
+                name="referralCode"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Referral code</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter referral code" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                    {referralCodeHasError && (
+                      <p className="mt-2 text-sm text-destructive">
+                        Referral code is not valid.
+                      </p>
+                    )}
+                  </FormItem>
+                )}
+              />
+            )}
+            {membershipTier && (
+              <div className="rounded-lg border border-muted p-4 text-sm">
+                <p className="font-medium capitalize">
+                  {membershipTier} membership applied.
+                </p>
+                <p className="text-muted-foreground mt-1">
+                  You receive a {Math.round(discountPercent * 100)}% discount.
+                </p>
+              </div>
+            )}
             <FormField
               control={form.control}
               name="dateRange"
@@ -219,6 +276,24 @@ const BookingForm = ({
                   <span>Tax (5%):</span>
                   <span className="font-medium"> {amount.tax.toFixed(2)}</span>
                 </div>
+                <div className="flex items-center justify-between">
+                  <span>Discount:</span>
+                  <span className="font-medium">
+                    - {amount.discount.toFixed(2)}
+                  </span>
+                </div>
+                {membershipTier && (
+                  <div className="rounded-lg bg-muted p-3 text-sm">
+                    Membership discount applied:{" "}
+                    {Math.round(discountPercent * 100)}%
+                  </div>
+                )}
+                {!membershipTier && referralCodeIsValid && (
+                  <div className="rounded-lg bg-muted p-3 text-sm">
+                    Referral discount applied:{" "}
+                    {Math.round(REFERRAL_DISCOUNT_PERCENT * 100)}%
+                  </div>
+                )}
                 <hr />
                 <div className="flex items-center justify-between">
                   <span>Est. Total:</span>

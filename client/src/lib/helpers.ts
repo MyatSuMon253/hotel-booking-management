@@ -1,6 +1,9 @@
 import { differenceInDays, format } from "date-fns";
 import type { DateRange } from "react-day-picker";
 
+const VALID_REFERRAL_CODES = ["HOTEL5", "WELCOME5", "REFERRAL5"];
+export const REFERRAL_DISCOUNT_PERCENT = 0.05;
+
 export const updateSearchParams = (
   searchParams: URLSearchParams,
   key: string,
@@ -23,10 +26,34 @@ export const formatDate = (date: Date | string) => {
   return format(date, "yyyy, MM-dd");
 };
 
-export const calculateAmount = (rentPerDay: number, daysOfRent: number) => {
+export const getMembershipDiscountPercent = (tier?: string) => {
+  if (!tier) return 0;
+
+  switch (tier) {
+    case "silver":
+      return 0.1;
+    case "gold":
+      return 0.2;
+    case "diamond":
+      return 0.3;
+    default:
+      return 0;
+  }
+};
+
+export const isReferralCodeValid = (code?: string) => {
+  if (!code) return false;
+  return VALID_REFERRAL_CODES.includes(code.trim().toUpperCase());
+};
+
+export const calculateAmount = (
+  rentPerDay: number,
+  daysOfRent: number,
+  discountPercent = 0,
+) => {
   const rent = rentPerDay * daysOfRent;
   const tax = rent * 0.05;
-  const discount = 0;
+  const discount = rent * discountPercent;
   const total = rent + tax - discount;
 
   return {

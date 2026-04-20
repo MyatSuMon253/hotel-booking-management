@@ -1,14 +1,41 @@
 import { IUser } from "../types/user";
 import errorHandler from "../middlewares/errorHandler";
 import { Booking } from "../models/booking";
+import { User } from "../models/user";
 import { NotFoundError } from "../utils/not-found";
 import { BookingInput } from "../types/booking";
 import { pubsub } from "../apollo/pubsub";
 import { refundBookingPayment } from "./payment";
 
+const MEMBERSHIP_DISCOUNT_PERCENT: Record<string, number> = {
+  silver: 0.1,
+  gold: 0.2,
+  diamond: 0.3,
+};
+
+const REFERRAL_DISCOUNT_PERCENT = 0.05;
+const VALID_REFERRAL_CODES = ["HOTEL5", "WELCOME5", "REFERRAL5"];
+
+const isValidReferralCode = (code: string) =>
+  VALID_REFERRAL_CODES.includes(code.trim().toUpperCase());
+
+const getMembershipDiscountPercent = (tier?: string) => {
+  if (!tier) return 0;
+  return MEMBERSHIP_DISCOUNT_PERCENT[tier] ?? 0;
+};
+
 export const createNewBooking = errorHandler(
   async (bookingInput: any, userId: string) => {
-    const { room, startDate, endDate } = bookingInput;
+    const {
+      room,
+      startDate,
+      endDate,
+      customer,
+      rentPerDay,
+      daysOfRent,
+      additionalNote,
+      referralCode,
+    } = bookingInput;
 
     const overlapping = await Booking.findOne({
       room,
@@ -21,10 +48,54 @@ export const createNewBooking = errorHandler(
       throw new Error("Selected dates overlap with an existing booking");
     }
 
-    const newBooking = await Booking.create({
-      ...bookingInput,
+    const user = await User.findById(userId).lean();
+    const membershipTier = user?.membershipTier;
+    const normalizedReferralCode = referralCode?.trim();
+    const referralIsValid = normalizedReferralCode
+      ? isValidReferralCode(normalizedReferralCode)
+      : false;
+
+    if (normalizedReferralCode && !membershipTier && !referralIsValid) {
+      throw new Error("Invalid referral code.");
+    }
+
+    const discountPercent = membershipTier
+      ? getMembershipDiscountPercent(membershipTier)
+      : referralIsValid
+        ? REFERRAL_DISCOUNT_PERCENT
+        : 0;
+
+    const rent = rentPerDay * daysOfRent;
+    const tax = rent * 0.05;
+    const discount = rent * discountPercent;
+    const total = rent + tax - discount;
+
+    const bookingData: any = {
+      room,
+      startDate,
+      endDate,
+      customer,
+      amount: {
+        rent,
+        tax,
+        discount,
+        total,
+      },
+      daysOfRent,
+      rentPerDay,
+      additionalNote,
       user: userId,
-    });
+    };
+
+    if (membershipTier) {
+      bookingData.membershipTier = membershipTier;
+    }
+
+    if (!membershipTier && referralIsValid) {
+      bookingData.referralCode = normalizedReferralCode.toUpperCase();
+    }
+
+    const newBooking = await Booking.create(bookingData);
 
     pubsub.publish("NEW_BOOKING", {
       newBookingNoti: "Ne",

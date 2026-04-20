@@ -4,6 +4,7 @@ export interface User {
   email: string;
   password: string;
   role?: string[];
+  membershipTier?: "silver" | "gold" | "diamond";
   avatar: {
     url: string;
     public_id: string;

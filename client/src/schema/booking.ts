@@ -6,6 +6,7 @@ export const bookingFormSchema = z.object({
     .email({ message: "Please enter a vaild email address." })
     .toLowerCase(),
   name: z.string().nonempty({ message: "Name is required." }),
+  referralCode: z.string().trim().optional(),
   additionalNote: z.string().optional(),
   dateRange: z
     .object({

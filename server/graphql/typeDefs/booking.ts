@@ -27,6 +27,7 @@ export const bookingTypeDefs = gql`
     amount: AmountInput!
     daysOfRent: Int!
     rentPerDay: Float!
+    referralCode: String
     additionalNote: String
   }
 
@@ -70,6 +71,8 @@ export const bookingTypeDefs = gql`
     cancelledAt: String
     cancelReason: String
     refundInfo: RefundInfo
+    membershipTier: String
+    referralCode: String
     additionalNote: String
   }
 

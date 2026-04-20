@@ -23,6 +23,7 @@ export const userTypeDefs = gql`
     email: String!
     avatar: Avatar
     role: [String]
+    membershipTier: String
     createdAt: String!
     updatedAt: String!
   }
@@ -39,6 +40,10 @@ export const userTypeDefs = gql`
     updateUserProfile(userInfo: UpdateUserInput!): Boolean
     updateUserPassword(oldPassword: String!, newPassword: String!): Boolean
     forgetPassword(email: String!): Boolean
-    resetPassword(token: String!, newPassword: String!, confirmNewPassword: String!): Boolean
+    resetPassword(
+      token: String!
+      newPassword: String!
+      confirmNewPassword: String!
+    ): Boolean
   }
 `;

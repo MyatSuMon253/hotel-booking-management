@@ -42,6 +42,14 @@ const bookingSchema = new mongoose.Schema<IBooking>(
       },
       required: true,
     },
+    membershipTier: {
+      type: String,
+      enum: {
+        values: ["silver", "gold", "diamond"],
+        message: "Invalid membership tier.",
+      },
+    },
+    referralCode: String,
     daysOfRent: {
       type: Number,
       required: true,
