@@ -145,7 +145,9 @@ export const columns: ColumnDef<BookingRow>[] = [
         <Dialog>
           <form>
             <DialogTrigger asChild>
-              <Button size={"sm"}>manage booking</Button>
+              <Button variant="outline" size={"sm"}>
+                manage booking
+              </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
