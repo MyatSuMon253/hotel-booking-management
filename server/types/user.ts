@@ -6,6 +6,7 @@ export interface IUser extends Document {
   email: string;
   password: string;
   role?: string[];
+  isActive?: boolean;
   membershipTier?: "silver" | "gold" | "diamond";
   avatar: {
     url: string;

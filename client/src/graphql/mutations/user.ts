@@ -25,7 +25,37 @@ export const FORGET_PASSWORD_MUTATION = gql`
 `;
 
 export const RESET_PASSWORD_MUTATION = gql`
-  mutation ResetPassword($token: String!, $newPassword: String!, $confirmNewPassword: String!) {
-    resetPassword(token: $token, newPassword: $newPassword, confirmNewPassword: $confirmNewPassword)
+  mutation ResetPassword(
+    $token: String!
+    $newPassword: String!
+    $confirmNewPassword: String!
+  ) {
+    resetPassword(
+      token: $token
+      newPassword: $newPassword
+      confirmNewPassword: $confirmNewPassword
+    )
+  }
+`;
+
+export const UPDATE_USER_ROLE_MUTATION = gql`
+  mutation UpdateUser(
+    $userId: ID!
+    $roles: [String!]
+    $isActive: Boolean
+    $membershipTier: String
+  ) {
+    updateUser(
+      userId: $userId
+      roles: $roles
+      isActive: $isActive
+      membershipTier: $membershipTier
+    )
+  }
+`;
+
+export const DELETE_USER_MUTATION = gql`
+  mutation DeleteUser($userId: ID!) {
+    deleteUser(userId: $userId)
   }
 `;

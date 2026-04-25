@@ -1,9 +1,11 @@
 export interface User {
-  _id: string;
+  id: string;
+  _id?: string;
   name: string;
   email: string;
   password: string;
   role?: string[];
+  isActive: boolean;
   membershipTier?: "silver" | "gold" | "diamond";
   avatar: {
     url: string;

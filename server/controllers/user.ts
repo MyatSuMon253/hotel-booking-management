@@ -87,6 +87,57 @@ export const updateUserProfile = errorHandler(
   },
 );
 
+export const getAllUsers = errorHandler(async () => {
+  return await User.find().sort({ createdAt: -1 });
+});
+
+export const getUserById = errorHandler(async (userId: string) => {
+  const userDoc = await User.findById(userId);
+  if (!userDoc) {
+    throw new Error("User not found");
+  }
+  return userDoc;
+});
+
+export const updateUser = errorHandler(
+  async (
+    userId: string,
+    updates: Partial<Pick<UserInput, "role">> & {
+      isActive?: boolean;
+      membershipTier?: "silver" | "gold" | "diamond";
+    },
+  ) => {
+    const userDoc = await User.findById(userId);
+
+    if (!userDoc) {
+      throw new Error("User not found!");
+    }
+
+    if (updates.role) {
+      userDoc.role = updates.role;
+    }
+    if (typeof updates.isActive === "boolean") {
+      userDoc.isActive = updates.isActive;
+    }
+    if (updates.membershipTier) {
+      userDoc.membershipTier = updates.membershipTier;
+    }
+
+    await userDoc.save();
+    return true;
+  },
+);
+
+export const deleteUserById = errorHandler(async (userId: string) => {
+  const userDoc = await User.findByIdAndDelete(userId);
+
+  if (!userDoc) {
+    throw new Error("User not found!");
+  }
+
+  return true;
+});
+
 export const updateUserPassword = errorHandler(
   async (oldPassword: string, newPassword: string, userId: string) => {
     const userDoc = await User.findById(userId).select("+password");

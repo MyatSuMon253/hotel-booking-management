@@ -16,6 +16,8 @@ import { bookingResolvers } from "../graphql/resolvers/booking";
 import { paymentTypeDefs } from "../graphql/typeDefs/payment";
 import { paymentResolver } from "../graphql/resolvers/payment";
 import { webhookHandler } from "../controllers/payment";
+import { promotionTypeDefs } from "../graphql/typeDefs/promotion";
+import { promotionResolvers } from "../graphql/resolvers/promotion";
 import { reviewTypeDefs } from "../graphql/typeDefs/review";
 import { reviewResolvers } from "../graphql/resolvers/review";
 import { createServer } from "http";
@@ -33,6 +35,7 @@ export const startApolloServer = async (app: Application) => {
     bookingTypeDefs,
     paymentTypeDefs,
     reviewTypeDefs,
+    promotionTypeDefs,
   ];
   const resolvers = [
     roomResolvers,
@@ -40,6 +43,7 @@ export const startApolloServer = async (app: Application) => {
     bookingResolvers,
     paymentResolver,
     reviewResolvers,
+    promotionResolvers,
   ];
 
   const schema = makeExecutableSchema({

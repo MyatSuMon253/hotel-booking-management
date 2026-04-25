@@ -1,12 +1,16 @@
 import { Response } from "express";
 import {
   forgetPassword,
+  getAllUsers,
+  getUserById,
   login,
   register,
   resetPassword,
+  updateUser,
   updateUserPassword,
   updateUserProfile,
   uploadAvatar,
+  deleteUserById,
 } from "../../controllers/user";
 import { IUser, UserInput } from "../../types/user";
 
@@ -19,8 +23,27 @@ export const userResolvers = {
       res.cookie("token", null, { maxAge: 0 });
       return true;
     },
+    getAllUsers: async () => getAllUsers(),
+    getUserById: async (_: any, { userId }: { userId: string }) =>
+      getUserById(userId),
   },
   Mutation: {
+    updateUser: async (
+      _: any,
+      {
+        userId,
+        roles,
+        isActive,
+        membershipTier,
+      }: {
+        userId: string;
+        roles?: string[];
+        isActive?: boolean;
+        membershipTier?: string;
+      },
+    ) => updateUser(userId, { role: roles, isActive, membershipTier }),
+    deleteUser: async (_: any, { userId }: { userId: string }) =>
+      deleteUserById(userId),
     register: async (
       _: any,
       {

@@ -23,6 +23,14 @@ const CONTROLS = [
     path: "/admin/bookings",
   },
   {
+    label: "Manage Customers",
+    path: "/admin/customers",
+  },
+  {
+    label: "Manage Promotions",
+    path: "/admin/promotions",
+  },
+  {
     label: "Manage Reviews",
     path: "/admin/reviews",
   },

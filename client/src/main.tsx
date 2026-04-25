@@ -21,8 +21,12 @@ import InvoiceApp from "./components/invoice/Invoice.tsx";
 import Dashboard from "./components/admin/dashboard/Dashboard.tsx";
 import Layout from "./components/layout/Layout.tsx";
 import ManageRoom from "./components/pages/ManageRoom.tsx";
+import ManageCustomer from "./components/pages/ManageCustomer.tsx";
+import ManagePromotion from "./components/pages/ManagePromotion.tsx";
 import CreateRoom from "./components/admin/room/CreateRoom.tsx";
 import UpdateRoom from "./components/admin/room/UpdateRoom.tsx";
+import CreatePromotion from "./components/admin/promotion/CreatePromotion.tsx";
+import UpdatePromotion from "./components/admin/promotion/UpdatePromotion.tsx";
 import BookingList from "./components/admin/booking/BookingList.tsx";
 import ReviewList from "./components/admin/review/ReviewList.tsx";
 
@@ -92,6 +96,38 @@ const router = createBrowserRouter([
         element: (
           <ProtectPage roles={["admin"]}>
             <BookingList />
+          </ProtectPage>
+        ),
+      },
+      {
+        path: "/admin/customers",
+        element: (
+          <ProtectPage roles={["admin"]}>
+            <ManageCustomer />
+          </ProtectPage>
+        ),
+      },
+      {
+        path: "/admin/promotions",
+        element: (
+          <ProtectPage roles={["admin"]}>
+            <ManagePromotion />
+          </ProtectPage>
+        ),
+      },
+      {
+        path: "/admin/promotions/create",
+        element: (
+          <ProtectPage roles={["admin"]}>
+            <CreatePromotion />
+          </ProtectPage>
+        ),
+      },
+      {
+        path: "/admin/promotions/edit/:id",
+        element: (
+          <ProtectPage roles={["admin"]}>
+            <UpdatePromotion />
           </ProtectPage>
         ),
       },

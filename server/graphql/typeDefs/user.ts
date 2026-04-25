@@ -24,6 +24,7 @@ export const userTypeDefs = gql`
     avatar: Avatar
     role: [String]
     membershipTier: String
+    isActive: Boolean!
     createdAt: String!
     updatedAt: String!
   }
@@ -31,6 +32,8 @@ export const userTypeDefs = gql`
   type Query {
     currentUser: User
     logout: Boolean
+    getAllUsers: [User!]!
+    getUserById(userId: ID!): User
   }
 
   type Mutation {
@@ -45,5 +48,12 @@ export const userTypeDefs = gql`
       newPassword: String!
       confirmNewPassword: String!
     ): Boolean
+    updateUser(
+      userId: ID!
+      roles: [String!]
+      isActive: Boolean
+      membershipTier: String
+    ): Boolean
+    deleteUser(userId: ID!): Boolean
   }
 `;

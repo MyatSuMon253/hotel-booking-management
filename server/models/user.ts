@@ -32,6 +32,10 @@ const userSchema = new mongoose.Schema(
         message: "Please select a corret role.",
       },
     },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
     membershipTier: {
       type: String,
       enum: {
