@@ -267,7 +267,7 @@ export const updateBuffetBookingPayment = errorHandler(
 
     booking.set(bookingInput);
 
-    if (booking.paymentInfo?.method === "cash") {
+    if (booking.paymentInfo?.status === "paid") {
       booking.paymentInfo.status = "paid";
       booking.status = "confirmed";
     }

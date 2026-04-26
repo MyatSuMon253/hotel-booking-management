@@ -12,6 +12,18 @@ export const LOGIN_MUTATION = gql`
   mutation Login($email: String!, $password: String!) {
     login(email: $email, password: $password) {
       id
+      name
+      email
+      avatar {
+        url
+        public_id
+      }
+      role
+      membershipTier
+      referralCode
+      referralPoints
+      createdAt
+      updatedAt
     }
   }
 `;

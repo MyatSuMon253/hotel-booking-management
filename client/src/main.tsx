@@ -33,6 +33,7 @@ import BookingList from "./components/admin/booking/BookingList.tsx";
 import ReviewList from "./components/admin/review/ReviewList.tsx";
 import CustomerDetail from "./components/admin/customer/CustomerDetail.tsx";
 import ManageBuffetDinner from "./components/pages/ManageBuffetDinner.tsx";
+import ManageBuffetBooking from "./components/pages/ManageBuffetBooking.tsx";
 import BuffetDinnerForm from "./components/admin/buffet/BuffetDinnerForm.tsx";
 import BuffetListPage from "./components/pages/BuffetListPage.tsx";
 import BuffetDetailPage from "./components/pages/BuffetDetailPage.tsx";
@@ -185,6 +186,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectPage roles={["admin"]}>
             <BuffetDinnerForm />
+          </ProtectPage>
+        ),
+      },
+      {
+        path: "/admin/buffet-bookings",
+        element: (
+          <ProtectPage roles={["admin"]}>
+            <ManageBuffetBooking />
           </ProtectPage>
         ),
       },

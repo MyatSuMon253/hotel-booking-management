@@ -15,31 +15,35 @@ const CONTROLS = [
     path: "/admin/dashboard",
   },
   {
-    label: "Manage Rooms",
+    label: "Rooms",
     path: "/admin/rooms",
   },
   {
-    label: "Manage Bookings",
+    label: "Room Bookings",
     path: "/admin/bookings",
   },
   {
-    label: "Manage Customers",
-    path: "/admin/customers",
-  },
-  {
-    label: "Manage Promotions",
-    path: "/admin/promotions",
-  },
-  {
-    label: "Manage Buffet Dinners",
+    label: "Buffet Dinners",
     path: "/admin/buffet-dinners",
   },
   {
-    label: "Manage Membership Tiers",
+    label: "Dinner Bookings",
+    path: "/admin/buffet-bookings",
+  },
+  {
+    label: "Membership Tiers",
     path: "/admin/membership-tiers",
   },
   {
-    label: "Manage Reviews",
+    label: "Customers",
+    path: "/admin/customers",
+  },
+  {
+    label: "Promotions",
+    path: "/admin/promotions",
+  },
+  {
+    label: "Reviews",
     path: "/admin/reviews",
   },
 ];

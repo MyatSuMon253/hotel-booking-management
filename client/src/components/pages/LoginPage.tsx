@@ -1,4 +1,4 @@
-import { isAuthenticatedVar } from "@/apollo/apollo-vars";
+import { isAuthenticatedVar, userInfoVar } from "@/apollo/apollo-vars";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -29,19 +29,25 @@ import {
 } from "../ui/card";
 
 const LoginPage = () => {
-  const naviagte = useNavigate();
+  const navigate = useNavigate();
   const isAuthenticated = useReactiveVar(isAuthenticatedVar);
 
   useEffect(() => {
     if (isAuthenticated) {
-      naviagte("/");
+      const user = userInfoVar();
+      navigate(user?.role?.includes("admin") ? "/admin/dashboard" : "/bookings");
     }
-  }, [isAuthenticated, naviagte]);
+  }, [isAuthenticated, navigate]);
 
   const [login, { loading }] = useMutation(LOGIN_MUTATION, {
-    onCompleted() {
+    onCompleted(data) {
+      const user = data?.login;
       toast.success("Login successful.");
-      return naviagte("/");
+      if (user) {
+        userInfoVar(user);
+        isAuthenticatedVar(true);
+      }
+      return navigate(user?.role?.includes("admin") ? "/admin/dashboard" : "/bookings");
     },
     refetchQueries: [CURRENT_USER],
   });
