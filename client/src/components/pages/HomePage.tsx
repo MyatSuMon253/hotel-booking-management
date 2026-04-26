@@ -26,6 +26,8 @@ const HomePage = () => {
   const variables = { query, filters, page };
   const { data, loading } = useQuery(GET_ALL_ROOMS, { variables });
 
+  const rooms = data?.getAllRooms?.rooms ?? [];
+
   return (
     <main className="layout grid grid-cols-4 gap-6">
       <Filters />
@@ -40,7 +42,7 @@ const HomePage = () => {
           {loading && <p>Loading ...</p>}
           {!loading && data?.getAllRooms && (
             <section className="grid grid-cols-3 gap-4">
-              {data?.getAllRooms?.rooms?.map((room: Room) => (
+              {rooms?.map((room: Room) => (
                 <RoomCard key={room.id} room={room} />
               ))}
             </section>

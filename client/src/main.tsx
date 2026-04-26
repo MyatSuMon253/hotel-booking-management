@@ -3,7 +3,6 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import { Toaster } from "sonner";
-
 import client from "./apollo/apolloClient.ts";
 import DetailPage from "./components/pages/DetailPage.tsx";
 import HomePage from "./components/pages/HomePage.tsx";

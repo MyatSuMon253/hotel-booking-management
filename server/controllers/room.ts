@@ -14,7 +14,7 @@ export const getAllRooms = errorHandler(
     const totalRoomCount = rooms.length;
 
     apiFilters.pagination(page, perPage);
-    rooms = await apiFilters.model.clone();
+    rooms = await apiFilters.model.clone().populate("reviews");
 
     if (!rooms) {
       throw new NotFoundError("Rooms not found");
@@ -25,7 +25,7 @@ export const getAllRooms = errorHandler(
 );
 
 export const getAllRoomsWithoutFilters = errorHandler(async () => {
-  const rooms = await Room.find().sort({ createdAt: -1 });
+  const rooms = await Room.find().populate("reviews").sort({ createdAt: -1 });
   return rooms;
 });
 

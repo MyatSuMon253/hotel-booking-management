@@ -51,7 +51,10 @@ const roomSchema = new mongoose.Schema(
 );
 
 roomSchema.virtual("ratings").get(function () {
-  let numOfReviews = this.reviews.length;
+  const reviewsWithRatings = this.reviews.filter((review: any) =>
+    Number.isFinite(review?.rating),
+  );
+  const numOfReviews = reviewsWithRatings.length;
 
   if (numOfReviews === 0) {
     return {
@@ -60,15 +63,15 @@ roomSchema.virtual("ratings").get(function () {
     };
   }
 
-  const totalRatings = this.reviews.reduce(
+  const totalRatings = reviewsWithRatings.reduce(
     (sum: number, review: any) => sum + review.rating,
     0,
   );
 
-  const value = numOfReviews > 0 ? totalRatings / numOfReviews : 0;
+  const value = totalRatings / numOfReviews;
 
   return {
-    value,
+    value: Number.isFinite(value) ? value : 5,
     count: numOfReviews,
   };
 });

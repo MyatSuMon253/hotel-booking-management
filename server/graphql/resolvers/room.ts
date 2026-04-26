@@ -36,6 +36,14 @@ export const roomResolvers = {
     ) => await deleteRoomImage(roomId, imageId),
   },
   Room: {
-    ratings: (parent: any)=> parent.ratings
-  }
+    ratings: (parent: any) => {
+      const value = Number(parent.ratings?.value);
+      const count = Number(parent.ratings?.count);
+
+      return {
+        value: Number.isFinite(value) ? value : 5,
+        count: Number.isFinite(count) ? count : 0,
+      };
+    },
+  },
 };
