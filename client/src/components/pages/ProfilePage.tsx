@@ -5,7 +5,7 @@ import UserInfo from "../profile/UserInfo";
 
 const ProfilePage = () => {
   return (
-    <main className="layout space-y-4 mb-4">
+    <main className="mb-4 space-y-4">
       <AvatarUpload />
       <UserInfo />
       <UpdatePassword />

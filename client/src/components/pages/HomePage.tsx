@@ -29,9 +29,7 @@ const HomePage = () => {
   const rooms = data?.getAllRooms?.rooms ?? [];
 
   return (
-    <main className="layout grid grid-cols-4 gap-6">
-      <Filters />
-
+    <main className="grid grid-cols-4 gap-6">
       <div className="col-span-3">
         <h1 className="text-2xl font-bold">Top trending hotel in Myanmar</h1>
         <p className="text-sm font-medium text-muted-foreground">
@@ -59,6 +57,7 @@ const HomePage = () => {
           />
         )}
       </div>
+      <Filters />
     </main>
   );
 };

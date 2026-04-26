@@ -8,18 +8,15 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { CURRENT_USER, LOGOUT } from "@/graphql/queries/user";
-import { useLazyQuery, useQuery, useReactiveVar } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import { Link, useNavigate } from "react-router";
 import { Button } from "../ui/button";
 
 const Header = () => {
   const navigate = useNavigate();
-  const userInfo = useReactiveVar(userInfoVar);
 
   const { data, loading } = useQuery(CURRENT_USER, {
     onCompleted: (data) => {
@@ -68,9 +65,9 @@ const Header = () => {
               </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              {/* { <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              {userInfo?.role?.includes("admin") && (
+           userInfo?.role?.includes("admin") && (
                 <>
                   {" "}
                   <DropdownMenuItem>
@@ -84,7 +81,7 @@ const Header = () => {
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Link to={"/bookings"}>Bookings</Link>
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
               <DropdownMenuItem onClick={logoutHandler}>
                 <span className="text-red-600">Logout</span>
               </DropdownMenuItem>

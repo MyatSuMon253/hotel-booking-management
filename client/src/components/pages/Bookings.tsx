@@ -19,6 +19,7 @@ import type { BuffetBooking } from "@/types/buffet";
 import { Link } from "react-router";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
+import CancelBuffetBookingDialog from "../buffet/CancelBuffetBookingDialog";
 
 interface RoomBookingResponse {
   id: string;
@@ -74,7 +75,7 @@ function Bookings() {
     })) ?? [];
 
   return (
-    <section className="layout">
+    <section>
       <h2 className="mb-4 text-2xl font-bold">My Bookings</h2>
       <div className="grid grid-cols-3 gap-4">
         <BookingCard
@@ -132,19 +133,26 @@ function Bookings() {
                         <Badge variant="outline">{booking.status}</Badge>
                       </td>
                       <td className="p-3">
-                        <Button size="sm" variant="outline" asChild>
-                          <Link
-                            to={
-                              booking.paymentInfo?.status === "paid"
-                                ? `/buffet-bookings/${booking.id}/confirmation`
-                                : `/buffet-bookings/${booking.id}/payment`
-                            }
-                          >
-                            {booking.paymentInfo?.status === "paid"
-                              ? "View"
-                              : "Pay"}
-                          </Link>
-                        </Button>
+                        <div className="flex flex-wrap gap-2">
+                          <Button size="sm" variant="outline" asChild>
+                            <Link
+                              to={
+                                booking.paymentInfo?.status === "paid"
+                                  ? `/buffet-bookings/${booking.id}/confirmation`
+                                  : `/buffet-bookings/${booking.id}/payment`
+                              }
+                            >
+                              {booking.paymentInfo?.status === "paid"
+                                ? "View"
+                                : "Pay"}
+                            </Link>
+                          </Button>
+                          {booking.status !== "cancelled" && (
+                            <CancelBuffetBookingDialog
+                              buffetBookingId={booking.id}
+                            />
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ),

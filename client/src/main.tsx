@@ -19,6 +19,7 @@ import Bookings from "./components/pages/Bookings.tsx";
 import InvoiceApp from "./components/invoice/Invoice.tsx";
 import Dashboard from "./components/admin/dashboard/Dashboard.tsx";
 import Layout from "./components/layout/Layout.tsx";
+import UserLayout from "./components/layout/UserLayout.tsx";
 import ManageRoom from "./components/pages/ManageRoom.tsx";
 import ManageCustomer from "./components/pages/ManageCustomer.tsx";
 import ManagePromotion from "./components/pages/ManagePromotion.tsx";
@@ -47,7 +48,11 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <HomePage />,
+        element: (
+          <UserLayout>
+            <HomePage />
+          </UserLayout>
+        ),
       },
       {
         path: "/rooms/:id",
@@ -81,7 +86,9 @@ const router = createBrowserRouter([
         path: "/profile",
         element: (
           <ProtectPage>
-            <ProfilePage />
+            <UserLayout>
+              <ProfilePage />
+            </UserLayout>
           </ProtectPage>
         ),
       },
@@ -270,7 +277,9 @@ const router = createBrowserRouter([
         path: "/bookings",
         element: (
           <ProtectPage>
-            <Bookings />
+            <UserLayout>
+              <Bookings />
+            </UserLayout>
           </ProtectPage>
         ),
       },
