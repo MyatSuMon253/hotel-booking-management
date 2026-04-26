@@ -17,13 +17,6 @@ export const columns: ColumnDef<User>[] = [
     ),
   },
   {
-    accessorKey: "role",
-    header: "Role",
-    cell: ({ row }) => (
-      <Badge variant="outline">{row.original.role?.join(", ") || "user"}</Badge>
-    ),
-  },
-  {
     accessorKey: "isActive",
     header: "Status",
     cell: ({ row }) => (
@@ -40,11 +33,11 @@ export const columns: ColumnDef<User>[] = [
     ),
   },
   {
-    accessorKey: "createdAt",
-    header: "Joined",
+    accessorKey: "referralPoints",
+    header: "Points",
     cell: ({ row }) => (
       <p className="text-sm text-muted-foreground">
-        {new Date(parseInt(row.original.createdAt)).toLocaleDateString()}
+        {row.original.referralPoints ?? 0}
       </p>
     ),
   },

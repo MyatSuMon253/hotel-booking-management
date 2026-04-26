@@ -44,12 +44,14 @@ export const UPDATE_USER_ROLE_MUTATION = gql`
     $roles: [String!]
     $isActive: Boolean
     $membershipTier: String
+    $referralPointsAdjustment: Int
   ) {
     updateUser(
       userId: $userId
       roles: $roles
       isActive: $isActive
       membershipTier: $membershipTier
+      referralPointsAdjustment: $referralPointsAdjustment
     )
   }
 `;

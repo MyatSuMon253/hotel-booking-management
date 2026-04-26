@@ -128,6 +128,7 @@ export const updateUser = errorHandler(
     updates: Partial<Pick<UserInput, "role">> & {
       isActive?: boolean;
       membershipTier?: "silver" | "gold" | "diamond" | null;
+      referralPointsAdjustment?: number;
     },
   ) => {
     const userDoc = await User.findById(userId);
@@ -149,6 +150,14 @@ export const updateUser = errorHandler(
         userDoc.membershipTier = undefined;
         userDoc.referralCode = undefined;
       }
+    }
+    if (typeof updates.referralPointsAdjustment === "number") {
+      if (updates.referralPointsAdjustment < 0) {
+        throw new Error("Referral points adjustment cannot be negative.");
+      }
+
+      userDoc.referralPoints =
+        (userDoc.referralPoints ?? 0) + updates.referralPointsAdjustment;
     }
 
     await userDoc.save();

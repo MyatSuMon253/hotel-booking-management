@@ -61,6 +61,7 @@ export const userTypeDefs = gql`
       roles: [String!]
       isActive: Boolean
       membershipTier: String
+      referralPointsAdjustment: Int
     ): Boolean
     deleteUser(userId: ID!): Boolean
   }

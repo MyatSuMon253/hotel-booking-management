@@ -41,13 +41,21 @@ export const userResolvers = {
         roles,
         isActive,
         membershipTier,
+        referralPointsAdjustment,
       }: {
         userId: string;
         roles?: string[];
         isActive?: boolean;
         membershipTier?: string;
+        referralPointsAdjustment?: number;
       },
-    ) => updateUser(userId, { role: roles, isActive, membershipTier }),
+    ) =>
+      updateUser(userId, {
+        role: roles,
+        isActive,
+        membershipTier,
+        referralPointsAdjustment,
+      }),
     deleteUser: async (_: any, { userId }: { userId: string }) =>
       deleteUserById(userId),
     register: async (
