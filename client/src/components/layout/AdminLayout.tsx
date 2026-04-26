@@ -31,6 +31,10 @@ const CONTROLS = [
     path: "/admin/promotions",
   },
   {
+    label: "Manage Buffet Dinners",
+    path: "/admin/buffet-dinners",
+  },
+  {
     label: "Manage Membership Tiers",
     path: "/admin/membership-tiers",
   },

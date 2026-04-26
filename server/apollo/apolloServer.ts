@@ -22,6 +22,8 @@ import { membershipTierTypeDefs } from "../graphql/typeDefs/membershipTier";
 import { membershipTierResolvers } from "../graphql/resolvers/membershipTier";
 import { reviewTypeDefs } from "../graphql/typeDefs/review";
 import { reviewResolvers } from "../graphql/resolvers/review";
+import { buffetTypeDefs } from "../graphql/typeDefs/buffet";
+import { buffetResolvers } from "../graphql/resolvers/buffet";
 import { createServer } from "http";
 import { WebSocketServer } from "ws";
 import { useServer } from "graphql-ws/use/ws";
@@ -39,6 +41,7 @@ export const startApolloServer = async (app: Application) => {
     reviewTypeDefs,
     promotionTypeDefs,
     membershipTierTypeDefs,
+    buffetTypeDefs,
   ];
   const resolvers = [
     roomResolvers,
@@ -48,6 +51,7 @@ export const startApolloServer = async (app: Application) => {
     reviewResolvers,
     promotionResolvers,
     membershipTierResolvers,
+    buffetResolvers,
   ];
 
   const schema = makeExecutableSchema({

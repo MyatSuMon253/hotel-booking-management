@@ -32,6 +32,12 @@ import UpdateMembershipTier from "./components/admin/membership-tier/UpdateMembe
 import BookingList from "./components/admin/booking/BookingList.tsx";
 import ReviewList from "./components/admin/review/ReviewList.tsx";
 import CustomerDetail from "./components/admin/customer/CustomerDetail.tsx";
+import ManageBuffetDinner from "./components/pages/ManageBuffetDinner.tsx";
+import BuffetDinnerForm from "./components/admin/buffet/BuffetDinnerForm.tsx";
+import BuffetListPage from "./components/pages/BuffetListPage.tsx";
+import BuffetDetailPage from "./components/pages/BuffetDetailPage.tsx";
+import BuffetPaymentPage from "./components/pages/BuffetPaymentPage.tsx";
+import BuffetConfirmationPage from "./components/pages/BuffetConfirmationPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -45,6 +51,22 @@ const router = createBrowserRouter([
       {
         path: "/rooms/:id",
         element: <DetailPage />,
+      },
+      {
+        path: "/buffets",
+        element: (
+          <ProtectPage>
+            <BuffetListPage />
+          </ProtectPage>
+        ),
+      },
+      {
+        path: "/buffets/:id",
+        element: (
+          <ProtectPage>
+            <BuffetDetailPage />
+          </ProtectPage>
+        ),
       },
       {
         path: "/register",
@@ -143,6 +165,30 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "/admin/buffet-dinners",
+        element: (
+          <ProtectPage roles={["admin"]}>
+            <ManageBuffetDinner />
+          </ProtectPage>
+        ),
+      },
+      {
+        path: "/admin/buffet-dinners/create",
+        element: (
+          <ProtectPage roles={["admin"]}>
+            <BuffetDinnerForm />
+          </ProtectPage>
+        ),
+      },
+      {
+        path: "/admin/buffet-dinners/edit/:id",
+        element: (
+          <ProtectPage roles={["admin"]}>
+            <BuffetDinnerForm />
+          </ProtectPage>
+        ),
+      },
+      {
         path: "/admin/membership-tiers",
         element: (
           <ProtectPage roles={["admin"]}>
@@ -192,6 +238,22 @@ const router = createBrowserRouter([
         element: (
           <ProtectPage>
             <PaymentConfirmation />
+          </ProtectPage>
+        ),
+      },
+      {
+        path: "/buffet-bookings/:id/payment",
+        element: (
+          <ProtectPage>
+            <BuffetPaymentPage />
+          </ProtectPage>
+        ),
+      },
+      {
+        path: "/buffet-bookings/:id/confirmation",
+        element: (
+          <ProtectPage>
+            <BuffetConfirmationPage />
           </ProtectPage>
         ),
       },

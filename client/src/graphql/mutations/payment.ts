@@ -7,3 +7,11 @@ export const STRIPE_CHECKOUT_MUTATION = gql`
     }
   }
 `;
+
+export const STRIPE_BUFFET_CHECKOUT_MUTATION = gql`
+  mutation StripeBuffetCheckoutSession($buffetBookingId: ID!) {
+    stripeBuffetCheckoutSession(buffetBookingId: $buffetBookingId) {
+      url
+    }
+  }
+`;

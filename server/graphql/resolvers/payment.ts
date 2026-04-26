@@ -1,4 +1,7 @@
-import { stripeCheckoutSession } from "../../controllers/payment";
+import {
+  stripeBuffetCheckoutSession,
+  stripeCheckoutSession,
+} from "../../controllers/payment";
 
 export const paymentResolver = {
   Mutation: {
@@ -6,5 +9,9 @@ export const paymentResolver = {
       _: any,
       { bookingId }: { bookingId: string },
     ) => stripeCheckoutSession(bookingId),
+    stripeBuffetCheckoutSession: async (
+      _: any,
+      { buffetBookingId }: { buffetBookingId: string },
+    ) => stripeBuffetCheckoutSession(buffetBookingId),
   },
 };

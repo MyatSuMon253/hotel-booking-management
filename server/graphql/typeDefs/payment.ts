@@ -7,5 +7,6 @@ export const paymentTypeDefs = gql`
 
   type Mutation {
     stripeCheckoutSession(bookingId: ID!): StripeSession!
+    stripeBuffetCheckoutSession(buffetBookingId: ID!): StripeSession!
   }
 `;

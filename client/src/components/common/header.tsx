@@ -50,6 +50,9 @@ const Header = () => {
         Rangoon Heritage
       </Link>
       <div className="space-x-4">
+        <Button variant="ghost" asChild>
+          <Link to={"/buffets"}>Buffet Dinners</Link>
+        </Button>
         {loading && <span>...</span>}
         {!loading && data?.currentUser ? (
           <DropdownMenu>

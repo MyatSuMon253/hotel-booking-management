@@ -1,4 +1,5 @@
 import { GET_BOOKING_BY_USER } from "@/graphql/queries/booking";
+import { GET_BUFFET_BOOKINGS_BY_USER } from "@/graphql/queries/buffet";
 import { useQuery } from "@apollo/client";
 import Loader from "../common/Loader";
 import NotFound from "../common/NotFound";
@@ -14,22 +15,50 @@ import BookingCard from "../booking/BookingCard";
 import type { BookingRow } from "@/types/booking";
 import { DataTable } from "../booking/data-table";
 import { columns } from "../booking/columns";
+import type { BuffetBooking } from "@/types/buffet";
+import { Link } from "react-router";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+
+interface RoomBookingResponse {
+  id: string;
+  room: {
+    title: string;
+    id: string;
+  };
+  startDate: string;
+  endDate: string;
+  amount: {
+    total: number;
+  };
+  daysOfRent: number;
+  paymentInfo?: {
+    status?: "paid" | "pending" | "refunded";
+    method?: "card" | "cash";
+  };
+  status?: BookingRow["status"];
+}
 
 function Bookings() {
   const { data, loading, error } = useQuery(GET_BOOKING_BY_USER);
+  const {
+    data: buffetData,
+    loading: buffetLoading,
+    error: buffetError,
+  } = useQuery(GET_BUFFET_BOOKINGS_BY_USER);
 
-  if (loading) {
+  if (loading || buffetLoading) {
     return <Loader />;
   }
 
-  if (error) {
+  if (error || buffetError) {
     return <NotFound />;
   }
 
   console.log(data);
 
   const rows: BookingRow[] =
-    data?.getBookingByUser?.bookings.map((booking: any) => ({
+    data?.getBookingByUser?.bookings.map((booking: RoomBookingResponse) => ({
       id: booking.id,
       roomTitle: booking.room.title,
       roomId: booking.room.id,
@@ -71,6 +100,65 @@ function Bookings() {
         </CardHeader>
         <CardContent>
           <DataTable data={rows} columns={columns} />
+        </CardContent>
+      </Card>
+      <Card className="mt-8">
+        <CardHeader>
+          <CardTitle>Buffet bookings</CardTitle>
+          <CardDescription>View your buffet dinner reservations.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="overflow-hidden rounded-md border">
+            <table className="w-full text-sm">
+              <thead className="bg-muted">
+                <tr>
+                  <th className="p-3 text-left">Dinner</th>
+                  <th className="p-3 text-left">Guests</th>
+                  <th className="p-3 text-left">Total</th>
+                  <th className="p-3 text-left">Status</th>
+                  <th className="p-3 text-left">Manage</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(buffetData?.getBuffetBookingsByUser ?? []).map(
+                  (booking: BuffetBooking) => (
+                    <tr key={booking.id} className="border-t">
+                      <td className="p-3 font-medium">
+                        {booking.buffetDinner.title}
+                      </td>
+                      <td className="p-3">{booking.guestCount}</td>
+                      <td className="p-3">${booking.amount.total.toFixed(2)}</td>
+                      <td className="p-3">
+                        <Badge variant="outline">{booking.status}</Badge>
+                      </td>
+                      <td className="p-3">
+                        <Button size="sm" variant="outline" asChild>
+                          <Link
+                            to={
+                              booking.paymentInfo?.status === "paid"
+                                ? `/buffet-bookings/${booking.id}/confirmation`
+                                : `/buffet-bookings/${booking.id}/payment`
+                            }
+                          >
+                            {booking.paymentInfo?.status === "paid"
+                              ? "View"
+                              : "Pay"}
+                          </Link>
+                        </Button>
+                      </td>
+                    </tr>
+                  ),
+                )}
+                {(buffetData?.getBuffetBookingsByUser ?? []).length === 0 && (
+                  <tr>
+                    <td className="p-6 text-center" colSpan={5}>
+                      No buffet bookings yet.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </CardContent>
       </Card>
     </section>
