@@ -5,6 +5,7 @@ export const buffetTypeDefs = gql`
     title: String!
     cuisineCategory: String!
     description: String
+    imageUrl: String
     startsAt: String!
     endsAt: String!
     includedDishes: [ID!]!
@@ -18,6 +19,7 @@ export const buffetTypeDefs = gql`
     title: String
     cuisineCategory: String
     description: String
+    imageUrl: String
     startsAt: String
     endsAt: String
     includedDishes: [ID!]
@@ -48,6 +50,7 @@ export const buffetTypeDefs = gql`
     name: String!
     cuisineCategory: String!
     description: String
+    imageUrl: String
   }
 
   type BuffetDinner {
@@ -55,6 +58,7 @@ export const buffetTypeDefs = gql`
     title: String!
     cuisineCategory: String!
     description: String
+    imageUrl: String
     startsAt: String!
     endsAt: String!
     includedDishes: [Dish!]!

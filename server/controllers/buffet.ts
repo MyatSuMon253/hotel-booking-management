@@ -1,7 +1,7 @@
 import errorHandler from "../middlewares/errorHandler";
 import mongoose from "mongoose";
 import {
-  getDishByCatalogId,
+  getDishWithImageByCatalogId,
   getDishCatalog,
   validateDishSelection,
 } from "../data/dishCatalog";
@@ -47,11 +47,11 @@ export const getRemainingBuffetCapacity = async (buffetDinner: any) => {
 };
 
 export const getAllDishes = errorHandler(async () => {
-  return getDishCatalog();
+  return await getDishCatalog();
 });
 
 export const getDishById = errorHandler(async (dishId: string) => {
-  const dish = getDishByCatalogId(dishId);
+  const dish = await getDishWithImageByCatalogId(dishId);
   if (!dish) {
     throw new NotFoundError("Dish not found");
   }
@@ -71,6 +71,10 @@ const buildBuffetDinnerInput = (buffetDinnerInput: any) => ({
   description:
     buffetDinnerInput.description !== undefined
       ? normalizeText(buffetDinnerInput.description)
+      : undefined,
+  imageUrl:
+    buffetDinnerInput.imageUrl !== undefined
+      ? normalizeText(buffetDinnerInput.imageUrl)
       : undefined,
   startsAt:
     buffetDinnerInput.startsAt !== undefined

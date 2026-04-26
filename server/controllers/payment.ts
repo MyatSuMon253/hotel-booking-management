@@ -76,6 +76,7 @@ export const stripeBuffetCheckoutSession = errorHandler(
               description: `${new Date(
                 buffetDinner.startsAt,
               ).toLocaleString()} for ${booking.guestCount} guest(s)`,
+              images: buffetDinner.imageUrl ? [buffetDinner.imageUrl] : [],
             },
           },
           quantity: 1,

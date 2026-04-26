@@ -3,6 +3,7 @@ export interface Dish {
   name: string;
   cuisineCategory: string;
   description?: string;
+  imageUrl?: string;
 }
 
 export interface BuffetDinner {
@@ -10,6 +11,7 @@ export interface BuffetDinner {
   title: string;
   cuisineCategory: string;
   description?: string;
+  imageUrl?: string;
   startsAt: string;
   endsAt: string;
   includedDishes: Dish[];

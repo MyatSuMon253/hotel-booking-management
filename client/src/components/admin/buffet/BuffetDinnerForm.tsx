@@ -46,6 +46,7 @@ function BuffetDinnerForm() {
       title: "",
       cuisineCategory: "",
       description: "",
+      imageUrl: "",
       eventDate: "",
       startTime: "",
       endTime: "",
@@ -88,6 +89,7 @@ function BuffetDinnerForm() {
         title: buffetDinner.title,
         cuisineCategory: buffetDinner.cuisineCategory,
         description: buffetDinner.description ?? "",
+        imageUrl: buffetDinner.imageUrl ?? "",
         eventDate: startsAt?.toISOString().slice(0, 10) ?? "",
         startTime: startsAt?.toTimeString().slice(0, 5) ?? "",
         endTime: endsAt?.toTimeString().slice(0, 5) ?? "",
@@ -133,6 +135,7 @@ function BuffetDinnerForm() {
       title: values.title,
       cuisineCategory: values.cuisineCategory,
       description: values.description,
+      imageUrl: values.imageUrl,
       startsAt: startsAt.toISOString(),
       endsAt: endsAt.toISOString(),
       includedDishes: values.includedDishes,
@@ -203,6 +206,13 @@ function BuffetDinnerForm() {
               {...form.register("description")}
             />
           </label>
+          <label className="flex flex-col gap-2">
+            <span>Buffet dinner photo URL</span>
+            <Input
+              placeholder="https://example.com/european-night.jpg"
+              {...form.register("imageUrl")}
+            />
+          </label>
           <div className="grid gap-4 sm:grid-cols-3">
             <label className="flex flex-col gap-2">
               <span>Event date</span>
@@ -244,12 +254,22 @@ function BuffetDinnerForm() {
             </div>
             <div className="grid gap-2 sm:grid-cols-2">
               {filteredDishes.map((dish) => (
-                <label key={dish.id} className="flex items-center gap-2">
+                <label
+                  key={dish.id}
+                  className="flex items-center gap-3 rounded-md border p-2"
+                >
                   <input
                     type="checkbox"
                     checked={selectedDishes.includes(dish.id)}
                     onChange={() => handleDishToggle(dish.id)}
                   />
+                  {dish.imageUrl && (
+                    <img
+                      src={dish.imageUrl}
+                      alt={dish.name}
+                      className="h-12 w-16 rounded object-cover"
+                    />
+                  )}
                   <span>
                     {dish.name}{" "}
                     <span className="text-xs text-muted-foreground">

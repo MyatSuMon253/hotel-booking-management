@@ -18,6 +18,11 @@ const buffetDinnerSchema = new mongoose.Schema<IBuffetDinner>(
       default: "",
       trim: true,
     },
+    imageUrl: {
+      type: String,
+      default: "",
+      trim: true,
+    },
     startsAt: {
       type: Date,
       required: [true, "Start time is required."],

@@ -12,6 +12,7 @@ export interface IDish {
   name: string;
   cuisineCategory: string;
   description?: string;
+  imageUrl?: string;
 }
 
 export interface IBuffetDinner {
@@ -19,6 +20,7 @@ export interface IBuffetDinner {
   title: string;
   cuisineCategory: string;
   description?: string;
+  imageUrl?: string;
   startsAt: Date;
   endsAt: Date;
   includedDishes: string[];

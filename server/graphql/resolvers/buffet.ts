@@ -23,7 +23,7 @@ export const buffetResolvers = {
   BuffetDinner: {
     remainingCapacity: async (parent: any) =>
       getRemainingBuffetCapacity(parent),
-    includedDishes: (parent: any) => {
+    includedDishes: async (parent: any) => {
       if (!Array.isArray(parent.includedDishes)) {
         return [];
       }

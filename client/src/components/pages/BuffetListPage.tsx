@@ -35,12 +35,21 @@ function BuffetListPage() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {buffetDinners.map((buffetDinner) => (
           <Card key={buffetDinner.id}>
+            {buffetDinner.imageUrl && (
+              <img
+                src={buffetDinner.imageUrl}
+                alt={buffetDinner.title}
+                className="h-40 w-full rounded-t-lg object-cover"
+              />
+            )}
             <CardHeader>
               <div className="flex items-center justify-between gap-3">
                 <CardTitle>{buffetDinner.title}</CardTitle>
                 <Badge variant="outline">{buffetDinner.cuisineCategory}</Badge>
               </div>
-              <CardDescription>{formatDateTime(buffetDinner.startsAt)}</CardDescription>
+              <CardDescription>
+                {formatDateTime(buffetDinner.startsAt)}
+              </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
               <p className="line-clamp-3 text-sm text-muted-foreground">

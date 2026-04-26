@@ -73,7 +73,18 @@ function BuffetDinnerList() {
               <tbody>
                 {buffetDinners.map((buffetDinner) => (
                   <tr key={buffetDinner.id} className="border-t align-top">
-                    <td className="p-3 font-medium">{buffetDinner.title}</td>
+                    <td className="p-3">
+                      <div className="flex items-center gap-3">
+                        {buffetDinner.imageUrl && (
+                          <img
+                            src={buffetDinner.imageUrl}
+                            alt={buffetDinner.title}
+                            className="h-12 w-16 rounded object-cover"
+                          />
+                        )}
+                        <span className="font-medium">{buffetDinner.title}</span>
+                      </div>
+                    </td>
                     <td className="p-3">{buffetDinner.cuisineCategory}</td>
                     <td className="p-3">
                       {formatDateTime(buffetDinner.startsAt)}

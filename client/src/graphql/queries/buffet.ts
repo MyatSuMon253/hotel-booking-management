@@ -5,6 +5,7 @@ const DISH_FIELDS = `
   name
   cuisineCategory
   description
+  imageUrl
 `;
 
 const BUFFET_DINNER_FIELDS = `
@@ -12,6 +13,7 @@ const BUFFET_DINNER_FIELDS = `
   title
   cuisineCategory
   description
+  imageUrl
   startsAt
   endsAt
   maxCapacity

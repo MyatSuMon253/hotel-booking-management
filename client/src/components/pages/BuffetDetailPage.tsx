@@ -103,6 +103,13 @@ function BuffetDetailPage() {
   return (
     <section className="layout grid gap-6 lg:grid-cols-3">
       <Card className="lg:col-span-2">
+        {buffetDinner.imageUrl && (
+          <img
+            src={buffetDinner.imageUrl}
+            alt={buffetDinner.title}
+            className="h-72 w-full rounded-t-lg object-cover"
+          />
+        )}
         <CardHeader>
           <div className="flex items-center justify-between gap-3">
             <CardTitle className="text-3xl">{buffetDinner.title}</CardTitle>
@@ -114,11 +121,26 @@ function BuffetDetailPage() {
           <p className="text-muted-foreground">{buffetDinner.description}</p>
           <div>
             <h3 className="font-semibold">Included dishes</h3>
-            <div className="mt-2 flex flex-wrap gap-2">
+            <div className="mt-2 grid gap-3 sm:grid-cols-2">
               {buffetDinner.includedDishes.map((dish) => (
-                <Badge key={dish.id} variant="secondary">
-                  {dish.name}
-                </Badge>
+                <div
+                  key={dish.id}
+                  className="flex items-center gap-3 rounded-md border p-2"
+                >
+                  {dish.imageUrl && (
+                    <img
+                      src={dish.imageUrl}
+                      alt={dish.name}
+                      className="h-14 w-20 rounded object-cover"
+                    />
+                  )}
+                  <div>
+                    <p className="font-medium">{dish.name}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {dish.cuisineCategory}
+                    </p>
+                  </div>
+                </div>
               ))}
             </div>
           </div>

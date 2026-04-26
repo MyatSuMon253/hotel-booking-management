@@ -7,6 +7,12 @@ export const buffetDinnerSchema = z.object({
     .trim()
     .min(1, { message: "Cuisine category is required." }),
   description: z.string().optional(),
+  imageUrl: z
+    .string()
+    .trim()
+    .url({ message: "Please enter a valid image URL." })
+    .optional()
+    .or(z.literal("")),
   eventDate: z.string().min(1, { message: "Event date is required." }),
   startTime: z.string().min(1, { message: "Start time is required." }),
   endTime: z.string().min(1, { message: "End time is required." }),
