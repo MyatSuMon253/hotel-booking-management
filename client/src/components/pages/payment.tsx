@@ -85,7 +85,7 @@ function PaymentPage() {
   };
 
   return (
-    <section className="layout">
+    <section>
       <Card>
         <CardHeader>
           <CardTitle>Booking Summary - #{bookingData.id}</CardTitle>

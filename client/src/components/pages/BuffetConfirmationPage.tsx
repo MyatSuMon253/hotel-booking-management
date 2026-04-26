@@ -46,7 +46,7 @@ function BuffetConfirmationPage() {
         : "This page will update after Stripe confirms payment.";
 
   return (
-    <section className="layout mx-auto max-w-2xl py-8">
+    <section className="mx-auto max-w-2xl py-8">
       <Card>
         <CardHeader className="text-center">
           <div className="mb-2 flex justify-center">

@@ -59,7 +59,7 @@ const DetailPage = () => {
   }
 
   return (
-    <main className="layout mb-20">
+    <main className="mb-20">
       {loading && <Loader />}
       {!loading && data?.getRoomById && (
         <div className="grid grid-cols-8 w-full gap-4">

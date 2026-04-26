@@ -10,7 +10,6 @@ import { Button } from "../ui/button";
 import {
   Card,
   CardContent,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "../ui/card";
@@ -115,15 +114,6 @@ function AttractionCard({ attraction }: AttractionCardProps) {
           ))}
         </ul>
       </CardContent>
-
-      <CardFooter>
-        <Button asChild variant="ghost" className="px-0">
-          <a href={attraction.tripUrl} target="_blank" rel="noreferrer">
-            Read source
-            <ExternalLink className="ml-2 h-4 w-4" />
-          </a>
-        </Button>
-      </CardFooter>
     </Card>
   );
 }

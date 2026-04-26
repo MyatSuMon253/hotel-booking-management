@@ -23,7 +23,7 @@ function BuffetListPage() {
   const buffetDinners: BuffetDinner[] = data?.getAvailableBuffetDinners ?? [];
 
   return (
-    <section className="layout">
+    <section>
       <div className="mb-6 flex items-end justify-between">
         <div>
           <h2 className="text-3xl font-bold">Buffet Dinners</h2>

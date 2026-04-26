@@ -78,7 +78,7 @@ function BuffetPaymentPage() {
   };
 
   return (
-    <section className="layout">
+    <section>
       <Card>
         <CardHeader>
           <CardTitle>Buffet Booking Summary - #{booking.id}</CardTitle>

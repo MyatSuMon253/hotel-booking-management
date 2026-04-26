@@ -57,7 +57,7 @@ function PaymentConfirmation() {
         : "This page will update as soon as we confirm the payment with Stripe.";
 
   return (
-    <section className="layout max-w-2xl mx-auto py-8">
+    <section className="mx-auto max-w-2xl py-8">
       <Card>
         <CardHeader className="text-center">
           <div className="flex justify-center mb-2">

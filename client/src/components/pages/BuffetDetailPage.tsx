@@ -101,7 +101,7 @@ function BuffetDetailPage() {
   };
 
   return (
-    <section className="layout grid gap-6 lg:grid-cols-3">
+    <section className="grid gap-6 lg:grid-cols-3">
       <Card className="lg:col-span-2">
         {buffetDinner.imageUrl && (
           <img

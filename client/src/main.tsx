@@ -57,13 +57,19 @@ const router = createBrowserRouter([
       },
       {
         path: "/rooms/:id",
-        element: <DetailPage />,
+        element: (
+          <UserLayout>
+            <DetailPage />
+          </UserLayout>
+        ),
       },
       {
         path: "/buffets",
         element: (
           <ProtectPage>
-            <BuffetListPage />
+            <UserLayout>
+              <BuffetListPage />
+            </UserLayout>
           </ProtectPage>
         ),
       },
@@ -71,7 +77,9 @@ const router = createBrowserRouter([
         path: "/buffets/:id",
         element: (
           <ProtectPage>
-            <BuffetDetailPage />
+            <UserLayout>
+              <BuffetDetailPage />
+            </UserLayout>
           </ProtectPage>
         ),
       },
@@ -254,7 +262,9 @@ const router = createBrowserRouter([
         path: "/bookings/:id/payment",
         element: (
           <ProtectPage>
-            <PaymentPage />
+            <UserLayout>
+              <PaymentPage />
+            </UserLayout>
           </ProtectPage>
         ),
       },
@@ -262,7 +272,9 @@ const router = createBrowserRouter([
         path: "/bookings/:id/confirmation",
         element: (
           <ProtectPage>
-            <PaymentConfirmation />
+            <UserLayout>
+              <PaymentConfirmation />
+            </UserLayout>
           </ProtectPage>
         ),
       },
@@ -270,7 +282,9 @@ const router = createBrowserRouter([
         path: "/buffet-bookings/:id/payment",
         element: (
           <ProtectPage>
-            <BuffetPaymentPage />
+            <UserLayout>
+              <BuffetPaymentPage />
+            </UserLayout>
           </ProtectPage>
         ),
       },
@@ -278,7 +292,9 @@ const router = createBrowserRouter([
         path: "/buffet-bookings/:id/confirmation",
         element: (
           <ProtectPage>
-            <BuffetConfirmationPage />
+            <UserLayout>
+              <BuffetConfirmationPage />
+            </UserLayout>
           </ProtectPage>
         ),
       },
@@ -296,7 +312,9 @@ const router = createBrowserRouter([
         path: "/invoice/:id",
         element: (
           <ProtectPage>
-            <InvoiceApp />
+            <UserLayout>
+              <InvoiceApp />
+            </UserLayout>
           </ProtectPage>
         ),
       },
