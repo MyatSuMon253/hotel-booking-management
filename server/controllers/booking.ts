@@ -6,12 +6,10 @@ import { NotFoundError } from "../utils/not-found";
 import { BookingInput } from "../types/booking";
 import { pubsub } from "../apollo/pubsub";
 import { refundBookingPayment } from "./payment";
-
-const MEMBERSHIP_DISCOUNT_PERCENT: Record<string, number> = {
-  silver: 0.1,
-  gold: 0.2,
-  diamond: 0.3,
-};
+import {
+  MembershipTier,
+  ensureDefaultMembershipTiers,
+} from "../models/membershipTier";
 
 const REFERRAL_DISCOUNT_PERCENT = 0.05;
 const VALID_REFERRAL_CODES = ["HOTEL5", "WELCOME5", "REFERRAL5"];
@@ -19,9 +17,20 @@ const VALID_REFERRAL_CODES = ["HOTEL5", "WELCOME5", "REFERRAL5"];
 const isValidReferralCode = (code: string) =>
   VALID_REFERRAL_CODES.includes(code.trim().toUpperCase());
 
-const getMembershipDiscountPercent = (tier?: string) => {
+const getMembershipDiscountPercent = async (tier?: string) => {
   if (!tier) return 0;
-  return MEMBERSHIP_DISCOUNT_PERCENT[tier] ?? 0;
+
+  await ensureDefaultMembershipTiers();
+
+  const membershipTier = await MembershipTier.findOne({
+    name: tier,
+  }).lean();
+
+  if (membershipTier) {
+    return membershipTier.active ? membershipTier.discountPercentage / 100 : 0;
+  }
+
+  return 0;
 };
 
 export const createNewBooking = errorHandler(
@@ -60,7 +69,7 @@ export const createNewBooking = errorHandler(
     }
 
     const discountPercent = membershipTier
-      ? getMembershipDiscountPercent(membershipTier)
+      ? await getMembershipDiscountPercent(membershipTier)
       : referralIsValid
         ? REFERRAL_DISCOUNT_PERCENT
         : 0;

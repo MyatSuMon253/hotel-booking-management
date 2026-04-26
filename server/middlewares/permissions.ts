@@ -25,6 +25,8 @@ export const permissions = shield(
       getAllReviews: and(isAuthenticated, isAdmin),
       getAllPromotions: and(isAuthenticated, isAdmin),
       getPromotionById: and(isAuthenticated, isAdmin),
+      getAllMembershipTiers: isAuthenticated,
+      getMembershipTierById: and(isAuthenticated, isAdmin),
     },
     Mutation: {
       createNewRoom: and(isAuthenticated, isAdmin),
@@ -35,6 +37,9 @@ export const permissions = shield(
       createPromotion: and(isAuthenticated, isAdmin),
       updatePromotion: and(isAuthenticated, isAdmin),
       deletePromotion: and(isAuthenticated, isAdmin),
+      createMembershipTier: and(isAuthenticated, isAdmin),
+      updateMembershipTier: and(isAuthenticated, isAdmin),
+      deleteMembershipTier: and(isAuthenticated, isAdmin),
       updateUser: and(isAuthenticated, isAdmin),
       deleteUser: and(isAuthenticated, isAdmin),
 

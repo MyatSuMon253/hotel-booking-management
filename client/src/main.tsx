@@ -23,10 +23,13 @@ import Layout from "./components/layout/Layout.tsx";
 import ManageRoom from "./components/pages/ManageRoom.tsx";
 import ManageCustomer from "./components/pages/ManageCustomer.tsx";
 import ManagePromotion from "./components/pages/ManagePromotion.tsx";
+import ManageMembershipTier from "./components/pages/ManageMembershipTier.tsx";
 import CreateRoom from "./components/admin/room/CreateRoom.tsx";
 import UpdateRoom from "./components/admin/room/UpdateRoom.tsx";
 import CreatePromotion from "./components/admin/promotion/CreatePromotion.tsx";
 import UpdatePromotion from "./components/admin/promotion/UpdatePromotion.tsx";
+import CreateMembershipTier from "./components/admin/membership-tier/CreateMembershipTier.tsx";
+import UpdateMembershipTier from "./components/admin/membership-tier/UpdateMembershipTier.tsx";
 import BookingList from "./components/admin/booking/BookingList.tsx";
 import ReviewList from "./components/admin/review/ReviewList.tsx";
 
@@ -128,6 +131,30 @@ const router = createBrowserRouter([
         element: (
           <ProtectPage roles={["admin"]}>
             <UpdatePromotion />
+          </ProtectPage>
+        ),
+      },
+      {
+        path: "/admin/membership-tiers",
+        element: (
+          <ProtectPage roles={["admin"]}>
+            <ManageMembershipTier />
+          </ProtectPage>
+        ),
+      },
+      {
+        path: "/admin/membership-tiers/create",
+        element: (
+          <ProtectPage roles={["admin"]}>
+            <CreateMembershipTier />
+          </ProtectPage>
+        ),
+      },
+      {
+        path: "/admin/membership-tiers/edit/:id",
+        element: (
+          <ProtectPage roles={["admin"]}>
+            <UpdateMembershipTier />
           </ProtectPage>
         ),
       },

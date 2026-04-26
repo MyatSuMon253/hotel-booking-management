@@ -1,6 +1,6 @@
 import { userInfoVar } from "@/apollo/apollo-vars";
 import { bookingFormSchema } from "@/schema/booking";
-import { useMutation, useReactiveVar } from "@apollo/client";
+import { useMutation, useQuery, useReactiveVar } from "@apollo/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -30,12 +30,13 @@ import {
   adjustTimeZone,
   calculateAmount,
   getDaysOfRent,
-  getMembershipDiscountPercent,
   isReferralCodeValid,
   REFERRAL_DISCOUNT_PERCENT,
 } from "@/lib/helpers";
 import { toast } from "sonner";
 import { CREATE_BOOKING_MUTATION } from "@/graphql/mutations/booking";
+import { GET_ALL_MEMBERSHIP_TIERS } from "@/graphql/queries/membership-tier";
+import type { MembershipTier } from "@/types/membership-tier";
 
 interface BookingFormProps {
   dates?: DateRange | undefined;
@@ -52,6 +53,9 @@ const BookingForm = ({
 }: BookingFormProps) => {
   const user = useReactiveVar(userInfoVar);
   const navigate = useNavigate();
+  const { data: membershipTierData } = useQuery(GET_ALL_MEMBERSHIP_TIERS, {
+    skip: !user?.membershipTier,
+  });
 
   const [isBookingAvailable, setIsBookingAvailable] = useState(true);
 
@@ -72,6 +76,8 @@ const BookingForm = ({
   const dateRange = form.watch("dateRange");
   const referralCode = form.watch("referralCode") ?? "";
   const membershipTier = user?.membershipTier;
+  const membershipTiers: MembershipTier[] =
+    membershipTierData?.getAllMembershipTiers ?? [];
 
   const [daysOfRent, setDaysOfRent] = useState(0);
   const [amount, setAmount] = useState({
@@ -86,7 +92,10 @@ const BookingForm = ({
   const referralCodeHasError =
     !membershipTier && referralCode.trim() && !referralCodeIsValid;
   const discountPercent = membershipTier
-    ? getMembershipDiscountPercent(membershipTier)
+    ? getMembershipDiscountPercent({
+        membershipTier,
+        membershipTiers,
+      })
     : referralCodeIsValid
       ? REFERRAL_DISCOUNT_PERCENT
       : 0;
@@ -108,7 +117,7 @@ const BookingForm = ({
         email: user.email,
       });
     }
-  }, [user]);
+  }, [user, form]);
 
   const [createBooking, { loading }] = useMutation(CREATE_BOOKING_MUTATION, {
     onCompleted() {
@@ -328,3 +337,21 @@ const BookingForm = ({
 };
 
 export default BookingForm;
+
+interface GetMembershipDiscountPercentParams {
+  membershipTier: string;
+  membershipTiers: MembershipTier[];
+}
+
+function getMembershipDiscountPercent({
+  membershipTier,
+  membershipTiers,
+}: GetMembershipDiscountPercentParams) {
+  const tier = membershipTiers.find((item) => item.name === membershipTier);
+
+  if (!tier) {
+    return 0;
+  }
+
+  return tier.active ? tier.discountPercentage / 100 : 0;
+}
