@@ -16,6 +16,10 @@ const CONTROLS = [
     path: "/buffets",
   },
   {
+    label: "Attractions",
+    path: "/attractions",
+  },
+  {
     label: "My Bookings",
     path: "/bookings",
   },

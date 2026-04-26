@@ -40,6 +40,7 @@ import BuffetListPage from "./components/pages/BuffetListPage.tsx";
 import BuffetDetailPage from "./components/pages/BuffetDetailPage.tsx";
 import BuffetPaymentPage from "./components/pages/BuffetPaymentPage.tsx";
 import BuffetConfirmationPage from "./components/pages/BuffetConfirmationPage.tsx";
+import TouristAttractionsPage from "./components/pages/TouristAttractionsPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -72,6 +73,14 @@ const router = createBrowserRouter([
           <ProtectPage>
             <BuffetDetailPage />
           </ProtectPage>
+        ),
+      },
+      {
+        path: "/attractions",
+        element: (
+          <UserLayout>
+            <TouristAttractionsPage />
+          </UserLayout>
         ),
       },
       {
