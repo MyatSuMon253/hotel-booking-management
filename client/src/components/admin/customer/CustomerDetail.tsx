@@ -61,6 +61,7 @@ interface BookingActivity {
   status?: string;
   membershipTier?: string;
   referralCode?: string;
+  referralOwner?: Pick<User, "id" | "name" | "email">;
   additionalNote?: string;
   createdAt?: string;
 }
@@ -135,6 +136,14 @@ function CustomerDetail() {
 
     return reviews.filter((review) => review.user?.id === customer.id);
   }, [customer, reviews]);
+
+  const referredBookings = useMemo(() => {
+    if (!customer) return [];
+
+    return bookings.filter(
+      (booking) => booking.referralOwner?.id === customer.id,
+    );
+  }, [bookings, customer]);
 
   const timeline = useMemo(() => {
     if (!customer) return [];
@@ -305,16 +314,22 @@ function CustomerDetail() {
                   </Badge>
                 </div>
                 <InfoRow
+                  label="Referral code"
+                  value={customer.referralCode ?? "Not available"}
+                />
+                <InfoRow
+                  label="Referral points"
+                  value={(customer.referralPoints ?? 0).toString()}
+                />
+                <InfoRow
                   label="Membership bookings"
                   value={customerBookings
                     .filter((booking) => booking.membershipTier)
                     .length.toString()}
                 />
                 <InfoRow
-                  label="Referral bookings"
-                  value={customerBookings
-                    .filter((booking) => booking.referralCode)
-                    .length.toString()}
+                  label="Bookings referred"
+                  value={referredBookings.length.toString()}
                 />
               </CardContent>
             </Card>

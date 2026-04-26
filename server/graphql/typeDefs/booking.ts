@@ -73,6 +73,7 @@ export const bookingTypeDefs = gql`
     refundInfo: RefundInfo
     membershipTier: String
     referralCode: String
+    referralOwner: User
     additionalNote: String
     createdAt: String
     updatedAt: String

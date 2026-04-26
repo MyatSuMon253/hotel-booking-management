@@ -1,7 +1,6 @@
 import { differenceInDays, format } from "date-fns";
 import type { DateRange } from "react-day-picker";
 
-const VALID_REFERRAL_CODES = ["HOTEL5", "WELCOME5", "REFERRAL5"];
 export const REFERRAL_DISCOUNT_PERCENT = 0.05;
 
 export const updateSearchParams = (
@@ -39,11 +38,6 @@ export const getMembershipDiscountPercent = (tier?: string) => {
     default:
       return 0;
   }
-};
-
-export const isReferralCodeValid = (code?: string) => {
-  if (!code) return false;
-  return VALID_REFERRAL_CODES.includes(code.trim().toUpperCase());
 };
 
 export const calculateAmount = (

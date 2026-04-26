@@ -23,6 +23,7 @@ export interface IBooking {
   };
   membershipTier?: "silver" | "gold" | "diamond";
   referralCode?: string;
+  referralOwner?: IUser;
   daysOfRent: number;
   rentPerDay: number;
   paymentInfo: {

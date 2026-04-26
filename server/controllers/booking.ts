@@ -12,10 +12,6 @@ import {
 } from "../models/membershipTier";
 
 const REFERRAL_DISCOUNT_PERCENT = 0.05;
-const VALID_REFERRAL_CODES = ["HOTEL5", "WELCOME5", "REFERRAL5"];
-
-const isValidReferralCode = (code: string) =>
-  VALID_REFERRAL_CODES.includes(code.trim().toUpperCase());
 
 const getMembershipDiscountPercent = async (tier?: string) => {
   if (!tier) return 0;
@@ -31,6 +27,18 @@ const getMembershipDiscountPercent = async (tier?: string) => {
   }
 
   return 0;
+};
+
+const getReferralOwner = async (code?: string) => {
+  const normalizedCode = code?.trim().toUpperCase();
+
+  if (!normalizedCode) return null;
+
+  return User.findOne({
+    referralCode: normalizedCode,
+    membershipTier: { $exists: true, $ne: null },
+    isActive: true,
+  });
 };
 
 export const createNewBooking = errorHandler(
@@ -59,18 +67,18 @@ export const createNewBooking = errorHandler(
 
     const user = await User.findById(userId).lean();
     const membershipTier = user?.membershipTier;
-    const normalizedReferralCode = referralCode?.trim();
-    const referralIsValid = normalizedReferralCode
-      ? isValidReferralCode(normalizedReferralCode)
-      : false;
+    const normalizedReferralCode = referralCode?.trim().toUpperCase();
+    const referralOwner = !membershipTier
+      ? await getReferralOwner(normalizedReferralCode)
+      : null;
 
-    if (normalizedReferralCode && !membershipTier && !referralIsValid) {
+    if (normalizedReferralCode && !membershipTier && !referralOwner) {
       throw new Error("Invalid referral code.");
     }
 
     const discountPercent = membershipTier
       ? await getMembershipDiscountPercent(membershipTier)
-      : referralIsValid
+      : referralOwner
         ? REFERRAL_DISCOUNT_PERCENT
         : 0;
 
@@ -100,11 +108,18 @@ export const createNewBooking = errorHandler(
       bookingData.membershipTier = membershipTier;
     }
 
-    if (!membershipTier && referralIsValid) {
-      bookingData.referralCode = normalizedReferralCode.toUpperCase();
+    if (!membershipTier && referralOwner && normalizedReferralCode) {
+      bookingData.referralCode = normalizedReferralCode;
+      bookingData.referralOwner = referralOwner._id;
     }
 
     const newBooking = await Booking.create(bookingData);
+
+    if (referralOwner) {
+      await User.findByIdAndUpdate(referralOwner._id, {
+        $inc: { referralPoints: 5 },
+      });
+    }
 
     pubsub.publish("NEW_BOOKING", {
       newBookingNoti: "Ne",
@@ -486,6 +501,7 @@ export const getAllBookings = errorHandler(async () => {
   const bookings = await Booking.find()
     .populate("room")
     .populate("user")
+    .populate("referralOwner")
     .sort({ createdAt: -1 });
   return bookings;
 });

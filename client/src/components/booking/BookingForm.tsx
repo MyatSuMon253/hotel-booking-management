@@ -30,13 +30,13 @@ import {
   adjustTimeZone,
   calculateAmount,
   getDaysOfRent,
-  isReferralCodeValid,
   REFERRAL_DISCOUNT_PERCENT,
 } from "@/lib/helpers";
 import { toast } from "sonner";
 import { CREATE_BOOKING_MUTATION } from "@/graphql/mutations/booking";
 import { GET_ALL_MEMBERSHIP_TIERS } from "@/graphql/queries/membership-tier";
 import type { MembershipTier } from "@/types/membership-tier";
+import { VALIDATE_REFERRAL_CODE } from "@/graphql/queries/user";
 
 interface BookingFormProps {
   dates?: DateRange | undefined;
@@ -75,9 +75,19 @@ const BookingForm = ({
 
   const dateRange = form.watch("dateRange");
   const referralCode = form.watch("referralCode") ?? "";
+  const normalizedReferralCode = referralCode.trim().toUpperCase();
   const membershipTier = user?.membershipTier;
   const membershipTiers: MembershipTier[] =
     membershipTierData?.getAllMembershipTiers ?? [];
+  const {
+    data: referralCodeData,
+    loading: isReferralCodeLoading,
+    error: referralCodeError,
+  } = useQuery(VALIDATE_REFERRAL_CODE, {
+    variables: { code: normalizedReferralCode },
+    skip: !user || !!membershipTier || normalizedReferralCode.length === 0,
+    fetchPolicy: "network-only",
+  });
 
   const [daysOfRent, setDaysOfRent] = useState(0);
   const [amount, setAmount] = useState({
@@ -88,9 +98,15 @@ const BookingForm = ({
   });
 
   const referralCodeIsValid =
-    !membershipTier && isReferralCodeValid(referralCode);
+    !!user &&
+    !membershipTier &&
+    !!referralCodeData?.validateReferralCode?.isValid;
   const referralCodeHasError =
-    !membershipTier && referralCode.trim() && !referralCodeIsValid;
+    !!user &&
+    !membershipTier &&
+    normalizedReferralCode.length > 0 &&
+    !isReferralCodeLoading &&
+    (!referralCodeIsValid || !!referralCodeError);
   const discountPercent = membershipTier
     ? getMembershipDiscountPercent({
         membershipTier,
@@ -215,6 +231,17 @@ const BookingForm = ({
                         Referral code is not valid.
                       </p>
                     )}
+                    {isReferralCodeLoading && (
+                      <p className="mt-2 text-sm text-muted-foreground">
+                        Checking referral code...
+                      </p>
+                    )}
+                    {referralCodeIsValid && (
+                      <p className="mt-2 text-sm text-muted-foreground">
+                        Referral from{" "}
+                        {referralCodeData?.validateReferralCode?.ownerName}.
+                      </p>
+                    )}
                   </FormItem>
                 )}
               />
@@ -314,7 +341,13 @@ const BookingForm = ({
               <Button
                 type="submit"
                 className="w-full"
-                disabled={loading || !isBookingAvailable || daysOfRent <= 0}
+                disabled={
+                  loading ||
+                  !isBookingAvailable ||
+                  daysOfRent <= 0 ||
+                  !!referralCodeHasError ||
+                  isReferralCodeLoading
+                }
               >
                 Place Booking
               </Button>

@@ -122,6 +122,11 @@ export const GET_ALL_BOOKING = gql`
       daysOfRent
       membershipTier
       referralCode
+      referralOwner {
+        id
+        name
+        email
+      }
       additionalNote
       createdAt
       updatedAt

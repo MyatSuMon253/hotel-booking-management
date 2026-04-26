@@ -24,9 +24,16 @@ export const userTypeDefs = gql`
     avatar: Avatar
     role: [String]
     membershipTier: String
+    referralCode: String
+    referralPoints: Int
     isActive: Boolean!
     createdAt: String!
     updatedAt: String!
+  }
+
+  type ReferralCodeStatus {
+    isValid: Boolean!
+    ownerName: String
   }
 
   type Query {
@@ -34,6 +41,7 @@ export const userTypeDefs = gql`
     logout: Boolean
     getAllUsers: [User!]!
     getUserById(userId: ID!): User
+    validateReferralCode(code: String!): ReferralCodeStatus!
   }
 
   type Mutation {

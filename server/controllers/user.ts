@@ -88,6 +88,7 @@ export const updateUserProfile = errorHandler(
 );
 
 export const getAllUsers = errorHandler(async () => {
+  await ensureReferralCodesForMembers();
   return await User.find().sort({ createdAt: -1 });
 });
 
@@ -96,7 +97,29 @@ export const getUserById = errorHandler(async (userId: string) => {
   if (!userDoc) {
     throw new Error("User not found");
   }
+  if (userDoc.membershipTier && !userDoc.referralCode) {
+    await userDoc.save();
+  }
   return userDoc;
+});
+
+export const validateReferralCode = errorHandler(async (code: string) => {
+  const normalizedCode = code.trim().toUpperCase();
+
+  if (!normalizedCode) {
+    return { isValid: false, ownerName: null };
+  }
+
+  const referralOwner = await User.findOne({
+    referralCode: normalizedCode,
+    membershipTier: { $exists: true, $ne: null },
+    isActive: true,
+  });
+
+  return {
+    isValid: !!referralOwner,
+    ownerName: referralOwner?.name ?? null,
+  };
 });
 
 export const updateUser = errorHandler(
@@ -104,7 +127,7 @@ export const updateUser = errorHandler(
     userId: string,
     updates: Partial<Pick<UserInput, "role">> & {
       isActive?: boolean;
-      membershipTier?: "silver" | "gold" | "diamond";
+      membershipTier?: "silver" | "gold" | "diamond" | null;
     },
   ) => {
     const userDoc = await User.findById(userId);
@@ -119,8 +142,13 @@ export const updateUser = errorHandler(
     if (typeof updates.isActive === "boolean") {
       userDoc.isActive = updates.isActive;
     }
-    if (updates.membershipTier) {
-      userDoc.membershipTier = updates.membershipTier;
+    if (Object.prototype.hasOwnProperty.call(updates, "membershipTier")) {
+      if (updates.membershipTier) {
+        userDoc.membershipTier = updates.membershipTier;
+      } else {
+        userDoc.membershipTier = undefined;
+        userDoc.referralCode = undefined;
+      }
     }
 
     await userDoc.save();
@@ -158,6 +186,15 @@ export const updateUserPassword = errorHandler(
     return true;
   },
 );
+
+async function ensureReferralCodesForMembers() {
+  const membersWithoutCodes = await User.find({
+    membershipTier: { $exists: true, $ne: null },
+    $or: [{ referralCode: { $exists: false } }, { referralCode: null }],
+  });
+
+  await Promise.all(membersWithoutCodes.map((userDoc) => userDoc.save()));
+}
 
 export const forgetPassword = errorHandler(async (customer_email: string) => {
   const user = await User.findOne({ email: customer_email });

@@ -50,6 +50,10 @@ const bookingSchema = new mongoose.Schema<IBooking>(
       },
     },
     referralCode: String,
+    referralOwner: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
     daysOfRent: {
       type: Number,
       required: true,

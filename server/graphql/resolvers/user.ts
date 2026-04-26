@@ -11,12 +11,16 @@ import {
   updateUserProfile,
   uploadAvatar,
   deleteUserById,
+  validateReferralCode,
 } from "../../controllers/user";
 import { IUser, UserInput } from "../../types/user";
 
 export const userResolvers = {
   Query: {
     currentUser: async (_: any, __: any, { user }: { user: IUser }) => {
+      if (user?.membershipTier && !user.referralCode) {
+        await user.save();
+      }
       return user;
     },
     logout: async (_: any, __: any, { res }: { res: Response }) => {
@@ -26,6 +30,8 @@ export const userResolvers = {
     getAllUsers: async () => getAllUsers(),
     getUserById: async (_: any, { userId }: { userId: string }) =>
       getUserById(userId),
+    validateReferralCode: async (_: any, { code }: { code: string }) =>
+      validateReferralCode(code),
   },
   Mutation: {
     updateUser: async (

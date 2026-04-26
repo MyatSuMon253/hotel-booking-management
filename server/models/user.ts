@@ -43,6 +43,17 @@ const userSchema = new mongoose.Schema(
         message: "Invalid membership tier.",
       },
     },
+    referralCode: {
+      type: String,
+      uppercase: true,
+      trim: true,
+      unique: true,
+      sparse: true,
+    },
+    referralPoints: {
+      type: Number,
+      default: 0,
+    },
     resetPasswordToken: String,
     resetPasswordExpire: String,
   },
@@ -52,9 +63,35 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return;
+  if (!this.isModified("password")) return next();
 
   this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
+
+userSchema.pre("save", async function (next) {
+  if (!this.membershipTier || this.referralCode) {
+    return next();
+  }
+
+  const UserModel = this.constructor as mongoose.Model<IUser>;
+  let referralCode = "";
+  let codeExists = true;
+
+  while (codeExists) {
+    const prefix = this.name
+      .replace(/[^a-zA-Z0-9]/g, "")
+      .slice(0, 4)
+      .toUpperCase()
+      .padEnd(4, "RHB");
+    referralCode = `${prefix}${crypto.randomBytes(3).toString("hex").toUpperCase()}`;
+    codeExists = !!(await UserModel.exists({
+      _id: { $ne: this._id },
+      referralCode,
+    }));
+  }
+
+  this.referralCode = referralCode;
   next();
 });
 

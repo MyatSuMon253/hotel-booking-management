@@ -7,6 +7,8 @@ export interface User {
   role?: string[];
   isActive: boolean;
   membershipTier?: "silver" | "gold" | "diamond";
+  referralCode?: string;
+  referralPoints?: number;
   avatar: {
     url: string;
     public_id: string;

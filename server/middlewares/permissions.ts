@@ -27,6 +27,7 @@ export const permissions = shield(
       getPromotionById: and(isAuthenticated, isAdmin),
       getAllMembershipTiers: isAuthenticated,
       getMembershipTierById: and(isAuthenticated, isAdmin),
+      validateReferralCode: isAuthenticated,
     },
     Mutation: {
       createNewRoom: and(isAuthenticated, isAdmin),

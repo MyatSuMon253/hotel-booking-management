@@ -12,6 +12,8 @@ export const CURRENT_USER = gql`
       }
       role
       membershipTier
+      referralCode
+      referralPoints
       createdAt
       updatedAt
     }
@@ -32,6 +34,8 @@ export const GET_ALL_USERS = gql`
       email
       role
       membershipTier
+      referralCode
+      referralPoints
       isActive
       createdAt
       updatedAt
@@ -51,9 +55,20 @@ export const GET_USER_BY_ID = gql`
       }
       role
       membershipTier
+      referralCode
+      referralPoints
       isActive
       createdAt
       updatedAt
+    }
+  }
+`;
+
+export const VALIDATE_REFERRAL_CODE = gql`
+  query ValidateReferralCode($code: String!) {
+    validateReferralCode(code: $code) {
+      isValid
+      ownerName
     }
   }
 `;
