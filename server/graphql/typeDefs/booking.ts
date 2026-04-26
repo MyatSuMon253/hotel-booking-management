@@ -74,6 +74,8 @@ export const bookingTypeDefs = gql`
     membershipTier: String
     referralCode: String
     additionalNote: String
+    createdAt: String
+    updatedAt: String
   }
 
   input updateBookingPaymentInput {

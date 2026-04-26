@@ -10,7 +10,7 @@ import { LucideSearch, LucideX } from "lucide-react";
 import { useLocation, useNavigate, useSearchParams } from "react-router";
 
 import { updateSearchParams } from "@/lib/helpers";
-import { Locations, Types } from "@/lib/filterData";
+import { Types } from "@/lib/filterData";
 import { Checkbox } from "../ui/checkbox";
 import { Input } from "../ui/input";
 

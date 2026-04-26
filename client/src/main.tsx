@@ -32,6 +32,7 @@ import CreateMembershipTier from "./components/admin/membership-tier/CreateMembe
 import UpdateMembershipTier from "./components/admin/membership-tier/UpdateMembershipTier.tsx";
 import BookingList from "./components/admin/booking/BookingList.tsx";
 import ReviewList from "./components/admin/review/ReviewList.tsx";
+import CustomerDetail from "./components/admin/customer/CustomerDetail.tsx";
 
 const router = createBrowserRouter([
   {
@@ -107,6 +108,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectPage roles={["admin"]}>
             <ManageCustomer />
+          </ProtectPage>
+        ),
+      },
+      {
+        path: "/admin/customers/:id",
+        element: (
+          <ProtectPage roles={["admin"]}>
+            <CustomerDetail />
           </ProtectPage>
         ),
       },

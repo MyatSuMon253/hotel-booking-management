@@ -45,6 +45,10 @@ export const GET_USER_BY_ID = gql`
       id
       name
       email
+      avatar {
+        url
+        public_id
+      }
       role
       membershipTier
       isActive

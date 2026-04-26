@@ -27,7 +27,9 @@ function CustomerList() {
     return <NotFound />;
   }
 
-  const users: User[] = data?.getAllUsers ?? [];
+  const users: User[] =
+    data?.getAllUsers?.filter((user: User) => user.role?.includes("user")) ??
+    [];
 
   return (
     <AdminLayout>

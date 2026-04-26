@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
+import { Link } from "react-router";
 import { toast } from "sonner";
 import ConfirmDialog from "@/components/common/ConfirmDialog";
 import { Button } from "@/components/ui/button";
@@ -73,7 +74,10 @@ function CustomerActions({ customer }: CustomerActionsProps) {
   };
 
   return (
-    <div className="space-x-3">
+    <div className="flex items-center gap-2">
+      <Button size="sm" variant="secondary" asChild>
+        <Link to={`/admin/customers/${customer.id}`}>View</Link>
+      </Button>
       <Dialog>
         <DialogTrigger asChild>
           <Button size="sm" variant="outline">

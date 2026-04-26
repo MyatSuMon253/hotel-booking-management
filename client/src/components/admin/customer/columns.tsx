@@ -44,7 +44,7 @@ export const columns: ColumnDef<User>[] = [
     header: "Joined",
     cell: ({ row }) => (
       <p className="text-sm text-muted-foreground">
-        {new Date(row.original.createdAt).toLocaleDateString()}
+        {new Date(parseInt(row.original.createdAt)).toLocaleDateString()}
       </p>
     ),
   },

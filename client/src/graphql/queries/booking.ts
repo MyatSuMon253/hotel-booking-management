@@ -110,12 +110,21 @@ export const GET_ALL_BOOKING = gql`
         method
       }
       status
+      user {
+        id
+        name
+        email
+      }
       customer {
         name
         email
       }
       daysOfRent
+      membershipTier
+      referralCode
       additionalNote
+      createdAt
+      updatedAt
     }
   }
 `;

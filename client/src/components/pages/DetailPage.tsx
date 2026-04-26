@@ -1,6 +1,6 @@
 import { GET_SINGLE_ROOM } from "@/graphql/queries/room";
 import { useQuery } from "@apollo/client";
-import { AirVent, MapPin, Soup, WavesLadder, Wifi } from "lucide-react";
+import { AirVent, Soup, WavesLadder, Wifi } from "lucide-react";
 import { useParams } from "react-router";
 
 import {
