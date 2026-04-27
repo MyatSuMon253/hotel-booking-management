@@ -1,0 +1,103 @@
+@startuml
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam linetype ortho
+
+title Booking Flows (Room + Buffet) — Flow Chart (Activity)
+
+start
+
+partition "Customer (Browser)" {
+  :Login (required for booking);
+  :Choose booking type;
+}
+
+if (Room booking?) then (Room)
+  partition "Customer (Browser)" {
+    :Browse rooms and open\nroom detail page;
+    :Select check-in/check-out\ndates and guest details;
+  }
+
+  partition "Frontend (React)" {
+    :Query getBookedDatesById(roomId);
+    :Disable unavailable dates\nin date picker UI;
+    :Submit booking form;
+  }
+
+  partition "Backend (GraphQL)" {
+    :Mutation createNewBooking(bookingInput);
+    if (Dates overlap\nwith existing booking?) then (Yes)
+      :Return error\n\"Selected dates overlap\";
+      stop
+    else (No)
+      :Calculate rent, tax,\nreferral/membership discount;
+      :Persist Booking\n(status=pending, payment=pending);
+    endif
+  }
+
+  partition "Frontend (React)" {
+    :Mutation stripeCheckoutSession(bookingId);
+  }
+
+else (Buffet)
+  partition "Customer (Browser)" {
+    :Browse buffet dinners and open\ndinner detail page;
+    :Select guest count\nand customer details;
+  }
+
+  partition "Frontend (React)" {
+    :Submit buffet booking form;
+  }
+
+  partition "Backend (GraphQL)" {
+    :Mutation createBuffetBooking(bookingInput);
+    if (Dinner inactive\nor already started?) then (Yes)
+      :Return error\n\"No longer available\";
+      stop
+    else (No)
+      :Check remaining capacity;
+      if (Enough seats?) then (No)
+        :Return error\n\"Not enough seats\";
+        stop
+      else (Yes)
+        :Calculate subtotal + tax;
+        :Persist BuffetBooking\n(status=pending, payment=pending);
+      endif
+    endif
+  }
+
+  partition "Frontend (React)" {
+    :Mutation stripeBuffetCheckoutSession(buffetBookingId);
+  }
+endif
+
+partition "Backend (Stripe Checkout)" {
+  :Create Checkout Session\n(success/cancel URLs);
+  :Return session.url;
+}
+
+partition "Customer (Stripe Hosted Page)" {
+  :Enter card details and pay;
+  if (Payment completed?) then (Yes)
+    :Redirect to confirmation page;
+  else (No)
+    :Redirect to payment page\n(status=cancelled);
+    stop
+  endif
+}
+
+partition "Backend (Stripe Webhook)" {
+  :POST /api/payment/webhook\n(checkout.session.completed);
+  :Verify signature + parse event;
+  :Update booking record\npaymentInfo + status=confirmed;
+}
+
+partition "Frontend (React)" {
+  :Show confirmation\n(success);
+  :User can view history\n(and invoice for room bookings);
+}
+
+stop
+@enduml

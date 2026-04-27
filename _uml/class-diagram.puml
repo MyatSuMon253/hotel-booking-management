@@ -1,158 +1,226 @@
-@startuml HMS_Class_Diagram
+@startuml
 !theme plain
 skinparam backgroundColor #FAFAFA
 skinparam defaultFontName Arial
-skinparam defaultFontSize 12
+skinparam defaultFontSize 13
+
+title Hotel Booking Management System — Class Diagram (Domain Model)
+
+hide methods
 skinparam classAttributeIconSize 0
 
-title Hotel Management System — Class Diagram
-
-' ══════════════════════════════════════════════════════
-'  ENUMERATIONS
-' ══════════════════════════════════════════════════════
-
-enum UserRole {
+enum Role {
   user
   admin
 }
 
-enum BookingStatus {
-  PENDING
-  CONFIRMED
-  CANCELLED
-  COMPLETED
+enum PaymentMethod {
+  cash
+  card
 }
 
 enum PaymentStatus {
-  UNPAID
-  PAID
-  REFUNDED
+  pending
+  paid
+  refunded
 }
 
-enum DiscountType {
-  PERCENTAGE
-  FIXED_AMOUNT
+enum BookingStatus {
+  pending
+  confirmed
+  cancelled
 }
 
-' ══════════════════════════════════════════════════════
-'  VALUE OBJECTS / EMBEDDED TYPES
-' ══════════════════════════════════════════════════════
+enum BuffetBookingStatus {
+  pending
+  confirmed
+  cancelled
+}
+
+enum MembershipTierName {
+  silver
+  gold
+  diamond
+}
 
 class Avatar {
-  + url : String
-  + public_id : String
+  +url: string
+  +public_id: string
+}
+
+class User {
+  +id: ObjectId
+  +name: string
+  +email: string
+  +password: string
+  +role: Role[*]
+  +isActive: boolean
+  +membershipTier: MembershipTierName
+  +referralCode: string
+  +referralPoints: number
+  +avatar: Avatar
+  +createdAt: Date
+  +updatedAt: Date
 }
 
 class RoomImage {
-  + url : String
-  + public_id : String
-}
-
-' ══════════════════════════════════════════════════════
-'  CORE DOMAIN CLASSES
-' ══════════════════════════════════════════════════════
-
-class User {
-  + _id : ObjectId
-  + name : String
-  + email : String <<unique>>
-  - password : String <<select: false>>
-  + role : UserRole[]
-  + resetPasswordToken : String
-  + resetPasswordExpire : Date
-  + createdAt : Date
-  + updatedAt : Date
-  --
-  + generatePasswordResetToken() : String
-  + comparePassword(entered: String) : Boolean
+  +url: string
+  +public_id: string
 }
 
 class Room {
-  + _id : ObjectId
-  + title : String
-  + description : String
-  + roomNumber : String <<unique>>
-  + type : String
-  + pricePerNight : Float
-  + capacity : Int
-  + location : String
-  + isAvailable : Boolean
-  + reviews : String[]
-  + createdAt : Date
-  + updatedAt : Date
+  +id: ObjectId
+  +title: string
+  +description: string
+  +roomNumber: string
+  +type: string
+  +pricePerNight: number
+  +capacity: number
+  +location: string
+  +isAvailable: boolean
+  +images: RoomImage[*]
+  +createdAt: Date
+  +updatedAt: Date
+  +ratings: Rating
 }
 
-' ══════════════════════════════════════════════════════
-'  NEW: BOOKING
-' ══════════════════════════════════════════════════════
+class Rating {
+  +value: number
+  +count: number
+}
+
+class CustomerInfo {
+  +name: string
+  +email: string
+}
+
+class Amount {
+  +rent: number
+  +discount: number
+  +tax: number
+  +total: number
+}
+
+class BuffetAmount {
+  +subtotal: number
+  +tax: number
+  +total: number
+}
+
+class PaymentInfo {
+  +id: string
+  +status: PaymentStatus
+  +method: PaymentMethod
+}
+
+class RefundInfo {
+  +id: string
+  +amount: number
+  +status: string
+  +refundedAt: Date
+}
 
 class Booking {
-  + _id : ObjectId
-  + checkInDate : Date
-  + checkOutDate : Date
-  + numberOfGuests : Int
-  + totalPrice : Float
-  + status : BookingStatus
-  + paymentStatus : PaymentStatus
-  + specialRequests : String
-  + appliedPromoCode : String
-  + discountAmount : Float
-  + createdAt : Date
-  + updatedAt : Date
-  --
-  + calculateTotalPrice() : Float
-  + calculateNights() : Int
-  + cancel() : Boolean
+  +id: ObjectId
+  +startDate: Date
+  +endDate: Date
+  +daysOfRent: number
+  +rentPerDay: number
+  +status: BookingStatus
+  +membershipTier: MembershipTierName
+  +referralCode: string
+  +additionalNote: string
+  +cancelledAt: Date
+  +cancelReason: string
+  +createdAt: Date
+  +updatedAt: Date
 }
 
-' ══════════════════════════════════════════════════════
-'  NEW: PROMOTION
-' ══════════════════════════════════════════════════════
+class Review {
+  +id: ObjectId
+  +rating: number
+  +comment: string
+  +createdAt: Date
+  +updatedAt: Date
+}
 
 class Promotion {
-  + _id : ObjectId
-  + title : String
-  + description : String
-  + code : String <<unique>>
-  + discountType : DiscountType
-  + discountValue : Float
-  + startDate : Date
-  + endDate : Date
-  + isActive : Boolean
-  + minimumNights : Int
-  + usageLimit : Int
-  + usedCount : Int
-  + createdAt : Date
-  + updatedAt : Date
-  --
-  + isValid() : Boolean
-  + isExpired() : Boolean
-  + hasReachedLimit() : Boolean
-  + applyDiscount(price: Float) : Float
+  +id: ObjectId
+  +code: string
+  +description: string
+  +discountType: string
+  +discountValue: number
+  +validFrom: Date
+  +validTo: Date
+  +active: boolean
+  +maxUses: number
+  +usedCount: number
+  +createdAt: Date
+  +updatedAt: Date
 }
 
-' ══════════════════════════════════════════════════════
-'  RELATIONSHIPS
-' ══════════════════════════════════════════════════════
+class MembershipTier {
+  +id: ObjectId
+  +name: MembershipTierName
+  +discountPercentage: number
+  +active: boolean
+  +createdAt: Date
+  +updatedAt: Date
+}
 
-' Composition — embedded sub-documents
-User "1" *-- "0..1" Avatar        : has >
-Room "1" *-- "0..*" RoomImage     : has >
+class BuffetDinner {
+  +id: ObjectId
+  +title: string
+  +cuisineCategory: string
+  +description: string
+  +imageUrl: string
+  +startsAt: Date
+  +endsAt: Date
+  +includedDishes: string[*]
+  +maxCapacity: number
+  +pricePerGuest: number
+  +facilities: string[*]
+  +active: boolean
+  +createdAt: Date
+  +updatedAt: Date
+  +remainingCapacity: number
+}
 
-' Enumerations
-User     ..> UserRole       : uses >
-Booking  ..> BookingStatus  : uses >
-Booking  ..> PaymentStatus  : uses >
-Promotion ..> DiscountType  : uses >
+class BuffetBooking {
+  +id: ObjectId
+  +guestCount: number
+  +pricePerGuest: number
+  +status: BuffetBookingStatus
+  +additionalNote: string
+  +cancelledAt: Date
+  +cancelReason: string
+  +createdAt: Date
+  +updatedAt: Date
+}
 
-' Associations — references (foreign keys / ObjectId refs)
-Booking "0..*" --> "1" User   : booked by >
-Booking "0..*" --> "1" Room   : reserves >
+User "1" o-- "0..1" Avatar
+Room "1" o-- "*" RoomImage
 
-' Promotion can optionally target specific rooms
-Promotion "0..*" --> "0..*" Room : applies to >
+User "1" --> "*" Booking : user
+Room "1" --> "*" Booking : room
+Booking "1" o-- "1" CustomerInfo
+Booking "1" o-- "1" Amount
+Booking "1" o-- "0..1" PaymentInfo
+Booking "1" o-- "0..1" RefundInfo
+Booking "0..1" --> "1" User : referralOwner
 
-' Booking optionally references a Promotion (via code)
-Booking "0..*" ..> "0..1" Promotion : uses promo >
+User "1" --> "*" Review : writes
+Room "1" --> "*" Review : has
+
+Promotion "*" --> "*" Room : applicableRooms
+MembershipTier "1" <-- "0..*" User : membershipTier
+MembershipTier "1" <-- "0..*" Booking : membershipTier
+
+User "1" --> "*" BuffetBooking : user
+BuffetDinner "1" --> "*" BuffetBooking : buffetDinner
+BuffetBooking "1" o-- "1" CustomerInfo
+BuffetBooking "1" o-- "1" BuffetAmount
+BuffetBooking "1" o-- "0..1" PaymentInfo
 
 @enduml
+

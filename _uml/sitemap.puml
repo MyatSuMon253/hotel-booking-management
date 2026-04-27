@@ -1,0 +1,53 @@
+@startwbs
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+
+title Hotel Booking Management System — Sitemap (Client Routes)
+
+* /
+** Home (Rooms List)
+*** Room Detail: /rooms/:id
+*** Tourist Attractions: /attractions
+** Auth
+*** Register: /register
+*** Login: /login
+*** Forgot Password: /reset
+*** Reset Password: /reset-password/:token
+** User (Protected)
+*** Profile: /profile
+*** Bookings: /bookings
+**** Payment: /bookings/:id/payment
+**** Confirmation: /bookings/:id/confirmation
+**** Invoice: /invoice/:id
+*** Buffets
+**** List: /buffets
+**** Detail: /buffets/:id
+**** Payment: /buffet-bookings/:id/payment
+**** Confirmation: /buffet-bookings/:id/confirmation
+** Admin (Protected, role=admin)
+*** Dashboard: /admin/dashboard
+*** Rooms
+**** List: /admin/rooms
+**** Create: /admin/rooms/create
+**** Edit: /admin/rooms/edit/:id
+*** Bookings: /admin/bookings
+*** Customers
+**** List: /admin/customers
+**** Detail: /admin/customers/:id
+*** Promotions
+**** List: /admin/promotions
+**** Create: /admin/promotions/create
+**** Edit: /admin/promotions/edit/:id
+*** Buffet Dinners
+**** List: /admin/buffet-dinners
+**** Create: /admin/buffet-dinners/create
+**** Edit: /admin/buffet-dinners/edit/:id
+*** Buffet Bookings: /admin/buffet-bookings
+*** Membership Tiers
+**** List: /admin/membership-tiers
+**** Create: /admin/membership-tiers/create
+**** Edit: /admin/membership-tiers/edit/:id
+*** Reviews: /admin/reviews
+@endwbs

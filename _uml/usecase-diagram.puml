@@ -1,0 +1,104 @@
+@startuml
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+
+title Hotel Booking Management System — Use Case Diagram
+
+left to right direction
+skinparam actorStyle awesome
+
+actor "Guest / Customer" as Customer
+actor "Admin / Staff" as Admin
+actor "Stripe" as Stripe
+actor "Cloudinary" as Cloudinary
+actor "SMTP Provider" as SMTP
+
+rectangle "Customer Portal" as CustomerPortal {
+  usecase "Register" as UC_Register
+  usecase "Login" as UC_Login
+  usecase "Manage Profile\n(Update info / password / avatar)" as UC_Profile
+  usecase "Browse Rooms\n(Search / Filter / Pagination)" as UC_BrowseRooms
+  usecase "View Room Details\n(Images / Ratings / Reviews)" as UC_RoomDetails
+  usecase "Check Booked Dates" as UC_BookedDates
+  usecase "Create Room Booking" as UC_CreateBooking
+  usecase "Pay For Booking\n(Stripe Checkout)" as UC_PayRoom
+  usecase "View My Bookings" as UC_ViewBookings
+  usecase "Cancel Booking" as UC_CancelBooking
+  usecase "View Invoice" as UC_Invoice
+  usecase "Create/Update Review" as UC_Review
+
+  usecase "Browse Buffet Dinners" as UC_BrowseBuffets
+  usecase "View Buffet Dinner Details" as UC_BuffetDetails
+  usecase "Create Buffet Booking" as UC_CreateBuffetBooking
+  usecase "Pay For Buffet Booking\n(Stripe Checkout)" as UC_PayBuffet
+  usecase "View My Buffet Bookings" as UC_ViewBuffetBookings
+  usecase "Cancel Buffet Booking" as UC_CancelBuffetBooking
+
+  usecase "View Tourist Attractions" as UC_Attractions
+  usecase "Forget Password" as UC_ForgetPassword
+  usecase "Reset Password" as UC_ResetPassword
+  usecase "Validate Referral Code" as UC_ValidateReferral
+}
+
+rectangle "Admin Portal" as AdminPortal {
+  usecase "View Dashboard Metrics" as UA_Dashboard
+  usecase "Manage Rooms\n(Create / Update / Delete / Images)" as UA_ManageRooms
+  usecase "Manage Bookings" as UA_ManageBookings
+  usecase "Manage Customers\n(Roles / Active / Membership)" as UA_ManageCustomers
+  usecase "Manage Promotions" as UA_ManagePromotions
+  usecase "Manage Membership Tiers" as UA_ManageTiers
+  usecase "Manage Reviews\n(View / Delete)" as UA_ManageReviews
+  usecase "Manage Buffet Dinners" as UA_ManageBuffets
+  usecase "Manage Buffet Bookings" as UA_ManageBuffetBookings
+  usecase "Receive Booking Notifications\n(GraphQL Subscription)" as UA_Noti
+}
+
+Customer --> UC_Register
+Customer --> UC_Login
+Customer --> UC_Profile
+Customer --> UC_BrowseRooms
+Customer --> UC_RoomDetails
+Customer --> UC_BookedDates
+Customer --> UC_CreateBooking
+Customer --> UC_PayRoom
+Customer --> UC_ViewBookings
+Customer --> UC_CancelBooking
+Customer --> UC_Invoice
+Customer --> UC_Review
+Customer --> UC_BrowseBuffets
+Customer --> UC_BuffetDetails
+Customer --> UC_CreateBuffetBooking
+Customer --> UC_PayBuffet
+Customer --> UC_ViewBuffetBookings
+Customer --> UC_CancelBuffetBooking
+Customer --> UC_Attractions
+Customer --> UC_ForgetPassword
+Customer --> UC_ResetPassword
+Customer --> UC_ValidateReferral
+
+Admin --> UA_Dashboard
+Admin --> UA_ManageRooms
+Admin --> UA_ManageBookings
+Admin --> UA_ManageCustomers
+Admin --> UA_ManagePromotions
+Admin --> UA_ManageTiers
+Admin --> UA_ManageReviews
+Admin --> UA_ManageBuffets
+Admin --> UA_ManageBuffetBookings
+Admin --> UA_Noti
+
+UC_PayRoom --> Stripe
+UC_PayBuffet --> Stripe
+UA_ManageRooms --> Cloudinary
+UC_Profile --> Cloudinary
+UC_ForgetPassword --> SMTP
+UC_ResetPassword --> SMTP
+
+UC_CreateBooking .> UC_BookedDates : <<includes>>
+UC_Review .> UC_ViewBookings : <<depends on paid booking>>
+UC_ResetPassword .> UC_ForgetPassword : <<extends>>
+
+@enduml
+

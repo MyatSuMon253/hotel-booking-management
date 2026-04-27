@@ -1,0 +1,1150 @@
+{
+  "info": {
+    "_postman_id": "7c7bb8a4-5c8d-4b9e-9c80-hotel-booking-management",
+    "name": "Hotel Booking Management API",
+    "description": "Postman collection for the Hotel Booking Management backend. Most requests use the GraphQL endpoint. Run Login first so Postman stores the authentication cookie for protected requests.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "graphqlUrl",
+      "value": "http://localhost:4040/graphql"
+    },
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:4040"
+    },
+    {
+      "key": "userId",
+      "value": "replace_with_user_id"
+    },
+    {
+      "key": "roomId",
+      "value": "replace_with_room_id"
+    },
+    {
+      "key": "bookingId",
+      "value": "replace_with_booking_id"
+    },
+    {
+      "key": "promotionId",
+      "value": "replace_with_promotion_id"
+    },
+    {
+      "key": "membershipTierId",
+      "value": "replace_with_membership_tier_id"
+    },
+    {
+      "key": "reviewId",
+      "value": "replace_with_review_id"
+    },
+    {
+      "key": "buffetDinnerId",
+      "value": "replace_with_buffet_dinner_id"
+    },
+    {
+      "key": "buffetBookingId",
+      "value": "replace_with_buffet_booking_id"
+    },
+    {
+      "key": "dishId",
+      "value": "replace_with_dish_id"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth and Profile",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"mutation Register($userInput: UserInput!) { register(userInput: $userInput) { id name email role membershipTier referralCode referralPoints isActive } }\",\"variables\":{\"userInput\":{\"name\":\"Test User\",\"email\":\"test@example.com\",\"password\":\"password123\"}}}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"mutation Login($email: String!, $password: String!) { login(email: $email, password: $password) { id name email role membershipTier referralCode referralPoints isActive } }\",\"variables\":{\"email\":\"test@example.com\",\"password\":\"password123\"}}"
+            }
+          }
+        },
+        {
+          "name": "Current User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"query CurrentUser { currentUser { id name email avatar { url public_id } role membershipTier referralCode referralPoints isActive createdAt updatedAt } }\"}"
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"query Logout { logout }\"}"
+            }
+          }
+        },
+        {
+          "name": "Update User Profile",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"mutation UpdateUserProfile($userInfo: UpdateUserInput!) { updateUserProfile(userInfo: $userInfo) }\",\"variables\":{\"userInfo\":{\"name\":\"Updated User\",\"email\":\"updated@example.com\"}}}"
+            }
+          }
+        },
+        {
+          "name": "Update Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"mutation UpdateUserPassword($oldPassword: String!, $newPassword: String!) { updateUserPassword(oldPassword: $oldPassword, newPassword: $newPassword) }\",\"variables\":{\"oldPassword\":\"password123\",\"newPassword\":\"newPassword123\"}}"
+            }
+          }
+        },
+        {
+          "name": "Upload Avatar",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"mutation UploadAvatar($image: String!) { uploadAvatar(image: $image) }\",\"variables\":{\"image\":\"data:image/png;base64,replace_with_base64_image\"}}"
+            }
+          }
+        },
+        {
+          "name": "Forget Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"mutation ForgetPassword($email: String!) { forgetPassword(email: $email) }\",\"variables\":{\"email\":\"test@example.com\"}}"
+            }
+          }
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"mutation ResetPassword($token: String!, $newPassword: String!, $confirmNewPassword: String!) { resetPassword(token: $token, newPassword: $newPassword, confirmNewPassword: $confirmNewPassword) }\",\"variables\":{\"token\":\"replace_with_reset_token\",\"newPassword\":\"password123\",\"confirmNewPassword\":\"password123\"}}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Rooms",
+      "item": [
+        {
+          "name": "Get All Rooms",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"query GetAllRooms($query: String, $filters: RoomFilters, $page: Int) { getAllRooms(query: $query, filters: $filters, page: $page) { rooms { id title description roomNumber type pricePerNight capacity location isAvailable images { url public_id } ratings { value count } createdAt updatedAt } pagination { totalRoomCount perPage } } }\",\"variables\":{\"query\":\"\",\"filters\":{\"isAvailable\":true},\"page\":1}}"
+            }
+          }
+        },
+        {
+          "name": "Get Room By ID",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"query GetRoomById($roomId: String!) { getRoomById(roomId: $roomId) { id title description roomNumber type pricePerNight capacity location isAvailable images { url public_id } ratings { value count } reviews { id rating comment createdAt user { id name email } } } }\",\"variables\":{\"roomId\":\"{{roomId}}\"}}"
+            }
+          }
+        },
+        {
+          "name": "Create Room (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"mutation CreateRoom($roomInput: RoomInput!) { createNewRoom(roomInput: $roomInput) { id title roomNumber type pricePerNight capacity location isAvailable } }\",\"variables\":{\"roomInput\":{\"title\":\"Deluxe Room\",\"description\":\"Comfortable room with city view\",\"roomNumber\":\"A101\",\"type\":\"deluxe\",\"pricePerNight\":120,\"capacity\":2,\"location\":\"First Floor\",\"isAvailable\":true,\"images\":[]}}}"
+            }
+          }
+        },
+        {
+          "name": "Update Room (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"mutation UpdateRoom($roomId: ID!, $roomInput: RoomInput!) { updateRoom(roomId: $roomId, roomInput: $roomInput) }\",\"variables\":{\"roomId\":\"{{roomId}}\",\"roomInput\":{\"title\":\"Updated Deluxe Room\",\"description\":\"Updated room description\",\"roomNumber\":\"A101\",\"type\":\"deluxe\",\"pricePerNight\":135,\"capacity\":2,\"location\":\"First Floor\",\"isAvailable\":true,\"images\":[]}}}"
+            }
+          }
+        },
+        {
+          "name": "Delete Room Image (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"mutation DeleteRoomImage($roomId: ID!, $imageId: String!) { deleteRoomImage(roomId: $roomId, imageId: $imageId) }\",\"variables\":{\"roomId\":\"{{roomId}}\",\"imageId\":\"replace_with_cloudinary_public_id\"}}"
+            }
+          }
+        },
+        {
+          "name": "Delete Room (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"mutation DeleteRoom($roomId: ID!) { deleteRoom(roomId: $roomId) }\",\"variables\":{\"roomId\":\"{{roomId}}\"}}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Room Bookings",
+      "item": [
+        {
+          "name": "Get Booked Dates By Room",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"query GetBookedDatesById($roomId: String!) { getBookedDatesById(roomId: $roomId) }\",\"variables\":{\"roomId\":\"{{roomId}}\"}}"
+            }
+          }
+        },
+        {
+          "name": "Create Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"mutation CreateBooking($bookingInput: BookingInput!) { createNewBooking(bookingInput: $bookingInput) { id startDate endDate daysOfRent rentPerDay amount { rent tax discount total } status paymentInfo { id status method } } }\",\"variables\":{\"bookingInput\":{\"room\":\"{{roomId}}\",\"startDate\":\"2026-05-10\",\"endDate\":\"2026-05-12\",\"customer\":{\"name\":\"Test User\",\"email\":\"test@example.com\"},\"amount\":{\"rent\":0,\"discount\":0,\"tax\":0,\"total\":0},\"daysOfRent\":2,\"rentPerDay\":120,\"referralCode\":\"\",\"additionalNote\":\"Near elevator if possible\"}}}"
+            }
+          }
+        },
+        {
+          "name": "Get My Bookings",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"query GetBookingByUser { getBookingByUser { bookings { id startDate endDate status customer { name email } amount { rent tax discount total } paymentInfo { id status method } room { id title roomNumber } createdAt } meta { totalBookings unpaidBookings needToPay } } }\"}"
+            }
+          }
+        },
+        {
+          "name": "Get Booking By ID",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"query GetBookingById($bookingId: String!) { getBookingById(bookingId: $bookingId) { id startDate endDate status customer { name email } amount { rent tax discount total } paymentInfo { id status method } refundInfo { id amount status refundedAt } room { id title roomNumber } user { id name email } createdAt updatedAt } }\",\"variables\":{\"bookingId\":\"{{bookingId}}\"}}"
+            }
+          }
+        },
+        {
+          "name": "Update Booking Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"mutation UpdateBookingPayment($bookingId: String!, $bookingInput: updateBookingPaymentInput!) { updateBookingPayment(bookingId: $bookingId, bookingInput: $bookingInput) }\",\"variables\":{\"bookingId\":\"{{bookingId}}\",\"bookingInput\":{\"paymentInfo\":{\"status\":\"paid\",\"method\":\"cash\"}}}}"
+            }
+          }
+        },
+        {
+          "name": "Cancel Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"mutation CancelBooking($bookingId: ID!, $reason: String) { cancelBooking(bookingId: $bookingId, reason: $reason) { id status cancelledAt cancelReason refundInfo { id amount status refundedAt } } }\",\"variables\":{\"bookingId\":\"{{bookingId}}\",\"reason\":\"Customer requested cancellation\"}}"
+            }
+          }
+        },
+        {
+          "name": "Get All Bookings (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"query GetAllBookings { getAllBookings { id startDate endDate status customer { name email } amount { total } paymentInfo { status method } room { id title roomNumber } user { id name email } referralOwner { id name email } createdAt } }\"}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "Create Stripe Room Checkout Session",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"mutation StripeCheckoutSession($bookingId: ID!) { stripeCheckoutSession(bookingId: $bookingId) { url } }\",\"variables\":{\"bookingId\":\"{{bookingId}}\"}}"
+            }
+          }
+        },
+        {
+          "name": "Create Stripe Buffet Checkout Session",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"mutation StripeBuffetCheckoutSession($buffetBookingId: ID!) { stripeBuffetCheckoutSession(buffetBookingId: $buffetBookingId) { url } }\",\"variables\":{\"buffetBookingId\":\"{{buffetBookingId}}\"}}"
+            }
+          }
+        },
+        {
+          "name": "Stripe Webhook (REST)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "stripe-signature",
+                "value": "replace_with_valid_stripe_signature"
+              }
+            ],
+            "url": "{{baseUrl}}/api/payment/webhook",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"type\":\"checkout.session.completed\",\"data\":{\"object\":{\"client_reference_id\":\"{{bookingId}}\"}}}"
+            },
+            "description": "This endpoint requires a valid Stripe signature. For local testing, prefer the Stripe CLI to forward signed webhook events."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Buffets",
+      "item": [
+        {
+          "name": "Get All Dishes (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"query GetAllDishes { getAllDishes { id name cuisineCategory description imageUrl } }\"}"
+            }
+          }
+        },
+        {
+          "name": "Get Dish By ID (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"query GetDishById($dishId: ID!) { getDishById(dishId: $dishId) { id name cuisineCategory description imageUrl } }\",\"variables\":{\"dishId\":\"{{dishId}}\"}}"
+            }
+          }
+        },
+        {
+          "name": "Get Available Buffet Dinners",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"query GetAvailableBuffetDinners { getAvailableBuffetDinners { id title cuisineCategory description imageUrl startsAt endsAt maxCapacity remainingCapacity pricePerGuest facilities active includedDishes { id name cuisineCategory } } }\"}"
+            }
+          }
+        },
+        {
+          "name": "Get All Buffet Dinners (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"query GetAllBuffetDinners { getAllBuffetDinners { id title cuisineCategory startsAt endsAt maxCapacity remainingCapacity pricePerGuest active } }\"}"
+            }
+          }
+        },
+        {
+          "name": "Get Buffet Dinner By ID",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"query GetBuffetDinnerById($buffetDinnerId: ID!) { getBuffetDinnerById(buffetDinnerId: $buffetDinnerId) { id title cuisineCategory description imageUrl startsAt endsAt includedDishes { id name cuisineCategory description imageUrl } maxCapacity remainingCapacity pricePerGuest facilities active createdAt updatedAt } }\",\"variables\":{\"buffetDinnerId\":\"{{buffetDinnerId}}\"}}"
+            }
+          }
+        },
+        {
+          "name": "Create Buffet Dinner (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"mutation CreateBuffetDinner($buffetDinnerInput: BuffetDinnerInput!) { createBuffetDinner(buffetDinnerInput: $buffetDinnerInput) }\",\"variables\":{\"buffetDinnerInput\":{\"title\":\"International Dinner Buffet\",\"cuisineCategory\":\"international\",\"description\":\"Weekend buffet dinner\",\"imageUrl\":\"https://example.com/buffet.jpg\",\"startsAt\":\"2026-05-15T18:00:00.000Z\",\"endsAt\":\"2026-05-15T21:00:00.000Z\",\"includedDishes\":[\"replace_with_dish_id\"],\"maxCapacity\":60,\"pricePerGuest\":35,\"facilities\":[\"Live station\",\"Dessert bar\"],\"active\":true}}}"
+            }
+          }
+        },
+        {
+          "name": "Update Buffet Dinner (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"mutation UpdateBuffetDinner($buffetDinnerId: ID!, $buffetDinnerInput: UpdateBuffetDinnerInput!) { updateBuffetDinner(buffetDinnerId: $buffetDinnerId, buffetDinnerInput: $buffetDinnerInput) }\",\"variables\":{\"buffetDinnerId\":\"{{buffetDinnerId}}\",\"buffetDinnerInput\":{\"title\":\"Updated Dinner Buffet\",\"maxCapacity\":70,\"pricePerGuest\":40,\"active\":true}}}"
+            }
+          }
+        },
+        {
+          "name": "Delete Buffet Dinner (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"mutation DeleteBuffetDinner($buffetDinnerId: ID!) { deleteBuffetDinner(buffetDinnerId: $buffetDinnerId) }\",\"variables\":{\"buffetDinnerId\":\"{{buffetDinnerId}}\"}}"
+            }
+          }
+        },
+        {
+          "name": "Create Buffet Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"mutation CreateBuffetBooking($bookingInput: BuffetBookingInput!) { createBuffetBooking(bookingInput: $bookingInput) { id guestCount pricePerGuest amount { subtotal tax total } status paymentInfo { id status method } } }\",\"variables\":{\"bookingInput\":{\"buffetDinner\":\"{{buffetDinnerId}}\",\"customer\":{\"name\":\"Test User\",\"email\":\"test@example.com\"},\"guestCount\":2,\"additionalNote\":\"Window table if available\"}}}"
+            }
+          }
+        },
+        {
+          "name": "Get My Buffet Bookings",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"query GetBuffetBookingsByUser { getBuffetBookingsByUser { id guestCount pricePerGuest amount { subtotal tax total } status paymentInfo { id status method } buffetDinner { id title startsAt endsAt } createdAt } }\"}"
+            }
+          }
+        },
+        {
+          "name": "Get Buffet Booking By ID",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"query GetBuffetBookingById($buffetBookingId: ID!) { getBuffetBookingById(buffetBookingId: $buffetBookingId) { id guestCount pricePerGuest amount { subtotal tax total } status paymentInfo { id status method } customer { name email } buffetDinner { id title startsAt endsAt } user { id name email } createdAt updatedAt } }\",\"variables\":{\"buffetBookingId\":\"{{buffetBookingId}}\"}}"
+            }
+          }
+        },
+        {
+          "name": "Update Buffet Booking Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"mutation UpdateBuffetBookingPayment($buffetBookingId: ID!, $bookingInput: UpdateBuffetBookingPaymentInput!) { updateBuffetBookingPayment(buffetBookingId: $buffetBookingId, bookingInput: $bookingInput) }\",\"variables\":{\"buffetBookingId\":\"{{buffetBookingId}}\",\"bookingInput\":{\"paymentInfo\":{\"status\":\"paid\",\"method\":\"cash\"}}}}"
+            }
+          }
+        },
+        {
+          "name": "Cancel Buffet Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"mutation CancelBuffetBooking($buffetBookingId: ID!, $reason: String) { cancelBuffetBooking(buffetBookingId: $buffetBookingId, reason: $reason) { id status cancelledAt cancelReason } }\",\"variables\":{\"buffetBookingId\":\"{{buffetBookingId}}\",\"reason\":\"Customer requested cancellation\"}}"
+            }
+          }
+        },
+        {
+          "name": "Get All Buffet Bookings (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"query GetAllBuffetBookings { getAllBuffetBookings { id guestCount amount { total } status paymentInfo { status method } customer { name email } buffetDinner { id title startsAt } user { id name email } createdAt } }\"}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Promotions",
+      "item": [
+        {
+          "name": "Get All Promotions (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"query GetAllPromotions { getAllPromotions { id code description discountType discountValue validFrom validTo active maxUses usedCount createdAt updatedAt } }\"}"
+            }
+          }
+        },
+        {
+          "name": "Get Promotion By ID (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"query GetPromotionById($promotionId: ID!) { getPromotionById(promotionId: $promotionId) { id code description discountType discountValue validFrom validTo active maxUses usedCount } }\",\"variables\":{\"promotionId\":\"{{promotionId}}\"}}"
+            }
+          }
+        },
+        {
+          "name": "Create Promotion (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"mutation CreatePromotion($promotionInput: PromotionInput!) { createPromotion(promotionInput: $promotionInput) }\",\"variables\":{\"promotionInput\":{\"code\":\"SUMMER10\",\"description\":\"Summer discount\",\"discountType\":\"percentage\",\"discountValue\":10,\"validFrom\":\"2026-05-01\",\"validTo\":\"2026-08-31\",\"active\":true,\"maxUses\":100}}}"
+            }
+          }
+        },
+        {
+          "name": "Update Promotion (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"mutation UpdatePromotion($promotionId: ID!, $promotionInput: UpdatePromotionInput!) { updatePromotion(promotionId: $promotionId, promotionInput: $promotionInput) }\",\"variables\":{\"promotionId\":\"{{promotionId}}\",\"promotionInput\":{\"description\":\"Updated summer discount\",\"discountValue\":15,\"active\":true}}}"
+            }
+          }
+        },
+        {
+          "name": "Delete Promotion (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"mutation DeletePromotion($promotionId: ID!) { deletePromotion(promotionId: $promotionId) }\",\"variables\":{\"promotionId\":\"{{promotionId}}\"}}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Membership Tiers and Referrals",
+      "item": [
+        {
+          "name": "Get All Membership Tiers",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"query GetAllMembershipTiers { getAllMembershipTiers { id name discountPercentage active createdAt updatedAt } }\"}"
+            }
+          }
+        },
+        {
+          "name": "Get Membership Tier By ID (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"query GetMembershipTierById($membershipTierId: ID!) { getMembershipTierById(membershipTierId: $membershipTierId) { id name discountPercentage active } }\",\"variables\":{\"membershipTierId\":\"{{membershipTierId}}\"}}"
+            }
+          }
+        },
+        {
+          "name": "Create Membership Tier (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"mutation CreateMembershipTier($membershipTierInput: MembershipTierInput!) { createMembershipTier(membershipTierInput: $membershipTierInput) }\",\"variables\":{\"membershipTierInput\":{\"name\":\"silver\",\"discountPercentage\":5,\"active\":true}}}"
+            }
+          }
+        },
+        {
+          "name": "Update Membership Tier (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"mutation UpdateMembershipTier($membershipTierId: ID!, $membershipTierInput: UpdateMembershipTierInput!) { updateMembershipTier(membershipTierId: $membershipTierId, membershipTierInput: $membershipTierInput) }\",\"variables\":{\"membershipTierId\":\"{{membershipTierId}}\",\"membershipTierInput\":{\"discountPercentage\":8,\"active\":true}}}"
+            }
+          }
+        },
+        {
+          "name": "Delete Membership Tier (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"mutation DeleteMembershipTier($membershipTierId: ID!) { deleteMembershipTier(membershipTierId: $membershipTierId) }\",\"variables\":{\"membershipTierId\":\"{{membershipTierId}}\"}}"
+            }
+          }
+        },
+        {
+          "name": "Validate Referral Code",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"query ValidateReferralCode($code: String!) { validateReferralCode(code: $code) { isValid ownerName } }\",\"variables\":{\"code\":\"REFERRALCODE\"}}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reviews",
+      "item": [
+        {
+          "name": "Can Review Room",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"query CanReview($reviewRoomId: ID!) { canReview(reviewRoomId: $reviewRoomId) }\",\"variables\":{\"reviewRoomId\":\"{{roomId}}\"}}"
+            }
+          }
+        },
+        {
+          "name": "Create or Update Review",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"mutation CreateAndUpdateReview($reviewInput: reviewInput!) { createAndUpdateReview(reviewInput: $reviewInput) { id rating comment createdAt updatedAt } }\",\"variables\":{\"reviewInput\":{\"roomId\":\"{{roomId}}\",\"rating\":5,\"comment\":\"Excellent room and service.\"}}}"
+            }
+          }
+        },
+        {
+          "name": "Get All Reviews (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"query GetAllReviews { getAllReviews { id rating comment user { id name email } room { id title roomNumber } createdAt updatedAt } }\"}"
+            }
+          }
+        },
+        {
+          "name": "Delete Review (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"mutation DeleteReviewById($reviewId: ID!) { deleteReviewById(reviewId: $reviewId) }\",\"variables\":{\"reviewId\":\"{{reviewId}}\"}}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin Customers and Dashboard",
+      "item": [
+        {
+          "name": "Get All Users (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"query GetAllUsers { getAllUsers { id name email avatar { url public_id } role membershipTier referralCode referralPoints isActive createdAt updatedAt } }\"}"
+            }
+          }
+        },
+        {
+          "name": "Get User By ID (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"query GetUserById($userId: ID!) { getUserById(userId: $userId) { id name email avatar { url public_id } role membershipTier referralCode referralPoints isActive createdAt updatedAt } }\",\"variables\":{\"userId\":\"{{userId}}\"}}"
+            }
+          }
+        },
+        {
+          "name": "Update User (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"mutation UpdateUser($userId: ID!, $roles: [String!], $isActive: Boolean, $membershipTier: String, $referralPointsAdjustment: Int) { updateUser(userId: $userId, roles: $roles, isActive: $isActive, membershipTier: $membershipTier, referralPointsAdjustment: $referralPointsAdjustment) }\",\"variables\":{\"userId\":\"{{userId}}\",\"roles\":[\"user\"],\"isActive\":true,\"membershipTier\":\"silver\",\"referralPointsAdjustment\":0}}"
+            }
+          }
+        },
+        {
+          "name": "Delete User (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"mutation DeleteUser($userId: ID!) { deleteUser(userId: $userId) }\",\"variables\":{\"userId\":\"{{userId}}\"}}"
+            }
+          }
+        },
+        {
+          "name": "Get Dashboard Metadata (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"query GetDashboardMetaData($startDate: String!, $endDate: String!) { getDashboardMetaData(startDate: $startDate, endDate: $endDate) { sales { date sales bookings } totalSales totalBookings totalPendingAmount totalPaidCashAmount totalCardSales totalConfirmedBookings totalCancelledBookings averageBookingValue totalRoomsBooked paymentMethodDistribution { method count totalAmount } statusDistribution { status count } } }\",\"variables\":{\"startDate\":\"2026-01-01\",\"endDate\":\"2026-12-31\"}}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Subscriptions Reference",
+      "item": [
+        {
+          "name": "newBookingNoti Subscription",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"subscription NewBookingNoti { newBookingNoti }\"}"
+            },
+            "description": "GraphQL subscriptions use ws://localhost:4040/graphql in the app. Postman support depends on the GraphQL WebSocket client used by your Postman version."
+          }
+        },
+        {
+          "name": "bookingCancelledNoti Subscription",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{graphqlUrl}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"query\":\"subscription BookingCancelledNoti { bookingCancelledNoti }\"}"
+            },
+            "description": "GraphQL subscriptions use ws://localhost:4040/graphql in the app. Postman support depends on the GraphQL WebSocket client used by your Postman version."
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+@startuml
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam linetype ortho
+
+title Room Booking + Stripe Payment — Sequence Diagram
+
+actor Customer as C
+participant "React Client\n(Apollo Client)" as FE
+participant "GraphQL API\n(Apollo Server)" as API
+participant "MongoDB\n(Mongoose)" as DB
+participant "Stripe Checkout" as Stripe
+participant "Webhook\n(/api/payment/webhook)" as Webhook
+
+C -> FE: Select room + dates\nand submit booking
+FE -> API: createNewBooking(bookingInput)
+API -> DB: Find overlapping booking\nfor room & dates
+alt Overlap exists
+  DB --> API: found
+  API --> FE: Error: dates overlap
+  FE --> C: Show validation message
+else No overlap
+  DB --> API: none
+  API -> DB: Insert Booking\n(status=pending, payment=pending)
+  DB --> API: bookingId
+  API --> FE: Booking created (bookingId)
+end
+
+FE -> API: stripeCheckoutSession(bookingId)
+API -> DB: Load booking + room
+DB --> API: booking + room
+API -> Stripe: Create Checkout Session\n(metadata: bookingType=room,\nclient_reference_id=bookingId)
+Stripe --> API: session.url
+API --> FE: { url }
+FE --> C: Redirect to Stripe session.url
+
+C -> Stripe: Pay by card
+Stripe -> Webhook: checkout.session.completed\n(signed event)
+Webhook -> Stripe: Verify signature
+Webhook -> DB: Update Booking\npaymentInfo + status=confirmed
+DB --> Webhook: ok
+Webhook --> Stripe: 200 OK
+
+Stripe --> C: Redirect to\n/confirmation?status=success
+C -> FE: Open confirmation page
+FE -> API: getBookingById(bookingId)
+API -> DB: Read booking
+DB --> API: booking (confirmed)
+API --> FE: booking details
+FE --> C: Show confirmation + invoice link
+
+@enduml
+

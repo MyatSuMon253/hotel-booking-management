@@ -1,0 +1,175 @@
+@startuml
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+
+title Hotel Booking Management System — ER Diagram (MongoDB Collections)
+
+hide circle
+skinparam linetype ortho
+
+entity "User" as User {
+  * _id : ObjectId
+  --
+  name : string
+  email : string (unique)
+  password : string (hashed)
+  role : [user|admin]
+  isActive : boolean
+  membershipTier : silver|gold|diamond (string)
+  referralCode : string (unique, sparse)
+  referralPoints : number
+  avatar.url : string
+  avatar.public_id : string
+  resetPasswordToken : string (hashed)
+  resetPasswordExpire : timestamp
+  createdAt : timestamp
+  updatedAt : timestamp
+}
+
+entity "Room" as Room {
+  * _id : ObjectId
+  --
+  title : string
+  description : string
+  roomNumber : string
+  type : string
+  pricePerNight : number
+  location : string
+  capacity : number
+  isAvailable : boolean
+  images[] : { url, public_id }
+  reviews[] : Review._id[]
+  createdAt : timestamp
+  updatedAt : timestamp
+}
+
+entity "Booking" as Booking {
+  * _id : ObjectId
+  --
+  user : User._id (ref)
+  room : Room._id (ref)
+  startDate : date
+  endDate : date
+  customer.name : string
+  customer.email : string
+  amount.rent : number
+  amount.tax : number
+  amount.discount : number
+  amount.total : number
+  membershipTier : silver|gold|diamond (string)
+  referralCode : string
+  referralOwner : User._id (ref)
+  daysOfRent : number
+  rentPerDay : number
+  paymentInfo.id : string (stripe payment_intent)
+  paymentInfo.status : pending|paid|refunded
+  paymentInfo.method : cash|card
+  status : pending|confirmed|cancelled
+  cancelledAt : date
+  cancelReason : string
+  refundInfo.id : string
+  refundInfo.amount : number
+  refundInfo.status : string
+  refundInfo.refundedAt : date
+  additionalNote : string
+  createdAt : timestamp
+  updatedAt : timestamp
+}
+
+entity "Review" as Review {
+  * _id : ObjectId
+  --
+  user : User._id (ref)
+  room : Room._id (ref)
+  rating : number
+  comment : string
+  createdAt : timestamp
+  updatedAt : timestamp
+}
+
+entity "Promotion" as Promotion {
+  * _id : ObjectId
+  --
+  code : string (unique)
+  description : string
+  discountType : percentage|fixed
+  discountValue : number
+  validFrom : date
+  validTo : date
+  active : boolean
+  maxUses : number
+  usedCount : number
+  applicableRooms : Room._id[]
+  createdAt : timestamp
+  updatedAt : timestamp
+}
+
+entity "MembershipTier" as MembershipTier {
+  * _id : ObjectId
+  --
+  name : silver|gold|diamond (unique)
+  discountPercentage : number
+  active : boolean
+  createdAt : timestamp
+  updatedAt : timestamp
+}
+
+entity "BuffetDinner" as BuffetDinner {
+  * _id : ObjectId
+  --
+  title : string
+  cuisineCategory : string
+  description : string
+  imageUrl : string
+  startsAt : date
+  endsAt : date
+  includedDishes : DishCatalogId[]
+  maxCapacity : number
+  pricePerGuest : number
+  facilities : string[]
+  active : boolean
+  createdAt : timestamp
+  updatedAt : timestamp
+}
+
+entity "BuffetBooking" as BuffetBooking {
+  * _id : ObjectId
+  --
+  user : User._id (ref)
+  buffetDinner : BuffetDinner._id (ref)
+  customer.name : string
+  customer.email : string
+  guestCount : number
+  pricePerGuest : number
+  amount.subtotal : number
+  amount.tax : number
+  amount.total : number
+  paymentInfo.id : string
+  paymentInfo.status : pending|paid|refunded
+  paymentInfo.method : cash|card
+  status : pending|confirmed|cancelled
+  cancelledAt : date
+  cancelReason : string
+  additionalNote : string
+  createdAt : timestamp
+  updatedAt : timestamp
+}
+
+User ||--o{ Booking : "creates"
+Room ||--o{ Booking : "reserved for"
+Booking }o--|| User : "referralOwner"
+
+User ||--o{ Review : "writes"
+Room ||--o{ Review : "receives"
+
+Promotion }o--o{ Room : "applicableRooms"
+
+User ..> MembershipTier : "membershipTier (string)"
+Booking ..> MembershipTier : "membershipTier (string)"
+
+User ||--o{ BuffetBooking : "creates"
+BuffetDinner ||--o{ BuffetBooking : "for"
+
+@enduml
