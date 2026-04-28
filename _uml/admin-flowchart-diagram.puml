@@ -1,0 +1,35 @@
+@startuml
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+
+title Admin Flowchart — Hotel Booking Management System
+
+start
+
+:Login with Admin Credentials;
+
+:Access Dashboard & View Reports;
+
+:Manage Rooms;
+
+:Manage Bookings;
+
+:Manage Customers;
+
+:Manage Promotions;
+
+:Manage Buffet Dinners;
+
+:Manage Membership Tiers;
+
+:Manage Reviews;
+
+:Real-time Notifications;
+
+:Logout;
+
+stop
+
+@enduml

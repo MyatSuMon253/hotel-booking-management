@@ -1,0 +1,33 @@
+@startuml
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+
+title Guest Flowchart — Hotel Booking Management System
+
+start
+
+:Login or Register;
+
+:Access User Portal;
+
+:View Dashboard;
+
+:Manage Room Booking;
+
+:Manage My Bookings;
+
+:Manage Reviews;
+
+:Manage Buffet Bookings;
+
+:Manage Profile;
+
+:View Tourist Attractions;
+
+:Logout;
+
+stop
+
+@enduml
