@@ -1,0 +1,165 @@
+@startuml
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+
+title Hotel Booking System — Scalability Design Pattern
+
+package "Client Layer" as client {
+  [React SPA\n(Vite Build)] as spa
+  [Mobile App\n(Optional)] as mobile
+}
+
+package "Edge/CDN" as cdn {
+  [CloudFlare / CloudFront\nStatic Assets + Images] as cloudfront
+  [Cloudinary\nImage CDN] as cloudinary_cdn
+}
+
+package "Load Balancer" as lb {
+  [Nginx / AWS ALB\nSSL Termination\nRate Limiting] as nginx
+}
+
+package "Container Orchestration\n(Kubernetes / ECS)" as k8s {
+  
+  package "Server Pods (Auto-scaling)" as servers {
+    [Server Instance 1\n(Express + Apollo)] as s1
+    [Server Instance 2\n(Express + Apollo)] as s2
+    [Server Instance N\n(Express + Apollo)] as sn
+  }
+  
+  package "Background Workers" as workers {
+    [Worker 1\n(Email, Refunds)] as w1
+    [Worker 2\n(Email, Refunds)] as w2
+  }
+}
+
+package "Caching & Messaging Layer" as redis_layer {
+  [Redis Cluster\n- Cache\n- Session Store\n- PubSub\n- Rate Limiting] as redis
+  [Message Queue\n(Bull / RabbitMQ)\n- Email Jobs\n- Payment Webhooks\n- Image Processing] as queue
+}
+
+package "Database Layer" as db {
+  [MongoDB Atlas\n- Replica Set\n- Auto-scaling\n- Sharding Ready] as mongodb
+  [Read Replica\n(Optional)] as replica
+}
+
+package "External Services" as external {
+  [Stripe API\n(Payments)] as stripe
+  [SMTP Service\n(Transactional Email)] as smtp
+  [SendGrid / SES\n(Bulk Email)] as sendgrid
+}
+
+package "Monitoring & Observability" as monitor {
+  [Prometheus\nMetrics] as prometheus
+  [Grafana\nDashboards] as grafana
+  [ELK Stack\nLogs] as elk
+  [Sentry\nError Tracking] as sentry
+}
+
+' Client to CDN flow
+spa --> cloudfront : static assets\n(JS, CSS, images)
+spa --> cloudinary_cdn : optimized\nimages
+mobile --> cloudfront
+mobile --> cloudinary_cdn
+
+' Client to Load Balancer
+spa --> nginx : GraphQL / REST\nHTTPS/WSS
+mobile --> nginx
+
+' Load Balancer to Servers
+nginx --> s1 : round-robin\n/ least-conn
+nginx --> s2
+nginx --> sn
+
+' Servers to Redis
+s1 --> redis : cache queries\npubsub events
+s2 --> redis
+sn --> redis
+
+' Servers to Queue
+s1 --> queue : enqueue jobs\n(email, refunds)
+s2 --> queue
+sn --> queue
+
+' Workers to Queue
+w1 --> queue : consume jobs
+w2 --> queue
+
+' Workers to Redis
+w1 --> redis : job state
+w2 --> redis
+
+' Servers to Database
+s1 --> mongodb : connection pool
+s2 --> mongodb
+sn --> mongodb
+
+' Read Replica
+mongodb --> replica : replication
+
+' Servers to External
+s1 --> stripe : payment intents\nwebhooks
+s1 --> smtp : transactional
+s2 --> stripe
+sn --> stripe
+
+' Workers to External
+w1 --> sendgrid : bulk email
+w1 --> stripe : refund processing
+
+' Monitoring
+s1 --> prometheus : metrics
+s2 --> prometheus
+sn --> sentry : error reports
+s1 --> elk : structured logs
+w1 --> elk
+
+' Monitoring connections
+prometheus --> grafana : dashboards
+elk --> grafana
+
+note right of nginx
+  SSL/TLS Termination
+  Rate Limiting: 100 req/s per IP
+  IP Whitelisting for admin
+end note
+
+note right of servers
+  Stateless servers
+  JWT in HTTP-only cookies
+  Horizontal auto-scaling
+  based on CPU/Memory
+end note
+
+note right of redis
+  Multi-purpose Redis:
+  - Apollo cache (optional)
+  - GraphQL Subscriptions PubSub
+  - Rate limit counters
+  - Session storage (if needed)
+end note
+
+note right of queue
+  Decouples long-running tasks:
+  - Send bulk emails
+  - Process refunds
+  - Image optimization
+  - Webhook processing
+end note
+
+note right of mongodb
+  MongoDB Atlas:
+  - Auto-scaling storage
+  - Read replicas for reads
+  - Sharding for write scaling
+end note
+
+note right of workers
+  Separate workers for:
+  - Email notifications
+  - Payment refunds
+  - Report generation
+  - Data exports
+end note
+@enduml
