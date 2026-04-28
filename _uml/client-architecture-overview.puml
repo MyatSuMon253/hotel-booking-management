@@ -1,0 +1,39 @@
+@startuml
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+
+title Hotel Booking Management — Client Architecture Overview
+
+package "Hotel Booking Client (React 19 SPA)" as spa {
+  [Pages\n(Admin, Guest, Auth)] as pages
+  [UI Components\n(Radix + Tailwind)] as ui
+  [Data Layer\n(Apollo Client + Cache)] as data
+  [Forms\n(React Hook Form + Zod)] as forms
+  [Routing\n(React Router)] as routing
+  [Utilities\n(Hooks, Helpers, Types)] as utils
+}
+
+' External
+[GraphQL Server\n(Express + Apollo)] as server
+[WebSocket\n(Subscriptions)] as ws
+
+' Relationships
+pages --> ui : renders
+pages --> data : fetches data
+pages --> forms : handles input
+pages --> routing : navigates
+
+data --> server : HTTP/GraphQL\n(credentials: include)
+data --> ws : WebSocket\n(graphql-ws)
+data --> utils : shared types
+
+ui --> utils : styles, helpers
+
+note bottom of spa
+  Vite dev server (port 5173)
+  Cookie-based authentication
+  Lazy-loaded routes
+end note
+@enduml

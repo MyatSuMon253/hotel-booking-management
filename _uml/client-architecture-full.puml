@@ -1,0 +1,87 @@
+@startuml
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+
+title Hotel Booking Management System — Client Architecture
+
+package "Client Application (React 19 + TypeScript)" as client {
+  package "Entry & Configuration" as entry {
+    [main.tsx] as main
+    [App.tsx] as app
+    [Vite Config] as vite
+  }
+
+  package "Routing Layer" as routing {
+    [React Router v7] as router
+    [Route Definitions] as routes
+    [Lazy Loaded Pages] as lazy_pages
+  }
+
+  package "Data Fetching & State" as data {
+    [Apollo Client] as apollo
+    [GraphQL Operations\n(Queries/Mutations)] as gql_ops
+    [Apollo Cache] as cache
+    [GraphQL Subscriptions] as subs
+  }
+
+  package "UI Layer" as ui {
+    [Radix UI Components] as radix
+    [Tailwind CSS] as tailwind
+    [TanStack Table] as table
+    [Recharts] as recharts
+  }
+
+  package "Form Handling" as forms {
+    [React Hook Form] as rhf
+    [Zod Validation] as zod
+  }
+
+  package "Utilities" as utils {
+    [Custom Hooks] as hooks
+    [Helper Functions] as helpers
+    [Shared Types] as types
+  }
+}
+
+' Core relationships
+main --> app : renders
+app --> router : initializes
+app --> vite : build config
+
+' Routing flow
+router --> routes : defines
+routes --> lazy_pages : lazy loads
+
+' Page dependencies
+lazy_pages --> apollo : fetches data
+lazy_pages --> radix : UI components
+lazy_pages --> tailwind : styling
+lazy_pages --> table : data tables
+lazy_pages --> recharts : charts
+lazy_pages --> rhf : form handling
+
+' Form validation
+rhf --> zod : validates with
+
+' Data layer
+apollo --> gql_ops : executes
+apollo --> cache : caches data
+apollo --> subs : real-time updates
+
+' Utility usage
+lazy_pages --> hooks : custom hooks
+lazy_pages --> helpers : utilities
+lazy_pages --> types : type definitions
+
+note right of vite
+  Vite dev server (port 5173)
+  Build tool for development & production
+end note
+
+note right of apollo
+  Communicates with server via
+  HTTP/GraphQL and WebSocket
+end note
+@enduml
