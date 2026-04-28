@@ -1,0 +1,87 @@
+@startuml
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam linetype ortho
+
+title System Activity Diagram — Hotel Booking Management System
+
+start
+
+:User Initiates Action
+(Login/Browse/Book/Manage);
+
+partition "Authentication" {
+  if (Requires Auth?) then (yes)
+    :Send Login Credentials;
+    :Validate JWT Token
+    (HTTP-only cookie);
+    if (Valid Token?) then (yes)
+      :Authenticated;
+    else (no)
+      :Redirect to Login;
+      stop
+    endif
+  else (no)
+    :Continue as Guest;
+  endif
+}
+
+partition "Room Booking Flow" {
+  :Browse Rooms
+  (Filter, Search, Paginate);
+  :View Room Details;
+  if (Book Room?) then (yes)
+    :Select Dates & Guests;
+    :Apply Promo/Referral Code;
+    :Choose Payment Method;
+    
+    if (Stripe?) then (yes)
+      :Redirect to Stripe Checkout;
+      :Confirm Payment;
+      :Stripe Webhook Callback;
+      :Update Booking Status
+      (confirmed);
+    else (Cash)
+      :Booking Status
+      (pending);
+    endif
+    
+    :Save Booking to MongoDB;
+    :Generate Invoice (PDF);
+    :Send Confirmation;
+  endif
+}
+
+partition "Admin Management Flow" {
+  if (Admin Action?) then (yes)
+    fork
+      :Manage Rooms
+      (CRUD + Cloudinary);
+    fork again
+      :Manage Bookings
+      (Update Status + Stripe Refund);
+    fork again
+      :Manage Customers
+      (Roles + Tiers);
+    fork again
+      :Manage Promotions
+      (Codes + Validity);
+    end fork
+  endif
+}
+
+partition "Real-time Updates" {
+  :GraphQL Subscription
+  (New Booking/Cancellation);
+  :WebSocket Notification
+  to Admin;
+}
+
+:Display Results to User;
+
+stop
+
+@enduml
+@enduml

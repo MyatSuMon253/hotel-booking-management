@@ -1,0 +1,130 @@
+@startuml
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam linetype ortho
+skinparam shadowing false
+
+title Hotel Booking Management System - Project Overview
+
+skinparam actor {
+  BackgroundColor #FFFFFF
+  BorderColor #2C3E50
+}
+
+skinparam rectangle {
+  BackgroundColor #FFFFFF
+  BorderColor #5D6D7E
+}
+
+skinparam package {
+  BackgroundColor #F8F9FA
+  BorderColor #7F8C8D
+}
+
+skinparam component {
+  BackgroundColor #FFFFFF
+  BorderColor #34495E
+}
+
+skinparam database {
+  BackgroundColor #FEF9E7
+  BorderColor #D4AC0D
+}
+
+skinparam cloud {
+  BackgroundColor #F0FFF0
+  BorderColor #27AE60
+}
+
+actor "Guest" as guest
+actor "Customer" as customer
+actor "Admin" as admin
+
+package "client/ React + TypeScript + Vite" as client {
+  component "Public Pages\nHome, Room Details,\nAttractions, Auth" as public_pages
+  component "Customer Portal\nProfile, Bookings,\nPayments, Invoices,\nBuffet Booking" as customer_portal
+  component "Admin Portal\nDashboard, Rooms,\nBookings, Customers,\nPromotions, Reviews,\nMembership Tiers,\nBuffet Management" as admin_portal
+  component "Apollo Client\nHTTP Queries/Mutations\nWebSocket Subscriptions" as apollo_client
+  component "UI + Forms\nshadcn-style UI,\nReact Hook Form,\nZod, Recharts" as ui_layer
+
+  public_pages --> apollo_client
+  customer_portal --> apollo_client
+  admin_portal --> apollo_client
+  public_pages --> ui_layer
+  customer_portal --> ui_layer
+  admin_portal --> ui_layer
+}
+
+package "server/ Express + Apollo GraphQL" as server {
+  component "Express App\nJSON, cookies,\nStripe webhook" as express_app
+  component "Apollo Server\n/graphql HTTP + WS" as apollo_server
+  component "Auth Context\nJWT cookie to current user" as auth_context
+  component "Permission Layer\ngraphql-shield\ncustomer/admin rules" as permissions
+  component "GraphQL Modules\nUser, Room, Booking,\nPayment, Review,\nPromotion, Membership,\nBuffet" as graphql_modules
+  component "Controllers\nBusiness rules,\npricing, capacity,\ncancellation, refunds" as controllers
+  component "Mongoose Models" as models
+  component "PubSub\nnew/cancelled booking\nnotifications" as pubsub
+
+  express_app --> apollo_server
+  express_app --> controllers : "POST /api/payment/webhook"
+  apollo_server --> auth_context
+  apollo_server --> permissions
+  permissions --> graphql_modules
+  graphql_modules --> controllers
+  controllers --> models
+  controllers --> pubsub
+  pubsub --> apollo_server : "Subscriptions"
+}
+
+database "MongoDB" as mongodb {
+  component "users" as users
+  component "rooms" as rooms
+  component "bookings" as bookings
+  component "reviews" as reviews
+  component "promotions" as promotions
+  component "membership tiers" as tiers
+  component "buffet dinners" as buffet_dinners
+  component "buffet bookings" as buffet_bookings
+}
+
+cloud "External Services" as external {
+  component "Stripe Checkout\npayment sessions\nwebhooks/refunds" as stripe
+  component "Cloudinary\nroom/user images" as cloudinary
+  component "SMTP Mail\npassword reset" as smtp
+}
+
+database "Static Data" as static_data {
+  component "Tourist attractions" as attractions
+  component "Dish catalog" as dish_catalog
+  component "Seeder data" as seed_data
+}
+
+guest --> public_pages : "Browse rooms,\nattractions, register/login"
+customer --> customer_portal : "Book rooms,\nbook buffets,\npay, cancel,\nreview, invoice"
+admin --> admin_portal : "Manage hotel data,\nusers, bookings,\nreports"
+
+apollo_client --> apollo_server : "GraphQL over HTTP\ncredentials included"
+apollo_client --> apollo_server : "GraphQL over WebSocket\nsubscriptions"
+
+models --> mongodb : "Mongoose ODM"
+controllers --> stripe : "Create checkout,\nrefund, verify webhook"
+controllers --> cloudinary : "Upload/delete images"
+controllers --> smtp : "Send reset email"
+
+public_pages --> attractions : "Read local data"
+graphql_modules --> dish_catalog : "Buffet dish options"
+seed_data --> mongodb : "Initial rooms,\nusers, sample data"
+
+stripe --> express_app : "Webhook callback"
+
+legend right
+  |= Area |= Responsibility |
+  | client/ | Browser SPA, routing, UI, Apollo operations |
+  | server/ | GraphQL API, auth, permissions, business rules |
+  | MongoDB | Persistent hotel, user, booking, and buffet data |
+  | External Services | Payments, media storage, email delivery |
+endlegend
+
+@enduml
