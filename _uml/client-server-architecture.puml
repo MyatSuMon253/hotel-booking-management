@@ -1,0 +1,86 @@
+@startuml
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+
+title Hotel Booking Management System — Client-Server Architecture
+
+package "Client (React SPA)" as client {
+  [React 19 + TypeScript] as react
+  [Apollo Client] as apollo_client
+  [React Router] as router
+  [TanStack Table] as table
+  [Radix UI Components] as radix
+  [Tailwind CSS] as tailwind
+  [Recharts] as recharts
+  [React Hook Form + Zod] as forms
+}
+
+package "Server (Express + GraphQL)" as server {
+  [Express.js] as express
+  [Apollo Server] as apollo_server
+  [GraphQL Schema] as graphql
+  [Resolvers] as resolvers
+  [GraphQL Shield] as shield
+  [JWT Auth] as auth
+}
+
+package "External Services" as external {
+  [MongoDB\n(Mongoose)] as mongodb
+  [Stripe API] as stripe
+  [Cloudinary] as cloudinary
+  [Nodemailer\n(SMTP)] as email
+}
+
+package "Real-time" as realtime {
+  [GraphQL Subscriptions] as subscriptions
+  [WebSocket (ws)] as websocket
+}
+
+' Client internal connections
+react --> apollo_client : GraphQL queries/mutations
+react --> router : routing
+react --> table : data tables
+react --> radix : UI components
+react --> tailwind : styling
+react --> recharts : charts
+react --> forms : form validation
+
+' Client-Server connection
+apollo_client --> apollo_server : HTTP/GraphQL
+apollo_client <--> subscriptions : WebSocket\n(graphql-ws)
+
+' Server internal connections
+express --> apollo_server : middleware
+apollo_server --> graphql : schema
+graphql --> resolvers : execute
+resolvers --> shield : permissions
+resolvers --> auth : authenticate
+apollo_server --> subscriptions : pub/sub
+
+' Server-External connections
+resolvers --> mongodb : ODM
+resolvers --> stripe : payments
+resolvers --> cloudinary : image upload
+resolvers --> email : send emails
+
+' Real-time connections
+subscriptions --> websocket : WebSocket protocol
+
+note right of apollo_client
+  Client runs on Vite dev server
+  (port 5173 in development)
+end note
+
+note right of express
+  Server runs on Node.js
+  (port 4000 in development)
+end note
+
+note bottom of mongodb
+  MongoDB Atlas or
+  local MongoDB instance
+end note
+
+@enduml

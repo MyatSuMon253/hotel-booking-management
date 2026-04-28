@@ -1,0 +1,77 @@
+@startuml
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+
+title Hotel Booking Management System — High-Level Architecture
+
+skinparam componentStyle rectangle
+
+package "Client Layer" as client {
+  [Web App\n(React SPA)] as webapp
+  [Admin Dashboard] as admin
+  [User Portal] as user
+}
+
+package "API Layer" as api {
+  [GraphQL API\n(Apollo Server)] as graphql
+  [REST Endpoints\n(Express)] as rest
+  [Auth Service\n(JWT)] as auth
+}
+
+package "Business Logic" as logic {
+  [Booking Engine] as booking
+  [Payment Processor] as payment
+  [Room Management] as rooms
+  [Buffet Management] as buffet
+  [Membership Service] as membership
+}
+
+package "Data & External" as data {
+  database "MongoDB" as db
+  [Stripe\nPayments] as stripe
+  [Cloudinary\nImages] as cloudinary
+  [Email Service\n(SMTP)] as email
+}
+
+' Client to API
+webapp --> graphql : GraphQL over HTTP
+webapp <--> graphql : WebSocket (real-time)
+admin --> graphql
+user --> graphql
+
+' API to Business Logic
+graphql --> booking
+graphql --> payment
+graphql --> rooms
+graphql --> buffet
+graphql --> membership
+rest --> auth
+
+' Business Logic to Data
+booking --> db
+payment --> db
+rooms --> db
+buffet --> db
+membership --> db
+
+' External services
+payment --> stripe : charge
+rooms --> cloudinary : upload images
+booking --> email : confirmations
+
+note right of webapp
+  React 19 + TypeScript
+  Vite bundler
+  Apollo Client
+end note
+
+note right of graphql
+  Express.js server
+  TypeScript
+  GraphQL Shield
+  (permissions)
+end note
+
+@enduml
