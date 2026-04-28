@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --exec ts-node app.ts",
-    "db-seed": "tsc seeder/seeder.ts --outDir .tmp && node ./.tmp/seeder/seeder.js && rm -rf .tmp"
+    "db-seed": "ts-node --project tsconfig.json seeder/seeder.ts"
   },
   "keywords": [],
   "author": "",

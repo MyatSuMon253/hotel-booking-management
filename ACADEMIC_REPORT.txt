@@ -1,14 +1,3 @@
-# Hotel Booking Management System for Rangoon Heritage Hotel
-## Academic Project Documentation (Report)
-
-Author: (fill in)  
-Student ID: (fill in)  
-Supervisor: (fill in)  
-Program/Module: (fill in)  
-Date: 2026-04-27  
-
----
-
 ### Abstract
 
 Rangoon Heritage Hotel is a vintage-style hotel established in 1980 that has grown from a small operation of 15 rooms and 9 staff into an organization with 50 rooms and 27 staff. Despite this growth, the operational processes for room management, reservations, check-in/check-out, payment handling, refunds, and customer record-keeping have remained largely paper-based. Paper records, ledgers, and manual workflows create delays, increase the likelihood of human error, complicate reporting, and introduce data security risks through loss, theft, or damage.
