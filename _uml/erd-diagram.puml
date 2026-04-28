@@ -166,8 +166,8 @@ Room ||--o{ Review : "receives"
 
 Promotion }o--o{ Room : "applicableRooms"
 
-User ..> MembershipTier : "membershipTier (string)"
-Booking ..> MembershipTier : "membershipTier (string)"
+User ..> MembershipTier
+Booking ..> MembershipTier
 
 User ||--o{ BuffetBooking : "creates"
 BuffetDinner ||--o{ BuffetBooking : "for"
