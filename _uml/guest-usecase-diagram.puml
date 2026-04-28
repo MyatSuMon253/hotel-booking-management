@@ -1,0 +1,45 @@
+@startuml
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+
+title Hotel Booking Management System — Guest Use Case Diagram
+
+left to right direction
+skinparam actorStyle awesome
+
+actor "Guest" as Guest
+actor "Stripe" as Stripe
+actor "Cloudinary" as Cloudinary
+actor "SMTP Provider" as SMTP
+
+rectangle "Guest Portal" {
+  usecase "Register" as UC_Register
+  usecase "Login" as UC_Login
+  usecase "Manage Profile\n(Update Info / Password / Avatar)" as UC_Profile
+  usecase "Manage Bookings\n(Create / Cancel / Pay)" as UC_CreateBooking
+  usecase "Create Review" as UC_Review
+  usecase "Manage Buffet Bookings\n(Create / Cancel / Pay)" as UC_CreateBuffetBooking
+  usecase "Request Password Reset" as UC_ForgetPassword
+  usecase "Reset Password" as UC_ResetPassword
+}
+
+Guest --> UC_Register
+Guest --> UC_Login
+Guest --> UC_Profile
+Guest --> UC_CreateBooking
+Guest --> UC_Review
+Guest --> UC_CreateBuffetBooking
+Guest --> UC_ForgetPassword
+Guest --> UC_ResetPassword
+
+UC_CreateBooking --> Stripe
+UC_CreateBuffetBooking --> Stripe
+UC_Profile --> Cloudinary
+UC_ForgetPassword --> SMTP
+UC_ResetPassword --> SMTP
+
+UC_ResetPassword .> UC_ForgetPassword : <<extends>>
+
+@enduml

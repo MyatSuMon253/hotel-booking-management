@@ -9,96 +9,53 @@ title Hotel Booking Management System — Use Case Diagram
 left to right direction
 skinparam actorStyle awesome
 
-actor "Guest / Customer" as Customer
-actor "Admin / Staff" as Admin
-actor "Stripe" as Stripe
-actor "Cloudinary" as Cloudinary
-actor "SMTP Provider" as SMTP
+actor "Admin" as Admin
+actor "Guest" as Guest
 
-rectangle "Customer Portal" as CustomerPortal {
-  usecase "Register" as UC_Register
+rectangle "Rangoon Heritage Hotel" {
   usecase "Login" as UC_Login
-  usecase "Manage Profile\n(Update info / password / avatar)" as UC_Profile
-  usecase "Browse Rooms\n(Search / Filter / Pagination)" as UC_BrowseRooms
-  usecase "View Room Details\n(Images / Ratings / Reviews)" as UC_RoomDetails
-  usecase "Check Booked Dates" as UC_BookedDates
-  usecase "Create Room Booking" as UC_CreateBooking
-  usecase "Pay For Booking\n(Stripe Checkout)" as UC_PayRoom
-  usecase "View My Bookings" as UC_ViewBookings
-  usecase "Cancel Booking" as UC_CancelBooking
-  usecase "View Invoice" as UC_Invoice
-  usecase "Create/Update Review" as UC_Review
+  usecase "Register" as UC_Register
+  usecase "Manage Profile" as UC_Profile
+  usecase "Manage Password" as UC_ManagePassword
+  usecase "Upload Avatar" as UC_Avatar
 
-  usecase "Browse Buffet Dinners" as UC_BrowseBuffets
-  usecase "View Buffet Dinner Details" as UC_BuffetDetails
-  usecase "Create Buffet Booking" as UC_CreateBuffetBooking
-  usecase "Pay For Buffet Booking\n(Stripe Checkout)" as UC_PayBuffet
-  usecase "View My Buffet Bookings" as UC_ViewBuffetBookings
-  usecase "Cancel Buffet Booking" as UC_CancelBuffetBooking
+  usecase "Cancel/Confrim Room Booking" as UC_RoomBooking
+  usecase "Cancel/Confrim Buffet Booking" as UC_BookBuffet
+  usecase "Write Review" as UC_WriteReview
 
-  usecase "View Tourist Attractions" as UC_Attractions
-  usecase "Forget Password" as UC_ForgetPassword
-  usecase "Reset Password" as UC_ResetPassword
-  usecase "Validate Referral Code" as UC_ValidateReferral
+  usecase "Manage Room" as UC_ManageRoom
+  usecase "Manage Booking" as UC_ManageBooking
+  usecase "Manage Customer" as UC_ManageCustomer
+  usecase "Manage Promotion" as UC_ManagePromotion
+  usecase "Manage Membership Tier" as UC_ManageTier
+  usecase "Delete Review" as UC_ManageReview
+  usecase "Manage Buffet" as UC_ManageBuffet
+  usecase "Manage Buffet Booking" as UC_ManageBuffetBooking
 }
 
-rectangle "Admin Portal" as AdminPortal {
-  usecase "View Dashboard Metrics" as UA_Dashboard
-  usecase "Manage Rooms\n(Create / Update / Delete / Images)" as UA_ManageRooms
-  usecase "Manage Bookings" as UA_ManageBookings
-  usecase "Manage Customers\n(Roles / Active / Membership)" as UA_ManageCustomers
-  usecase "Manage Promotions" as UA_ManagePromotions
-  usecase "Manage Membership Tiers" as UA_ManageTiers
-  usecase "Manage Reviews\n(View / Delete)" as UA_ManageReviews
-  usecase "Manage Buffet Dinners" as UA_ManageBuffets
-  usecase "Manage Buffet Bookings" as UA_ManageBuffetBookings
-  usecase "Receive Booking Notifications\n(GraphQL Subscription)" as UA_Noti
-}
+Admin --> UC_ManageRoom
+Admin --> UC_ManageBooking
+Admin --> UC_ManageCustomer
+Admin --> UC_ManagePromotion
+Admin --> UC_ManageTier
+Admin --> UC_ManageReview
+Admin --> UC_ManageBuffet
+Admin --> UC_ManageBuffetBooking
 
-Customer --> UC_Register
-Customer --> UC_Login
-Customer --> UC_Profile
-Customer --> UC_BrowseRooms
-Customer --> UC_RoomDetails
-Customer --> UC_BookedDates
-Customer --> UC_CreateBooking
-Customer --> UC_PayRoom
-Customer --> UC_ViewBookings
-Customer --> UC_CancelBooking
-Customer --> UC_Invoice
-Customer --> UC_Review
-Customer --> UC_BrowseBuffets
-Customer --> UC_BuffetDetails
-Customer --> UC_CreateBuffetBooking
-Customer --> UC_PayBuffet
-Customer --> UC_ViewBuffetBookings
-Customer --> UC_CancelBuffetBooking
-Customer --> UC_Attractions
-Customer --> UC_ForgetPassword
-Customer --> UC_ResetPassword
-Customer --> UC_ValidateReferral
+Admin --> UC_Login
+Admin --> UC_Register
+Admin --> UC_Profile
+Admin --> UC_ManagePassword
+Admin --> UC_Avatar
 
-Admin --> UA_Dashboard
-Admin --> UA_ManageRooms
-Admin --> UA_ManageBookings
-Admin --> UA_ManageCustomers
-Admin --> UA_ManagePromotions
-Admin --> UA_ManageTiers
-Admin --> UA_ManageReviews
-Admin --> UA_ManageBuffets
-Admin --> UA_ManageBuffetBookings
-Admin --> UA_Noti
+UC_Login <-- Guest
+UC_Register <-- Guest
+UC_Profile <-- Guest
+UC_ManagePassword <-- Guest
+UC_Avatar <-- Guest
 
-UC_PayRoom --> Stripe
-UC_PayBuffet --> Stripe
-UA_ManageRooms --> Cloudinary
-UC_Profile --> Cloudinary
-UC_ForgetPassword --> SMTP
-UC_ResetPassword --> SMTP
-
-UC_CreateBooking .> UC_BookedDates : <<includes>>
-UC_Review .> UC_ViewBookings : <<depends on paid booking>>
-UC_ResetPassword .> UC_ForgetPassword : <<extends>>
+UC_RoomBooking <-- Guest
+UC_BookBuffet <-- Guest
+UC_WriteReview <-- Guest
 
 @enduml
-

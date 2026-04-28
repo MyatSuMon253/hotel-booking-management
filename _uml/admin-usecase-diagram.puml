@@ -1,0 +1,34 @@
+@startuml
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+
+title Hotel Booking Management System — Admin Use Case Diagram
+
+left to right direction
+skinparam actorStyle awesome
+
+actor "Admin" as Admin
+
+rectangle "Admin Portal" {
+  usecase "Manage Room Bookings\n(Cancel / Record Payment)" as UA_ManageBookings
+  usecase "Manage Buffet Bookings\n(Cancel / Record Payment)" as UA_ManageBuffetBookings
+  usecase "Manage Rooms" as UA_ManageRooms
+  usecase "Manage Customers" as UA_ManageCustomers
+  usecase "Manage Promotions" as UA_ManagePromotions
+  usecase "Manage Membership Tiers" as UA_ManageTiers
+  usecase "Manage Buffet Dinners" as UA_ManageBuffets
+  usecase "Delete Reviews" as UA_ManageReviews
+}
+
+Admin --> UA_ManageRooms
+Admin --> UA_ManageBookings
+Admin --> UA_ManageCustomers
+Admin --> UA_ManagePromotions
+Admin --> UA_ManageTiers
+Admin --> UA_ManageReviews
+Admin --> UA_ManageBuffets
+Admin --> UA_ManageBuffetBookings
+
+@enduml
