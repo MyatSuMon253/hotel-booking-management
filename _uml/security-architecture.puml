@@ -1,0 +1,111 @@
+@startuml
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+
+title Hotel Booking System — Security Architecture
+
+package "Client (React + Apollo)" as client {
+  [ProtectPage Component] as protect
+  [Zod Validation Schemas] as zod
+  [Apollo Client\n(credentials: include)] as apollo_client
+  [Login/Register Forms] as forms
+}
+
+package "Server (Express + Apollo Server)" as server {
+  package "Authentication" as auth {
+    [JWT Sign/Verify\n(jsonwebtoken)] as jwt
+    [bcrypt Password Hashing] as bcrypt
+    [Cookie Parser] as cookie_parser
+  }
+  
+  package "Authorization" as authz {
+    [GraphQL Shield\nMiddleware] as shield
+    [Permission Rules\n(isAuthenticated, isAdmin)] as rules
+  }
+  
+  package "Validation & Security" as validation {
+    [Error Handling\nMiddleware] as error_handler
+    [Stripe Webhook\nSignature Verify] as stripe_verify
+    [CORS Middleware] as cors
+  }
+  
+  package "Data Layer" as data {
+    [Mongoose Models\n(password select:false)] as models
+    [MongoDB Atlas\n(TLS by default)] as mongodb
+  }
+}
+
+package "External Services" as external {
+  [MongoDB Atlas] as atlas
+  [Stripe API\n(HTTPS)] as stripe
+  [Cloudinary\n(secure_url)] as cloudinary
+  [SMTP Service] as smtp
+}
+
+' Client to Server flow
+apollo_client --> jwt : GraphQL requests\nwith HTTP-only cookie
+forms --> zod : validate with
+protect --> apollo_client : checks\nisAuthenticatedVar
+
+' Server Authentication flow
+jwt --> cookie_parser : reads token\nfrom cookie
+jwt --> apollo_client : returns user\nin context
+bcrypt --> models : hash/compare\npasswords
+
+' Server Authorization flow
+shield --> rules : applies
+rules --> jwt : checks context.user
+rules --> models : checks user.role
+
+' Validation flow
+error_handler --> models : catches\nMongoErrors
+stripe_verify --> stripe : verifies\nwebhook signature
+cors --> apollo_client : allows\ncredentials
+
+' Data layer
+models --> mongodb : TLS connection
+mongodb --> atlas
+
+' External services
+stripe_verify --> stripe
+cloudinary --> external
+smtp --> external
+
+note right of protect
+  Client-side route guard
+  Checks auth state & roles
+  Redirects if unauthorized
+end note
+
+note right of jwt
+  Token stored in
+  HTTP-only cookie
+  (XSS protection)
+end note
+
+note right of bcrypt
+  Password hashing
+  10 salt rounds
+  Never stored plain
+end note
+
+note right of shield
+  GraphQL Shield
+  - isAuthenticated: valid JWT
+  - isAdmin: role includes admin
+end note
+
+note right of models
+  Password field:
+  select: false
+  (excluded by default)
+end note
+
+note right of stripe_verify
+  Stripe webhooks verified
+  using signature
+  Raw body preserved
+end note
+@enduml
