@@ -1,0 +1,55 @@
+@startuml
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam linetype ortho
+
+title Server Architecture
+
+skinparam component {
+  BackgroundColor #FFFFFF
+  BorderColor #34495E
+}
+
+skinparam database {
+  BackgroundColor #FEF9E7
+  BorderColor #D4AC0D
+}
+
+package "API Layer" {
+  component "Express + Apollo Server" as server
+  component "GraphQL Shield\n(Role-based Auth)" as shield
+}
+
+package "Business Logic" {
+  component "Resolvers" as resolvers
+  component "Controllers" as controllers
+}
+
+package "Data Layer" {
+  component "Mongoose Models" as models
+}
+
+database "MongoDB Atlas" as mongodb
+
+package "External Services" {
+  component "Stripe" as stripe
+  component "Cloudinary" as cloudinary
+  component "SMTP" as smtp
+}
+
+' Connections
+server --> shield
+shield --> resolvers
+resolvers --> controllers
+controllers --> models
+models --> mongodb
+
+controllers --> stripe
+controllers --> cloudinary
+controllers --> smtp
+
+server --> stripe : "Webhook"
+
+@enduml
