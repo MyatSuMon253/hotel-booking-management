@@ -1,5 +1,4 @@
 @startuml
-Bob -> Alice : hello
 
 !theme plain
 skinparam backgroundColor #FAFAFA
