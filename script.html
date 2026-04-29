@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h4>Home Page</h4>
+    <p>
+        Hello, today I will demonstrate my Hotel Booking Management System. <br>
+        This project is designed for Rangoon Heritage Hotel, a vintage-style hotel that wants to move from paper-based
+        hotel operations to a digital web-based system. <br>
+        The main purpose of this system is to reduce manual work, prevent booking errors, centralize hotel data, support
+        online payment, and give administrators clear reporting for better decision-making. <br>
+        The system has two main sides. For the customer side, they can browse rooms,
+        make reservation for room and dinner, pay online, manage their profile, view invoices and write reviews. <br>
+        The admin side, staff can manage rooms, customers, bookings, buffet dinners, promotions, membership tiers,
+        reviews, and dashboard reports.
+    </p>
+
+    <h4>Room Browsing Screen</h4>
+    <p>
+        Now I will start from the customer side. This is the home page, where customers can browse available hotel
+        rooms. <br>
+        Each room card shows important information like room image, title, room type, price per night, capacity and is
+        available. <br>
+        This helps customers compare options quickly without contacting hotel staff manually. <br>
+        On the right side, the system provides filtering options. <br>
+        Customers can search by room name and filter by room type and availability. <br>
+        This replaces the manual process of checking available rooms. <br>
+        In this system, data is stored centrally and retrieved directly from the database. <br>
+        All the list are paginated and can handle a large amount of data.
+    </p>
+
+
+    <h4>
+        Room Detail
+    </h4>
+
+    Screen action: Click one room, show `/rooms/:id`, image carousel, details, amenities, price, reviews.
+
+    Script:
+    <p>
+        In room detail page, the customer can view a larger image carousel, the room description, type, price per night,
+        and other facilities such as Wi-Fi, breakfast, and swimming pool access. <br>
+        The detail page shows review and rating of the room, so customers can make informed decisions. <br>
+        Customer cannot review without paying for this room. <br>
+        On the right side, the booking form is shown and customer can make booking quickly. <br>
+
+        I will demonstrate the room booking process.
+
+        The booking form automatically fills the logged-in customer's name and email. <br>
+        The customer can select start date and end date using a date range calendar. <br>
+        This calendar uses disabled date from the backend, so reserved dates can be chosen. <br>
+        This will prevent overlap bookings and reduces the risk of double booking. <br>
+
+        The booking form calculates the number of rental days, rent per day, total rent, tax, discount, and estimated
+        total amount. <br>
+        There are two types of discount.
+        If customer has a membership tier, the system applies the membership discount automatically. <br>
+        But if the customer does not have a membership tier, they can enter a referral code from other member. <br>
+        The system validates the referral code and applies 5% referral discount on rental fees. <br>
+        The customer can also add an additional note, such as arrival time or special requests. <br>
+        After confirming the information, click the Place Booking.
+    </p>
+
+    <h4>
+        Checkout Page
+    </h4>
+    <p>
+        After the booking is created, the customer is redirected to the payment page. <br>
+
+        The system supports payment information and Stripe checkout integration. <br>
+        Stripe handles the secure card payment with webhook technology. <br>
+
+        After payment is completed, the customer can view the booking confirmation page. <br>
+        This process is more reliable than manual payment handling because the booking and payment information are
+        inter-connected in the database.
+    </p>
+
+    <h4>My Bookings Page</h4>
+    <p>
+        At the top, the system shows summary cards such as total bookings, unpaid bookings, and due amount. <br>
+        Below that, the customer can manage bookings depending on the booking status. <br>
+        They can continue payment, view confirmation, cancel booking, or downloading invoice. <br>
+        This page also includes buffet dinner bookings, so the customer can manage both room reservations and dining
+        reservations from one place.
+    </p>
+
+    <h4>
+        Buffet Dinner Booking
+    </h4>
+    <p>
+
+        Customers can view available buffet dinners from the list. <br>
+        Each buffet dinner includes information such as title, cuisine category, description, image, start and end time,
+        included dishes, remaining seats, price per guest, and facilities. <br>
+
+        On the buffet detail page, the customer can choose the number of guests and create a dinner booking. <br>
+
+        The system calculates the subtotal, tax, and total amount based on guest count and price per guest. <br>
+
+        After booking, the customer can continue to checkout and payment confirmation page, the same as the room
+        booking. <br>
+        The system also tracks availabe seats, so staff and customers can see the remaining capacity.
+    </p>
+
+
+    <h4>
+        Tourist Attractions Page
+    </h4>
+    <p>
+
+        This page shows travel information related to local attractions. <br>
+
+        For a heritage hotel, this feature improves the guest experience because most of the customers are foreigners
+        visiting Myanmar. <br>
+        Instead of only providing room booking, the system also supports trip planning and customer engagement. <br>
+        It is demonstrating that the system is implemented based on customer journey, not only hotel operations. <br>
+    </p>
+
+
+    <h4>
+        Admin Dashboard
+    </h4>
+
+    <p>
+
+        Now I will switch to the admin side. <br>
+
+        The admin dashboard show a quick overview of hotel performance. including total revenues, total bookings,
+        confirmed bookings and cancelled bookings. <br>
+
+        The dashboard also includes visual charts of sales over time, booking trend, payment method distribution, and
+        booking status distribution. <br>
+
+        The date range calendar allows to change the reporting period more faster and accurate than normal ledger
+        calculations. <br>
+
+        This dashboard solves the main business problems of the old system that is difficult to generate timely and
+        visual reports.
+    </p>
+
+    <h4> Room Management</h4>
+
+    <p>
+        Admin can create , update , delete rooms with full control and no longer need to maintain paper records. <br>
+
+        When room data is updated here, customers can see the updated data immediately. <br>
+    </p>
+
+    <h4>
+        Booking Management
+    </h4>
+
+    <p>
+        At the booking management page, Admin can monitor booking status, payment status, customer information and
+        amount. <br>
+
+        This gives the centralized operational view, which is very important for adminstration.</p>
+
+    <h4>
+        Customer Management
+    </h4>
+
+    <p>
+        Admins can manage active status, membership tier, and referral points for customer. <br>
+        The customer detail page show all the related bookings and loyalty sytem.
+    </p>
+
+    <h4>
+        Promotion Management
+    </h4>
+
+    <p>
+        Each promotion have a coupon code, discount type, discount value, start date and end date, maximum usage and
+        used count.
+    </p>
+
+    <h4>
+        Memebership Management
+    </h4>
+
+    <p>
+
+        The membership module allows admins to define customer membershiptier levels and discount percentages. <br>
+        This connects directly to the booking form, where membership discounts are applied automatically. <br>
+        Together of promotions, referral codes, and membership tiers can improve customer retention and encourage repeat
+        bookings.
+    </p>
+
+    <h4>
+        Dinner Management
+    </h4>
+    <p>
+        Admins can manage dishes, dinner time, capacity, price per guest and other facilities. <br>
+        In the detail page, the included dishes are displayed with preview images.
+    </p>
+
+
+    <h4>
+        Buffet Booking Management
+    </h4>
+    <p>
+        In this page, admin can view buffet reservations and payment status. <br>
+        Admin can also cancel the dinner bookings of customer in case of limited capacity.
+    </p>
+
+    <h4>Review Management</h4>
+    <p>
+        Admin can view customer feedback to improve hotel operations. <br>
+        And also can delete the bad reviews to protects the hotel from inappropriate content. <br>
+        The system supports a broader hotel operation that includes dining, customer feedback, and management control.
+    </p>
+
+    <h4>Profile Page</h4>
+    <p>
+        On the profile page, customer can update thier information and change password. <br>
+        If the customers forgot their password, can request a reset email and create a new password using the reset
+        token.
+    </p>
+    <h4> Closing</h4>
+    <p>
+        To conclude, this Hotel Booking Management System converts the hotel's manual paper-based workflow into a
+        centralized digital platform. <br>
+
+        Customers can browse rooms, register, make reservation for room and dinner, pay online, view invoices, manage
+        bookings and submit reviews. <br>
+
+        Administrators can manage rooms, bookings, customers, promotions, membership tiers, buffet dinners, reviews, and
+        performance reports. <br>
+
+        Overall, the system improves efficiency, reduces human error, increase data security through role-based access,
+        and supports better business decisions through real-time reporting. <br>
+
+        Thank you for watching my project demonstration.</p>
+</body>
+
+</html>

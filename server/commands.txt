@@ -1,2 +1,6 @@
 1. stripe login 
 2. stripe listen --events checkout.session.completed --forward-to localhost:4444/api/payment/webhook
+
+4242 4242 4242 4242 
+02/32 
+000
